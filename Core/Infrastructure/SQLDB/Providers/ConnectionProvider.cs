@@ -14,14 +14,13 @@ public sealed class ConnectionProvider : IDisposable
 
     public ConnectionProvider(IConfiguration configuration, ILogger<ConnectionProvider> newLogger)
     {
-        //TODO: Add tenantId value objects. key : tenantId value: business connection string
         connectionString = configuration.GetConnectionString("Business");
         AppContext.SetSwitch("Switch.Microsoft.Data.SqlClient.EnableRetryLogic", true);
         options = new SqlRetryLogicOption()
         {
-            NumberOfTries = Int32.Parse(configuration["DBRetry:NumberOfTries"]),
-            MaxTimeInterval = TimeSpan.FromSeconds(Int32.Parse(configuration["DBRetry:MaxTimeInterval"])),
-            DeltaTime = TimeSpan.FromSeconds(Int32.Parse(configuration["DBRetry:DeltaTime"])),
+            NumberOfTries = int.Parse(configuration["DBRetry:NumberOfTries"]),
+            MaxTimeInterval = TimeSpan.FromSeconds(int.Parse(configuration["DBRetry:MaxTimeInterval"])),
+            DeltaTime = TimeSpan.FromSeconds(int.Parse(configuration["DBRetry:DeltaTime"])),
             TransientErrors = new List<int>() { 4060, 40197, 40501, 40613, 49918, 49919, 49920, 11001 }
         };
         logger = newLogger;
@@ -30,17 +29,17 @@ public sealed class ConnectionProvider : IDisposable
     public async Task<SqlConnection> Connect()
     {
         var provider = SqlConfigurableRetryFactory.CreateExponentialRetryProvider(options);
-        provider.Retrying += (object s, SqlRetryingEventArgs e) =>
+        provider.Retrying += (s, e) =>
         {
-            int attempts = e.RetryCount + 1;
+            var attempts = e.RetryCount + 1;
             logger.LogError($"attempt {attempts} - current delay time:{e.Delay} \n");
-            if (e.Exceptions[e.Exceptions.Count - 1] is SqlException ex)
+            if (e.Exceptions[^1] is SqlException ex)
             {
                 logger.LogError($"{ex.Number}-{ex.Message}\n");
             }
             else
             {
-                logger.LogError($"{e.Exceptions[e.Exceptions.Count - 1].Message}\n");
+                logger.LogError($"{e.Exceptions[^1].Message}\n");
             }
                 
             if (e.RetryCount == provider.RetryLogic.NumberOfTries - 1)
