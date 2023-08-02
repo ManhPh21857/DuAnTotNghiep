@@ -2,7 +2,7 @@
 using Project.Common.Domain.Tests;
 using Project.SQLDatabase.Providers;
 
-namespace Project.Common.Infrastructure.SQLDB.Tests; 
+namespace Project.Common.Infrastructure.SQLDB.Tests;
 
 public class TestRepository : ITestRepository {
     private readonly ConnectionProvider provider;

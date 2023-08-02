@@ -21,4 +21,8 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\Project.Core.Domain\Project.Core.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

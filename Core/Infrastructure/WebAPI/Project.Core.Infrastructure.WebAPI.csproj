@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\ApplicationService\Project.Core.ApplicationService.csproj" />
+    <ProjectReference Include="..\..\Domain\Project.Core.Domain\Project.Core.Domain.csproj" />
     <ProjectReference Include="..\SQLDB\Project.Core.Infrastructure.SQLDB.csproj" />
   </ItemGroup>
 

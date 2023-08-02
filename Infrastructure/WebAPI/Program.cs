@@ -38,10 +38,10 @@ builder.Services.AddCors(options =>
 {
     var webClientUrl = builder.Configuration["WebClient:Url"];
     options.AddPolicy("AllowAll",
-        builder =>
+        b =>
         {
-            builder
-               .SetIsOriginAllowed((host) => true)
+            b
+               .SetIsOriginAllowed(_ => true)
                .WithOrigins(webClientUrl)
                .AllowAnyMethod()
                .AllowAnyHeader()
