@@ -1,6 +1,6 @@
 ﻿using Dapper;
 using Project.Common.Domain.Tests;
-using Project.SQLDatabase.Providers;
+using Project.Core.Infrastructure.SQLDB.Providers;
 
 namespace Project.Common.Infrastructure.SQLDB.Tests;
 

@@ -6,10 +6,9 @@ using System.Reflection;
 using Project.Common.ApplicationService;
 
 namespace Project.Common.Infrastructure.WebAPI;
-public static class ServiceCollectionExtensions
-{
-    public static void AddCommonWebAPI(this IServiceCollection services)
-    {
+
+public static class ServiceCollectionExtensions {
+    public static void AddCommonWebAPI(this IServiceCollection services) {
         services.AddCommonDomain();
         services.AddCommonApplicationService();
         services.AddCommonSQLDB();
@@ -17,19 +16,13 @@ public static class ServiceCollectionExtensions
         services.AddValidator();
     }
 
-
-
-    public static void AddCustomIdentity(this IServiceCollection services)
-    {
+    public static void AddCustomIdentity(this IServiceCollection services) {
     }
 
-
-
-    public static void RegisterMapsterConfiguration(this IServiceCollection services)
-    {
+    public static void RegisterMapsterConfiguration(this IServiceCollection services) {
         TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly());
     }
-    private static void AddValidator(this IServiceCollection services)
-    {
+
+    private static void AddValidator(this IServiceCollection services) {
     }
 }

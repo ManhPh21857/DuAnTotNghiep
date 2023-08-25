@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Project.Core.Infrastructure.WebAPI.CoreController; 
+namespace Project.Core.Infrastructure.WebAPI.CoreController;
 
 [ApiController]
 [ApiVersion("1.0")]

@@ -1,7 +1,5 @@
-namespace Project.Infrastructure.WebAPI
-{
-    public class WeatherForecast
-    {
+namespace Project.Infrastructure.WebAPI {
+    public class WeatherForecast {
         public DateTime Date { get; set; }
 
         public int TemperatureC { get; set; }

@@ -5,12 +5,10 @@ using Project.Common.ApplicationService.Tests.Query;
 using Project.Common.Infrastructure.WebAPI.Controllers.Base;
 using Project.Common.Infrastructure.WebAPI.Controllers.v1.Tests.Get;
 
-namespace Project.Common.Infrastructure.WebAPI.Controllers.v1.Tests; 
+namespace Project.Common.Infrastructure.WebAPI.Controllers.v1.Tests;
 
-public class TestController : CommonController
-{
+public class TestController : CommonController {
     public TestController(ISender mediator) : base(mediator) {
-        
     }
 
     [HttpGet("get-test/{id}")]
