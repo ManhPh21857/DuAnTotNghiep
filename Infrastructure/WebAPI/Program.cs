@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Project.Common.Infrastructure.WebAPI;
 using Project.Core.Infrastructure.WebAPI;
 using Project.Core.Infrastructure.WebAPI.Models;
+using Project.HumanResources.Infrastructure.WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,8 +25,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCoreWebAPI();
 builder.Services.AddCommonWebAPI();
+builder.Services.AddHumanResourcesWebAPI();
 
-builder.Services.RegisterMapsterConfiguration();
+builder.Services.RegisterCommonMapsterConfiguration();
+builder.Services.RegisterHumanResourcesMapsterConfiguration();
 
 builder.Services.AddApiVersioning(x =>
 {

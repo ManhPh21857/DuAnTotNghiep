@@ -13,7 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Modules\Common\Infrastructure\WebAPI\Project.Common.Infrastructure.WebAPI.csproj" />
+    <ProjectReference Include="..\..\Modules\Common\Infrastructure\WebAPI\Project.Common.Infrastructure.WebAPI\Project.Common.Infrastructure.WebAPI.csproj" />
+    <ProjectReference Include="..\..\Modules\HumanResources\Infrastructure\WebAPI\Project.HumanResources.Infrastructure.WebAPI\Project.HumanResources.Infrastructure.WebAPI.csproj" />
   </ItemGroup>
 
 </Project>
