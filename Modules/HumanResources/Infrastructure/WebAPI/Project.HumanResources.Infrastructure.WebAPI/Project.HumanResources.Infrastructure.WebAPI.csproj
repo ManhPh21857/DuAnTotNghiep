@@ -17,4 +17,8 @@
     <ProjectReference Include="..\..\..\Domain\Project.HumanResources.Domain\Project.HumanResources.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\v1\Users\Post\" />
+  </ItemGroup>
+
 </Project>

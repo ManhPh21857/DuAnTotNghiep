@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Mapster" Version="7.3.0" />
+		<PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.9" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\..\Core\Infrastructure\WebAPI\Project.Core.Infrastructure.WebAPI.csproj" />
+		<ProjectReference Include="..\..\..\ApplicationService\Project.Product.ApplicationService\Project.Product.ApplicationService.csproj" />
+		<ProjectReference Include="..\..\..\Domain\Project.Product.Domain\Project.Product.Domain.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Controllers\v1\" />
+	</ItemGroup>
+
+</Project>

@@ -1,8 +1,10 @@
 ﻿using Mapster;
 
-namespace Project.Common.Infrastructure.WebAPI; 
+namespace Project.Common.Infrastructure.WebAPI;
 
-public class CommonMapsterConfig : IRegister {
-    public void Register(TypeAdapterConfig config) {
+public class CommonMapsterConfig : IRegister
+{
+    public void Register(TypeAdapterConfig config)
+    {
     }
 }
