@@ -12,7 +12,6 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Core\ApplicationService\Project.Core.ApplicationService.csproj" />
     <ProjectReference Include="..\..\..\..\Core\Domain\Project.Core.Domain\Project.Core.Domain.csproj" />
   </ItemGroup>
 

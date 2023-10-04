@@ -2,5 +2,6 @@
 
 namespace Project.Core.ApplicationService.Queries;
 
-public interface IQuery<TQueryResult> : IRequest<TQueryResult> {
+public interface IQuery<TQueryResult> : IRequest<TQueryResult>
+{
 }

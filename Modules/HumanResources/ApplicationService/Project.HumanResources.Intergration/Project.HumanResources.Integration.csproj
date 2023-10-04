@@ -8,12 +8,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Core\ApplicationService\Project.Core.ApplicationService.csproj" />
-    <ProjectReference Include="..\..\..\Common\Domain\Project.Common.Domain.csproj" />
     <ProjectReference Include="..\..\Domain\Project.HumanResources.Domain\Project.HumanResources.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Users\Commad\" />
+    <Folder Include="Users\Command\" />
   </ItemGroup>
 
 </Project>
