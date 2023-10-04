@@ -13,7 +13,6 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Core\ApplicationService\Project.Core.ApplicationService.csproj" />
     <ProjectReference Include="..\..\..\..\..\Core\Infrastructure\SQLDB\Project.Core.Infrastructure.SQLDB.csproj" />
     <ProjectReference Include="..\..\..\Domain\Project.HumanResources.Domain\Project.HumanResources.Domain.csproj" />
   </ItemGroup>

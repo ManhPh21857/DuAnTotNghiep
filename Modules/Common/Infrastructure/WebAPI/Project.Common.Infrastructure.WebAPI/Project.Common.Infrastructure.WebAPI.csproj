@@ -6,14 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Mapster" Version="7.3.0" />
+		<PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.9" />
+	</ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Core\Infrastructure\WebAPI\Project.Core.Infrastructure.WebAPI.csproj" />
     <ProjectReference Include="..\..\..\ApplicationService\Project.Common.ApplicationService\Project.Common.ApplicationService.csproj" />
     <ProjectReference Include="..\..\..\Domain\Project.Common.Domain\Project.Common.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\v1\" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Dapper.SqlBuilder" Version="2.0.78" />
+		<PackageReference Include="Mapster" Version="7.3.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\Core\ApplicationService\Project.Core.ApplicationService.csproj" />
+		<ProjectReference Include="..\..\..\..\Core\Infrastructure\SQLDB\Project.Core.Infrastructure.SQLDB.csproj" />
+		<ProjectReference Include="..\..\Domain\Project.Product.Domain\Project.Product.Domain.csproj" />
+		<ProjectReference Include="..\..\Infrastructure\SQLDB\Project.Product.Infrastructure.SQLDB\Project.Product.Infrastructure.SQLDB.csproj" />
+		<ProjectReference Include="..\Project.Product.Integration\Project.Product.Integration.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Project.Common.Infrastructure.WebAPI;
 using Project.Core.Infrastructure.WebAPI;
+using Project.Core.Infrastructure.WebAPI.Middlewares;
 using Project.Core.Infrastructure.WebAPI.Models;
 using Project.HumanResources.Infrastructure.WebAPI;
+using Project.Product.Infrastructure.WebAPI;
+using Project.Sales.Infrastructure.WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,15 +23,22 @@ builder.Services.AddControllers()
         });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddMemoryCache();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddCoreWebAPI();
 builder.Services.AddCommonWebAPI();
 builder.Services.AddHumanResourcesWebAPI();
+builder.Services.AddSalesWebAPI();
+builder.Services.AddProductWebAPI();
+
 
 builder.Services.RegisterCommonMapsterConfiguration();
 builder.Services.RegisterHumanResourcesMapsterConfiguration();
+builder.Services.RegisterSalesMapsterConfiguration();
+builder.Services.RegisterProductMapsterConfiguration();
 
 builder.Services.AddApiVersioning(x =>
 {
@@ -60,9 +70,13 @@ if(app.Environment.IsDevelopment()) {
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ErrorHandlingMiddleWare>();
+
 app.UseRouting();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
