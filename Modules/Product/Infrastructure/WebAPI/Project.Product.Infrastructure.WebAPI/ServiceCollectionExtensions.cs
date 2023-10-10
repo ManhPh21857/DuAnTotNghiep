@@ -6,7 +6,7 @@ using Project.Product.Domain;
 using Project.Product.Infrastructure.SQLDB;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers.Put;
-using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers1.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers.Post;
 using System.Reflection;
 using System.Web.Http.Validation;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;

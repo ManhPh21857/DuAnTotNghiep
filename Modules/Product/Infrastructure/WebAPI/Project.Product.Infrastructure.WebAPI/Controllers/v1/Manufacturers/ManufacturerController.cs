@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers.Put;
-using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers1.Get;
-using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers1.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers.Get;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers.Post;
 using Project.Product.Integration.Manufacturers;
 
 
-namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers1
+namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers
 {
     public class ManufacturerController : ProductController
     {
