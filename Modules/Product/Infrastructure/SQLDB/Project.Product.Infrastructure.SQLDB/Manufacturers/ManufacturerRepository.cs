@@ -1,7 +1,7 @@
 ﻿using Project.Core.Infrastructure.SQLDB.Providers;
-using Project.Product.Domain.Manufacturers1;
+using Project.Product.Domain.Manufacturers;
 using Dapper;
-namespace Project.Product.Infrastructure.SQLDB.Manufacturers1
+namespace Project.Product.Infrastructure.SQLDB.Manufacturers
 {
     public class ManufacturerRepository : IManufacturerRepository
     {
