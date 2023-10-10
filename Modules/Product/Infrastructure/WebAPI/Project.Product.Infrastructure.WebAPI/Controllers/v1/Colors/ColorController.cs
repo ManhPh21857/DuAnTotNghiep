@@ -8,7 +8,7 @@ using Project.Product.Integration.Colors;
 
 namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors
 {
-    public class ColorController : ProductController
+    public class ColorController : CommonController
     {
         public ColorController(ISender mediator) : base(mediator)
         {
