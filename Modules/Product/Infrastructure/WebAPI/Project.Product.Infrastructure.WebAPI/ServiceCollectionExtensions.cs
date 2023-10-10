@@ -4,7 +4,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Project.Product.ApplicationService;
 using Project.Product.Domain;
 using Project.Product.Infrastructure.SQLDB;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers.Delete;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers.Put;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers1.Post;
 using System.Reflection;
+using System.Web.Http.Validation;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Project.Product.Infrastructure.WebAPI;
 
@@ -28,7 +33,10 @@ public static class ServiceCollectionExtensions
         TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly());
     }
 
-    private static void AddValidator(this IServiceCollection services)
+    public static void AddValidator(this IServiceCollection services)
     {
+        services.AddScoped<IValidator<CreateManufacturerModel>, CreateManufacturerModelValidator>();
+        services.AddScoped<IValidator<UpdateManufacturerModel>, UpdateManufacturerModelValidator>();
+        services.AddScoped<IValidator<DeleteManufacturerModel>, DeleteManufacturerModelValidator>();
     }
 }
