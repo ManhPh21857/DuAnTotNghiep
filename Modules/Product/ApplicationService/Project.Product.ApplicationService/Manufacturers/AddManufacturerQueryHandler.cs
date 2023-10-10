@@ -1,7 +1,7 @@
 ﻿using Project.Core.ApplicationService;
 using Project.Core.ApplicationService.Commands;
 using Project.Core.ApplicationService.Queries;
-using Project.Product.Domain.Manufacturers1;
+using Project.Product.Domain.Manufacturers;
 using Project.Product.Integration.Manufacturers;
 namespace Project.Product.ApplicationService.Manufacturers
 {

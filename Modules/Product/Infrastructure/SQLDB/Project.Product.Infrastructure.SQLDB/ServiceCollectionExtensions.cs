@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Project.Product.Domain.Colors;
-using Project.Product.Domain.Manufacturers1;
+using Project.Product.Domain.Manufacturers;
 using Project.Product.Infrastructure.SQLDB.Colors;
+using Project.Product.Infrastructure.SQLDB.Manufacturers;
 using Project.Product.Infrastructure.SQLDB.Manufacturers1;
 using Project.Product.Domain.Colors;
 using Project.Product.Domain.Products;

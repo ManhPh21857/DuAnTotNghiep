@@ -1,8 +1,8 @@
 ﻿using Project.Core.ApplicationService.Queries;
-using Project.Product.Domain.Manufacturers1;
+using Project.Product.Domain.Manufacturers;
 using Project.Product.Integration.Manufacturers;
 
-namespace Project.Product.ApplicationService.Manufacturers1
+namespace Project.Product.ApplicationService.Manufacturers
 {
     public class GetManufacturerQueryHandler : QueryHandler<GetManufacturerQuery,GetManufacturerQueryResult>
     {

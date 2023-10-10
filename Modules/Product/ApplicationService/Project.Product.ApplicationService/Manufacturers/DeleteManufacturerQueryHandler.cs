@@ -1,5 +1,5 @@
 ﻿using Project.Core.ApplicationService.Commands;
-using Project.Product.Domain.Manufacturers1;
+using Project.Product.Domain.Manufacturers;
 using Project.Product.Integration.Manufacturers;
 using System;
 using System.Collections.Generic;

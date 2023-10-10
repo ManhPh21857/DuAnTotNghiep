@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Product.Domain.Manufacturers1
+namespace Project.Product.Domain.Manufacturers
 {
     public class ManufacturerInfo
     {

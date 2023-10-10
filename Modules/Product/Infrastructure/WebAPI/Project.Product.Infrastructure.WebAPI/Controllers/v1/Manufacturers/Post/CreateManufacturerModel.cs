@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers1.Post
+namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers.Post
 {
     public class CreateManufacturerModel
     {
