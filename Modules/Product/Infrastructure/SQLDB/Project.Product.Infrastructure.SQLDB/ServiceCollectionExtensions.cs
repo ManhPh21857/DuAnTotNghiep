@@ -2,9 +2,11 @@
 using Project.Product.Domain.Colors;
 using Project.Product.Domain.Manufacturers;
 using Project.Product.Domain.Materials;
+using Project.Product.Domain.Products;
 using Project.Product.Infrastructure.SQLDB.Colors;
 using Project.Product.Infrastructure.SQLDB.Manufacturers;
 using Project.Product.Infrastructure.SQLDB.Materials;
+using Project.Product.Infrastructure.SQLDB.Products;
 
 namespace Project.Product.Infrastructure.SQLDB;
 
@@ -14,6 +16,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IColorRepository, ColorRepository>();
         services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
+        services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IMaterialsRepository, MaterialsRepository>();
     }
 }

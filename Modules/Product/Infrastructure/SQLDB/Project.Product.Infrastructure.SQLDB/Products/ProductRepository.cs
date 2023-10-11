@@ -1,9 +1,9 @@
 ﻿using Dapper;
-using Project.Common.Domain.Constants;
-using Project.Common.Domain.Products;
 using Project.Core.Infrastructure.SQLDB.Providers;
+using Project.Product.Domain.Constants;
+using Project.Product.Domain.Products;
 
-namespace Project.Common.Infrastructure.SQLDB.Products;
+namespace Project.Product.Infrastructure.SQLDB.Products;
 
 public class ProductRepository : IProductRepository
 {

@@ -1,9 +1,9 @@
-﻿using Project.Common.Domain.Constants;
-using Project.Common.Domain.Products;
-using Project.Common.Integration.Products;
-using Project.Core.ApplicationService.Commands;
+﻿using Project.Core.ApplicationService.Commands;
+using Project.Product.Domain.Constants;
+using Project.Product.Domain.Products;
+using Project.Product.Integration.Products;
 
-namespace Project.Common.ApplicationService.Products;
+namespace Project.Product.ApplicationService.Products;
 
 public class GetProductQueryHandler : CommandHandler<GetProductQuery, GetProductQueryResult>
 {

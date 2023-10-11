@@ -1,4 +1,4 @@
-﻿namespace Project.Common.Domain.Products;
+﻿namespace Project.Product.Domain.Products;
 
 public class ProductInfo
 {

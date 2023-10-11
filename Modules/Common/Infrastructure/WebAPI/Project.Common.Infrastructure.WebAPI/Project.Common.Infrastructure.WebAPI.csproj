@@ -17,4 +17,8 @@
     <ProjectReference Include="..\..\..\Domain\Project.Common.Domain\Project.Common.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\v1\" />
+  </ItemGroup>
+
 </Project>

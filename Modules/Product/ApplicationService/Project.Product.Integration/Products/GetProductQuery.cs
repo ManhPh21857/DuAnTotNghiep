@@ -1,6 +1,6 @@
 ﻿using Project.Core.ApplicationService.Commands;
 
-namespace Project.Common.Integration.Products;
+namespace Project.Product.Integration.Products;
 
 public class GetProductQuery : ICommand<GetProductQueryResult>
 {
