@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors.Get;
-using Project.Product.Integration.Colors;
+using Project.Product.Integration.Colors.Query;
 
 namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors
 {

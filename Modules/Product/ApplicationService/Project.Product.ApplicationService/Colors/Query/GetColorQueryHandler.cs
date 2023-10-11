@@ -1,8 +1,8 @@
 ﻿using Project.Core.ApplicationService.Queries;
 using Project.Product.Domain.Colors;
-using Project.Product.Integration.Colors;
+using Project.Product.Integration.Colors.Query;
 
-namespace Project.Product.ApplicationService.Colors
+namespace Project.Product.ApplicationService.Colors.Query
 {
     public class GetColorQueryHandler : QueryHandler<GetColorQuery, GetColorQueryResult>
     {

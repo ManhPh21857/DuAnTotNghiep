@@ -1,6 +1,6 @@
 ﻿using Project.Product.Domain.Colors;
 
-namespace Project.Product.Integration.Colors
+namespace Project.Product.Integration.Colors.Query
 {
     public class GetColorQueryResult
     {
