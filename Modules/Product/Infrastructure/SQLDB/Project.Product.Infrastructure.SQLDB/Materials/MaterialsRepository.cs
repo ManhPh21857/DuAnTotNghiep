@@ -16,7 +16,7 @@ namespace Project.Product.Infrastructure.SQLDB.Materials
         {
             this.connection = connection;
         }
-        public async Task CreateGetMaterials(MaterialsInfo materials)
+        public async Task CreateMaterials(MaterialsInfo materials)
         {
             await using var connect = await connection.Connect();
             const string sql = @"
@@ -33,7 +33,7 @@ namespace Project.Product.Infrastructure.SQLDB.Materials
             });
         }
 
-        public async Task DeleteGetMaterials(MaterialsInfo materials)
+        public async Task DeleteMaterials(MaterialsInfo materials)
         {
             await using var connect = await connection.Connect();
             const string sql = @"
@@ -61,7 +61,7 @@ namespace Project.Product.Infrastructure.SQLDB.Materials
             return result;
         }
 
-        public async Task UpdateGetMaterials(MaterialsInfo materials)
+        public async Task UpdateMaterials(MaterialsInfo materials)
         {
             await using var connect = await connection.Connect();
             const string sql = @"

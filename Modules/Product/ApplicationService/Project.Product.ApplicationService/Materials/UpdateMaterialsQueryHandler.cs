@@ -23,7 +23,7 @@ namespace Project.Product.ApplicationService.Materials
                 Id = request.Id,
                 Name = request.Name
             };
-            await materials.UpdateGetMaterials(update);
+            await materials.UpdateMaterials(update);
             return new UpdateMaterialsQueryResult(true);
         }
     }

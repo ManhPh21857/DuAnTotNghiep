@@ -22,7 +22,7 @@ namespace Project.Product.ApplicationService.Materials
             {
                 Name = request.Name,
             };
-            await materials.CreateGetMaterials(create);
+            await materials.CreateMaterials(create);
             return new CreateMaterialsQueryResult(true);
             
         }

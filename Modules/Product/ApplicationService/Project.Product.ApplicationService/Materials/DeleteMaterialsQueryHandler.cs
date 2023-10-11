@@ -22,7 +22,7 @@ namespace Project.Product.ApplicationService.Materials
             {
                 Id = request.Id
             };
-            await materials.DeleteGetMaterials(delete);
+            await materials.DeleteMaterials(delete);
             return new DeleteMaterialsQueryResult(true);
         }
     }
