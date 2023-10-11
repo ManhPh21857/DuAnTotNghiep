@@ -53,7 +53,7 @@ namespace Project.Product.Infrastructure.SQLDB.Materials
             const string sql = @"
                                 select 
                                 id, 
-                                name,
+                                name
                                 from 
                                 [materials]
                                 ";
@@ -67,7 +67,7 @@ namespace Project.Product.Infrastructure.SQLDB.Materials
             const string sql = @"
                                 UPDATE [materials]
                                 SET 
-                                name = @Name, 
+                                name = @Name
                                 WHERE id = @Id;
                                 ";
             await connect.ExecuteAsync(sql, new

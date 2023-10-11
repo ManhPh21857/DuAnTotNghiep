@@ -9,10 +9,10 @@ namespace Project.Product.Integration.Materials
 {
     public class GetMaterialsQueryResult
     {
-        public IList<MaterialsInfo> Manufacturers { get; set; }
+        public IList<MaterialsInfo> Materials { get; set; }
         public GetMaterialsQueryResult(IList<MaterialsInfo> materials)
         {
-            Manufacturers = materials;
+            Materials = materials;
         }
     }
 }

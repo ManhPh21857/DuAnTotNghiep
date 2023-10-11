@@ -8,6 +8,9 @@ using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers.Put;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers.Post;
 using System.Reflection;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Put;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Delete;
 
 namespace Project.Product.Infrastructure.WebAPI;
 
@@ -36,5 +39,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<CreateManufacturerModel>, CreateManufacturerModelValidator>();
         services.AddScoped<IValidator<UpdateManufacturerModel>, UpdateManufacturerModelValidator>();
         services.AddScoped<IValidator<DeleteManufacturerModel>, DeleteManufacturerModelValidator>();
+        services.AddScoped<IValidator<CreateMaterialsModel>, CreateMaterialsModelValidator>();
+        services.AddScoped<IValidator<UpdateMaterialsModel>, UpdateMaterialsModelValidator>();
+        services.AddScoped<IValidator<DeleteMaterialsModel>, DeleteMaterialsModelValidator>();
     }
 }
