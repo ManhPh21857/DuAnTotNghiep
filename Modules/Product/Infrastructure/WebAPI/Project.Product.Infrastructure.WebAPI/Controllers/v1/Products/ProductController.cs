@@ -2,11 +2,11 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Project.Common.Infrastructure.WebAPI.Controllers.Base;
 using Project.Common.Infrastructure.WebAPI.Controllers.v1.Products.Get;
-using Project.Common.Integration.Products;
+using Project.Product.Infrastructure.WebAPI.Controllers.Base;
+using Project.Product.Integration.Products;
 
-namespace Project.Common.Infrastructure.WebAPI.Controllers.v1.Products;
+namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Products;
 
 public class ProductController : CommonController
 {

@@ -1,6 +1,6 @@
-﻿using Project.Common.Domain.Products;
+﻿using Project.Product.Domain.Products;
 
-namespace Project.Common.Integration.Products;
+namespace Project.Product.Integration.Products;
 
 public class GetProductQueryResult
 {
