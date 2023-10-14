@@ -36,11 +36,15 @@ public static class ServiceCollectionExtensions
 
     public static void AddValidator(this IServiceCollection services)
     {
+        // Manufacturer: Nha xan xuat
         services.AddScoped<IValidator<CreateManufacturerModel>, CreateManufacturerModelValidator>();
         services.AddScoped<IValidator<UpdateManufacturerModel>, UpdateManufacturerModelValidator>();
         services.AddScoped<IValidator<DeleteManufacturerModel>, DeleteManufacturerModelValidator>();
+        // Materials: Chat lieu
         services.AddScoped<IValidator<CreateMaterialsModel>, CreateMaterialsModelValidator>();
         services.AddScoped<IValidator<UpdateMaterialsModel>, UpdateMaterialsModelValidator>();
         services.AddScoped<IValidator<DeleteMaterialsModel>, DeleteMaterialsModelValidator>();
+        // Trademark: Thuong hieu
+
     }
 }
