@@ -22,7 +22,7 @@ namespace Project.Product.Infrastructure.SQLDB.Trademarks
         {
             await using var connect = await provider.Connect();
             const string sql = @"
-                                INSERT [dbo].[trademark] (
+                                INSERT [dbo].[trademarks] (
 	                                [name]
                                 )
                                 VALUES (
@@ -40,7 +40,7 @@ namespace Project.Product.Infrastructure.SQLDB.Trademarks
         {
             await using var connect = await provider.Connect();
             const string sql = @"
-                                Delete From [trademark]
+                                Delete From [trademarks]
                                 where Id=@Id;
                                 ";
             await connect.ExecuteAsync(sql, new
@@ -58,7 +58,7 @@ namespace Project.Product.Infrastructure.SQLDB.Trademarks
                                 id, 
                                 name
                                 from 
-                                [trademark]
+                                [trademarks]
                                 ";
             var result = await connect.QueryAsync<TrademarkInfo>(sql);
             return result;
@@ -68,7 +68,7 @@ namespace Project.Product.Infrastructure.SQLDB.Trademarks
         {
             await using var connect = await provider.Connect();
             const string sql = @"
-                                UPDATE [trademark]
+                                UPDATE [trademarks]
                                 SET 
                                 name = @Name
                                 WHERE id = @Id;

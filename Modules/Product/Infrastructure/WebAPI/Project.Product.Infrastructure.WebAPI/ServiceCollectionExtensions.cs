@@ -11,6 +11,12 @@ using System.Reflection;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Put;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Delete;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Put;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Delete;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Put;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Delete;
 
 namespace Project.Product.Infrastructure.WebAPI;
 
@@ -45,6 +51,12 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<UpdateMaterialsModel>, UpdateMaterialsModelValidator>();
         services.AddScoped<IValidator<DeleteMaterialsModel>, DeleteMaterialsModelValidator>();
         // Trademark: Thuong hieu
-
+        services.AddScoped<IValidator<CreateTrademarkModel>, CreateTrademarkModelValidator>();
+        services.AddScoped<IValidator<UpdateTrademarkModel>, UpdateTrademarkModelValidator>();
+        services.AddScoped<IValidator<DeleteTrademarkModel>, DeleteTrademarkModelValidator>();
+        // Origin: Xuất xứ
+        services.AddScoped<IValidator<CreateOriginModel>, CreateOriginModelValidator>();
+        services.AddScoped<IValidator<UpdateOriginModel>, UpdateOriginModelValidator>();
+        services.AddScoped<IValidator<DeleteOriginModel>, DeleteOriginModelValidator>();
     }
 }
