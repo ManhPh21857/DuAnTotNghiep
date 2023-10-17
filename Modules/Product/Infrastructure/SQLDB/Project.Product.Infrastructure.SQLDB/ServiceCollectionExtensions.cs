@@ -5,6 +5,8 @@ using Project.Product.Infrastructure.SQLDB.Colors;
 using Project.Product.Infrastructure.SQLDB.Manufacturers;
 using Project.Product.Domain.Products;
 using Project.Product.Infrastructure.SQLDB.Products;
+using Project.Product.Infrastructure.SQLDB.Images;
+using Project.Product.Domain.Images;
 
 namespace Project.Product.Infrastructure.SQLDB;
 
@@ -15,5 +17,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IColorRepository, ColorRepository>();
         services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IImageRepository, ImageRepository>();
     }
 }
