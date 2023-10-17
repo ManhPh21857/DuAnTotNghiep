@@ -20,4 +20,9 @@
 		<ProjectReference Include="..\Project.Product.Integration\Project.Product.Integration.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Materials\Command\" />
+	  <Folder Include="Materials\Query\" />
+	</ItemGroup>
+
 </Project>

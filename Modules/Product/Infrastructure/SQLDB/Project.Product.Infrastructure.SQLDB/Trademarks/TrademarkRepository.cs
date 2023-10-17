@@ -55,8 +55,8 @@ namespace Project.Product.Infrastructure.SQLDB.Trademarks
             var connect = await provider.Connect();
             const string sql = @"
                                 select 
-                                id, 
-                                name
+                                id As Id, 
+                                name As Name
                                 from 
                                 [trademarks]
                                 ";
