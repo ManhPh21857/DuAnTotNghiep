@@ -9,12 +9,8 @@ using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Get;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Put;
-using Project.Product.Integration.Materials;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Project.Product.Integration.Materials.Command;
+using Project.Product.Integration.Materials.Query;
 
 
 namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
@@ -38,7 +34,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
         [HttpGet("")]
         public async Task<ResponseBaseModel<GetMaterialsReponseModel>> GetColors()
         {
-            var result = await Mediator.Send(new GetMaterialsQuery());
+            var result = await Mediator.Send(new GetMaterialQuery());
 
             return new ResponseBaseModel<GetMaterialsReponseModel>
             {
@@ -60,7 +56,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
                 return this.BadRequest(ModelState);
             }
 
-            var registerRequest = request.Adapt<CreateMaterialsQuery>();
+            var registerRequest = request.Adapt<CreateMaterialCommand>();
 
 
             var result = await Mediator.Send(registerRequest);
@@ -87,7 +83,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
                 return this.BadRequest(ModelState);
             }
 
-            var registerRequest = request.Adapt<UpdateMaterialsQuery>();
+            var registerRequest = request.Adapt<UpdateMaterialCommand>();
 
 
             var result = await Mediator.Send(registerRequest);
@@ -113,7 +109,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
                 return this.BadRequest(ModelState);
             }
 
-            var registerRequest = request.Adapt<DeleteMaterialsQuery>();
+            var registerRequest = request.Adapt<DeleteMaterialCommand>();
 
 
             var result = await Mediator.Send(registerRequest);

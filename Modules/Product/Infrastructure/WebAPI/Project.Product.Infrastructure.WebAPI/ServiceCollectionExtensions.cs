@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Project.Product.ApplicationService;
 using Project.Product.Domain;
 using Project.Product.Infrastructure.SQLDB;
-using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers.Delete;
-using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers.Put;
-using Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Delete;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Put;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Post;
 using System.Reflection;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Put;
@@ -43,9 +43,9 @@ public static class ServiceCollectionExtensions
     public static void AddValidator(this IServiceCollection services)
     {
         // Manufacturer: Nha xan xuat
-        services.AddScoped<IValidator<CreateManufacturerModel>, CreateManufacturerModelValidator>();
-        services.AddScoped<IValidator<UpdateManufacturerModel>, UpdateManufacturerModelValidator>();
-        services.AddScoped<IValidator<DeleteManufacturerModel>, DeleteManufacturerModelValidator>();
+        services.AddScoped<IValidator<CreateSupplierModel>, CreateSupplierModelValidator>();
+        services.AddScoped<IValidator<UpdateSupplierModel>, UpdateSupplierModelValidator>();
+        services.AddScoped<IValidator<DeleteSupplierModel>, DeleteManufacturerModelValidator>();
         // Materials: Chat lieu
         services.AddScoped<IValidator<CreateMaterialsModel>, CreateMaterialsModelValidator>();
         services.AddScoped<IValidator<UpdateMaterialsModel>, UpdateMaterialsModelValidator>();

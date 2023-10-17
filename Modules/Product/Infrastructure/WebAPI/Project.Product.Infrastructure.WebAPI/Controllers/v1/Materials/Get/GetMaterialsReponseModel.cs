@@ -2,6 +2,6 @@
 {
     public class GetMaterialsReponseModel
     {
-        public List<GetMaterialsModel> Materials { get; set; }
+        public List<GetMaterialsModel> Material { get; set; }
     }
 }

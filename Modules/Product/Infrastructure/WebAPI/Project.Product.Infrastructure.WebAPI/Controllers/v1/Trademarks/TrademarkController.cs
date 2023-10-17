@@ -87,7 +87,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
                 return this.BadRequest(ModelState);
             }
 
-            var registerRequest = request.Adapt<UpdateTrademarkQuery>();
+            var registerRequest = request.Adapt<UpdateTrademarkCommand>();
 
 
             var result = await Mediator.Send(registerRequest);
@@ -113,7 +113,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
                 return this.BadRequest(ModelState);
             }
 
-            var registerRequest = request.Adapt<DeleteTrademarkQuery>();
+            var registerRequest = request.Adapt<DeleteTrademarkCommand>();
 
 
             var result = await Mediator.Send(registerRequest);
