@@ -16,7 +16,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors
         }
 
         [AllowAnonymous]
-        [HttpGet("colors")]
+        [HttpGet]
         public async Task<ResponseBaseModel<ColorResponseModel>> GetColors()
         {
             var result = await  Mediator.Send(new GetColorQuery());
