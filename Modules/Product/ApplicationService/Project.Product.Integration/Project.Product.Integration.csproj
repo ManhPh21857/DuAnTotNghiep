@@ -11,4 +11,8 @@
 		<ProjectReference Include="..\..\Domain\Project.Product.Domain\Project.Product.Domain.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Colors\Command\" />
+	</ItemGroup>
+
 </Project>

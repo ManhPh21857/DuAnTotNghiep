@@ -14,7 +14,7 @@ using Project.Product.Integration.Manufacturers;
 
 namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Manufacturers
 {
-    public class ManufacturerController : ProductController
+    public class ManufacturerController : CommonController
     {
         private readonly IValidator<CreateManufacturerModel> createManufacturerValidator;
         private readonly IValidator<UpdateManufacturerModel> updateManufacturerValidator;
