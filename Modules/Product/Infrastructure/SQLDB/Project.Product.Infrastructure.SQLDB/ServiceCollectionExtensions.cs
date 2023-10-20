@@ -1,18 +1,18 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Project.Product.Domain.Colors;
+using Project.Product.Domain.Images;
+using Project.Product.Domain.Materials;
 using Project.Product.Domain.Origins;
 using Project.Product.Domain.Products;
+using Project.Product.Domain.Suppliers;
 using Project.Product.Domain.Trademarks;
 using Project.Product.Infrastructure.SQLDB.Colors;
+using Project.Product.Infrastructure.SQLDB.Images;
 using Project.Product.Infrastructure.SQLDB.Materials;
 using Project.Product.Infrastructure.SQLDB.Origins;
 using Project.Product.Infrastructure.SQLDB.Products;
-using Project.Product.Infrastructure.SQLDB.Images;
-using Project.Product.Domain.Images;
-using Project.Product.Infrastructure.SQLDB.Trademarks;
-using Project.Product.Domain.Suppliers;
 using Project.Product.Infrastructure.SQLDB.Suppliers;
-using Project.Product.Domain.Materials;
+using Project.Product.Infrastructure.SQLDB.Trademarks;
 
 namespace Project.Product.Infrastructure.SQLDB;
 
