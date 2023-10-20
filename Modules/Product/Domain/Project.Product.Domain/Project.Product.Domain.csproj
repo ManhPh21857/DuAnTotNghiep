@@ -15,8 +15,4 @@
 		<ProjectReference Include="..\..\..\..\Core\Domain\Project.Core.Domain\Project.Core.Domain.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Enums\" />
-	</ItemGroup>
-
 </Project>

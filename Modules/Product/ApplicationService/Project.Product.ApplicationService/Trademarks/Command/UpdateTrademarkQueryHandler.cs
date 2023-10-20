@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace Project.Product.ApplicationService.Trademarks.Command
 {
-    public class UpdateTrademarkQueryHandler : CommandHandler<UpdateTrademarkQuery, UpdateTrademarkQueryResult>
+    public class UpdateTrademarkQueryHandler : CommandHandler<UpdateTrademarkCommand, UpdateTrademarkCommandResult>
     {
         private readonly ITrademarkRepository trademark;
         public UpdateTrademarkQueryHandler(ITrademarkRepository trademark)
         {
             this.trademark = trademark;
         }
-        public async override Task<UpdateTrademarkQueryResult> Handle(UpdateTrademarkQuery request, CancellationToken cancellationToken)
+        public async override Task<UpdateTrademarkCommandResult> Handle(UpdateTrademarkCommand request, CancellationToken cancellationToken)
         {
             var update = new TrademarkInfo()
             {
@@ -24,7 +24,7 @@ namespace Project.Product.ApplicationService.Trademarks.Command
                 Name = request.Name
             };
             await trademark.UpdateTrademark(update);
-            return new UpdateTrademarkQueryResult(true);
+            return new UpdateTrademarkCommandResult(true);
         }
     }
 }
