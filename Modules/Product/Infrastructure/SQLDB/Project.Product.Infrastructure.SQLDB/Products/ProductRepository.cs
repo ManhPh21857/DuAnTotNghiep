@@ -1,5 +1,8 @@
 ﻿using Dapper;
+using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
+using Project.Product.Domain.Constants;
+using Project.Product.Domain.Enums;
 using Project.Product.Domain.Products;
 
 namespace Project.Product.Infrastructure.SQLDB.Products;
@@ -13,70 +16,59 @@ public class ProductRepository : IProductRepository
         this.provider = provider;
     }
 
-    //public async Task<List<ProductInfo>> GetProducts(int skip, int take)
-    //{
-    //    await using var connect = await provider.Connect();
-
-    //    const string query = @"
-    //        SELECT
-    //         p.[Id]	 AS Id
-    //           ,p.[Name] AS Name
-    //           ,i.[Url]	 AS Url
-    //           ,(
-    //          SELECT
-    //           MIN([price])
-    //          FROM
-    //           [product_details]
-    //          WHERE
-    //           [product_id] = p.Id
-    //           AND [is_deleted] = @IsDeleted
-    //         )
-    //         AS MinPrice
-    //           ,(
-    //          SELECT
-    //           MAX([price])
-    //          FROM
-    //           [product_details]
-    //          WHERE
-    //           [product_id] = p.Id
-    //           AND [is_deleted] = @IsDeleted
-    //         )
-    //         AS MaxPrice
-    //           ,CAST(ROUND((
-    //          SELECT
-    //           AVG(Evaluate)
-    //          FROM
-    //           [evaluates]
-    //          WHERE
-    //           product_id = p.Id
-    //                    AND [is_deleted] = @IsDeleted
-    //          GROUP BY
-    //           product_id
-    //         ), 0) AS INT)
-    //         AS Evaluate
-    //        FROM
-    //         products AS p
-    //         LEFT JOIN [images] AS i
-    //          ON p.image_id = i.Id
-    //        WHERE
-    //         p.[is_deleted] = @IsDeleted
-    //        ORDER BY
-    //         p.Id
-    //        OFFSET @Skip ROWS
-    //        FETCH NEXT @Take ROWS ONLY";
-
-    //    var result = (await connect.QueryAsync<ProductInfo>(query,
-    //        new
-    //        {
-    //            IsDeleted = CommonConst.Valid,
-    //            Skip = skip,
-    //            Take = take
-    //        })).ToList();
-
-    //    return result;
-    //}
-
     #region Product
+
+    public async Task<IEnumerable<ProductView>> GetProducts(int skip, int take)
+    {
+        await using var connect = await provider.Connect();
+
+        const string query = @"
+            SELECT
+	            p.[Id]		    AS Id
+               ,p.[Code]	    AS Code
+               ,p.[Name]	    AS Name
+               ,p.[Image]       AS Image
+               ,p.data_version  AS DataVersion
+               ,c.[Name]	    AS ClassificationName
+               ,m.[Name]	    AS MaterialName
+               ,pd.Quantity     AS Quantity
+               ,pd.AvgPrice     AS AvgPrice
+            FROM
+	            [dbo].[products] AS p
+	            LEFT JOIN [dbo].[classifications] AS c
+		            ON p.[classification_id] = c.[Id]
+	            LEFT JOIN [dbo].[materials] AS m
+		            ON p.[material_id] = m.[Id]
+	            LEFT JOIN (
+		            SELECT
+			            [product_id]
+		               ,SUM([price]) AS Quantity
+		               ,AVG([price]) AS AvgPrice
+		            FROM
+			            [dbo].[product_details]
+		            GROUP BY
+			            [product_id]
+	            ) AS pd
+		            ON p.[Id] = pd.[product_id]
+            WHERE
+	            p.is_deleted = @IsDeleted
+            ORDER BY
+	            p.[Code]
+            OFFSET @Skip ROWS
+            FETCH NEXT @Take ROWS ONLY
+        ";
+
+        var result = await connect.QueryAsync<ProductView>(query,
+            new
+            {
+                IsDeleted = CommonConst.Valid,
+                Skip = skip,
+                Take = take
+            }
+        );
+
+        return result;
+    }
 
     public async Task<int> CreateProduct(ProductInfo param)
     {
@@ -122,6 +114,28 @@ public class ProductRepository : IProductRepository
         return result;
     }
 
+    public async Task DeleteProduct(int id)
+    {
+        await using var connect = await provider.Connect();
+        const string command = @"
+            UPDATE [dbo].[products]
+            SET
+	            [is_deleted] = @IsDeleted
+            WHERE
+	            [id] = @Id
+        ";
+
+        int result = await connect.ExecuteAsync(command,
+            new
+            {
+                IsDeleted = IsDeleted.Yes,
+                Id = id
+            }
+        );
+
+        result.IsOptimisticLocked();
+    }
+
     #endregion
 
     #region Product Color
@@ -155,6 +169,28 @@ public class ProductRepository : IProductRepository
         return result;
     }
 
+    public async Task DeleteProductColor(int productId)
+    {
+        await using var connect = await provider.Connect();
+        const string command = @"
+            UPDATE [dbo].[product_colors]
+            SET
+	            [is_deleted] = @IsDeleted
+            WHERE
+	            [product_id] = @ProductId
+        ";
+
+        int result = await connect.ExecuteAsync(command,
+            new
+            {
+                IsDeleted = IsDeleted.Yes,
+                ProductId = productId
+            }
+        );
+
+        result.IsOptimisticLocked();
+    }
+
     #endregion
 
     #region Product Size
@@ -183,6 +219,28 @@ public class ProductRepository : IProductRepository
         );
 
         return result;
+    }
+
+    public async Task DeleteProductSize(int productId)
+    {
+        await using var connect = await provider.Connect();
+        const string command = @"
+            UPDATE [dbo].[product_sizes]
+            SET
+	            [is_deleted] = @IsDeleted
+            WHERE
+	            [product_id] = @ProductId
+        ";
+
+        int result = await connect.ExecuteAsync(command,
+            new
+            {
+                IsDeleted = IsDeleted.Yes,
+                ProductId = productId
+            }
+        );
+
+        result.IsOptimisticLocked();
     }
 
     #endregion
@@ -222,6 +280,28 @@ public class ProductRepository : IProductRepository
                 Quantity = param.Quantity
             }
         );
+    }
+
+    public async Task DeleteProductDetail(int productId)
+    {
+        await using var connect = await provider.Connect();
+        const string command = @"
+            UPDATE [dbo].[product_details]
+            SET
+	            [is_deleted] = @IsDeleted
+            WHERE
+	            [product_id] = @ProductId
+        ";
+
+        int result = await connect.ExecuteAsync(command,
+            new
+            {
+                IsDeleted = IsDeleted.Yes,
+                ProductId = productId
+            }
+        );
+
+        result.IsOptimisticLocked();
     }
 
     #endregion

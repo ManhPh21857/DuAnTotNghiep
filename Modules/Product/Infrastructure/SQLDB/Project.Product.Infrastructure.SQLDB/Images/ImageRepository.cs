@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
+using Project.Product.Domain.Enums;
 using Project.Product.Domain.Images;
 
 namespace Project.Product.Infrastructure.SQLDB.Images
@@ -41,6 +43,28 @@ namespace Project.Product.Infrastructure.SQLDB.Images
             );
 
             return result;
+        }
+
+        public async Task DeleteImage(int productId)
+        {
+            await using var connect = await provider.Connect();
+            const string command = @"
+                UPDATE [dbo].[images]
+                SET
+	                is_deleted = @IsDeleted
+                WHERE
+	                product_id = @ProductId
+            ";
+
+            int result = await connect.ExecuteAsync(command,
+                new
+                {
+                    IsDeleted = IsDeleted.Yes,
+                    ProductId = productId,
+                }
+            );
+            
+            result.IsOptimisticLocked();
         }
     }
 }
