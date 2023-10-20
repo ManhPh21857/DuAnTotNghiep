@@ -46,7 +46,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
 
         [AllowAnonymous]
         [HttpPost("")]
-        public async Task<ActionResult<ResponseBaseModel<CreateMaterialsReponseModel>>> CreateManufacturers(
+        public async Task<ActionResult<ResponseBaseModel<CreateMaterialsReponseModel>>> CreateMaterials(
        [FromBody] CreateMaterialsModel request)
         {
             var validator = await createMaterialsValidator.ValidateAsync(request);
@@ -55,62 +55,43 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
                 validator.AddToModelState(ModelState);
                 return this.BadRequest(ModelState);
             }
-
             var registerRequest = request.Adapt<CreateMaterialCommand>();
-
-
             var result = await Mediator.Send(registerRequest);
-
             var response = new ResponseBaseModel<CreateMaterialsReponseModel>
             {
                 Data = result.Adapt<CreateMaterialsReponseModel>()
             };
-
             return response;
         }
 
-
-
         [AllowAnonymous]
         [HttpPut("")]
-        public async Task<ActionResult<ResponseBaseModel<UpdateMaterialsReponseModel>>> UpdateManufacturers(
+        public async Task<ActionResult<ResponseBaseModel<UpdateMaterialsReponseModel>>> UpdateMaterials(
        [FromBody] UpdateMaterialsModel request)
-        {
-            var validator = await updateMaterialsValidator.ValidateAsync(request);
+        {           
+            var validator= await updateMaterialsValidator.ValidateAsync(request);
             if (!validator.IsValid)
             {
                 validator.AddToModelState(ModelState);
                 return this.BadRequest(ModelState);
             }
-
             var registerRequest = request.Adapt<UpdateMaterialCommand>();
-
-
             var result = await Mediator.Send(registerRequest);
-
             var response = new ResponseBaseModel<UpdateMaterialsReponseModel>
             {
                 Data = result.Adapt<UpdateMaterialsReponseModel>()
             };
-
             return response;
         }
 
 
+
         [AllowAnonymous]
-        [HttpDelete("")]
-        public async Task<ActionResult<ResponseBaseModel<DeleteMaterialsReponseModel>>> DeleteManufacturers(
-     [FromBody] DeleteMaterialsModel request)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ResponseBaseModel<DeleteMaterialsReponseModel>>> DeleteMaterials(int id)
         {
-            var validator = await deleteMaterialsValidator.ValidateAsync(request);
-            if (!validator.IsValid)
-            {
-                validator.AddToModelState(ModelState);
-                return this.BadRequest(ModelState);
-            }
 
-            var registerRequest = request.Adapt<DeleteMaterialCommand>();
-
+            var registerRequest = new DeleteMaterialCommand(id);
 
             var result = await Mediator.Send(registerRequest);
 
@@ -118,7 +99,6 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
             {
                 Data = result.Adapt<DeleteMaterialsReponseModel>()
             };
-
             return response;
         }
     }

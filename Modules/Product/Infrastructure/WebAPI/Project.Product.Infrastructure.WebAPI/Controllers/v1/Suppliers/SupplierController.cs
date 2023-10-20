@@ -92,18 +92,11 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers
 
 
         [AllowAnonymous]
-        [HttpDelete("")]
-        public async Task<ActionResult<ResponseBaseModel<DeleteSupplierReponseModel>>> DeleteManufacturers(
-     [FromBody] DeleteSupplierModel request)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ResponseBaseModel<DeleteSupplierReponseModel>>> DeleteManufacturers(int id)
         {
-            var validator = await deleteSupplierValidator.ValidateAsync(request);
-            if (!validator.IsValid)
-            {
-                validator.AddToModelState(ModelState);
-                return this.BadRequest(ModelState);
-            }
-
-            var registerRequest = request.Adapt<DeleteSupplierCommand>();
+          
+            var registerRequest = new DeleteSupplierCommand(id);
 
 
             var result = await Mediator.Send(registerRequest);

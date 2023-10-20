@@ -23,7 +23,7 @@ namespace Project.Product.ApplicationService.Suppliers.Command
             var update = new SupplierInfo();
             update.Id = request.Id;
             update.Name = request.Name;
-            update.AddressID = request.AddressID;
+            update.Address = request.Address;
             update.Status = request.Status;
              await supplier.UpdateSupplier(update);
             return new UpdateSupplierCommandResult(true);

@@ -12,5 +12,6 @@ namespace Project.Product.Domain.Materials
         Task CreateMaterial(MaterialInfo material);
         Task UpdateMaterial(MaterialInfo material);
         Task DeleteMaterial(MaterialInfo material);
+        Task<MaterialInfo> CheckMaterialName(string name);
     }
 }

@@ -5,20 +5,20 @@ namespace Project.Product.Integration.Suppliers.Command
     {
 
         public string Name { get; set; }
-        public int AddressID { get; set; }
+        public string Address { get; set; }
         public int Status { get; set; }
 
 
         public AddSupplierCommand(
 
             string name,
-            int addressID,
+            string address,
             int status
         )
         {
 
             this.Name = name;
-            this.AddressID = addressID;
+            this.Address = address;
             this.Status = status;
         }
     }

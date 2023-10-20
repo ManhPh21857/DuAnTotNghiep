@@ -16,6 +16,24 @@ namespace Project.Product.Infrastructure.SQLDB.Materials
         {
             this.connection = connection;
         }
+
+        public async Task<MaterialInfo> CheckMaterialName(string name)
+        {
+            await using var connect = await connection.Connect();
+            const string sql = @"
+                                select 
+                                name
+                                from 
+                                [materials]
+                                where name = @Name
+                                ";
+            var result = await connect.QueryFirstOrDefaultAsync<MaterialInfo>(sql, new
+            {
+                Name = name
+            }) ;
+            return result;
+        }
+
         public async Task CreateMaterial(MaterialInfo materials)
         {
             await using var connect = await connection.Connect();
@@ -33,7 +51,7 @@ namespace Project.Product.Infrastructure.SQLDB.Materials
             });
         }
 
-        public async Task DeleteMaterial(MaterialInfo materials)
+        public async Task DeleteMaterial(MaterialInfo material)
         {
             await using var connect = await connection.Connect();
             const string sql = @"
@@ -42,7 +60,7 @@ namespace Project.Product.Infrastructure.SQLDB.Materials
                                 ";
             await connect.ExecuteAsync(sql, new
             {
-                Id = materials.Id,
+                Id = material.Id
 
             });
         }
@@ -76,5 +94,6 @@ namespace Project.Product.Infrastructure.SQLDB.Materials
                 Name = materials.Name
             });
         }
+
     }
 }

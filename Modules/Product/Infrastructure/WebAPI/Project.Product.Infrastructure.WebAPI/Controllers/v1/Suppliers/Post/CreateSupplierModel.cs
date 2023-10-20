@@ -11,7 +11,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Post
     {
 
         public string? Name { get; set; }
-        public int? AddressID { get; set; }
+        public string? Address { get; set; }
         public int? Status { get; set; }
 
     }
@@ -28,9 +28,9 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Post
                 .NotEmpty()
                 .WithMessage($"{nameof(CreateSupplierModel.Status)} can not be empty");
 
-            RuleFor(v => v.AddressID)
+            RuleFor(v => v.Address)
             .NotEmpty()
-            .WithMessage($"{nameof(CreateSupplierModel.AddressID)} can not be empty");
+            .WithMessage($"{nameof(CreateSupplierModel.Address)} can not be empty");
         }
     }
 }

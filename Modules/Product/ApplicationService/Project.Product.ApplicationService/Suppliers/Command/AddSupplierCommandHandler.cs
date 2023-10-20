@@ -25,7 +25,7 @@ namespace Project.Product.ApplicationService.Suppliers.Command
             var addsupplier = new SupplierInfo
             {
                 Name = request.Name,
-                AddressID = request.AddressID,
+                Address = request.Address,
                 Status = request.Status,
             };
 

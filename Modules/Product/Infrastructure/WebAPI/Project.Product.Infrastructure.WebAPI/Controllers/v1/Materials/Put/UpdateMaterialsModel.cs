@@ -1,9 +1,4 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Put
 {
@@ -18,12 +13,13 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Put
         {
             RuleFor(v => v.Name)
                 .NotEmpty()
-                .WithMessage($"{nameof(UpdateMaterialsModel.Name)} can not be empty");
-
+                .WithMessage($"{nameof(UpdateMaterialsModel.Name)} can not be empty")
+                .NotNull()
+                .WithMessage($"{nameof(UpdateMaterialsModel.Name)} can not null");
 
             RuleFor(v => v.Id)
-                .NotEmpty()
-                .WithMessage($"{nameof(UpdateMaterialsModel.Id)} can not be empty");
+                .NotNull()
+                .WithMessage($"{nameof(UpdateMaterialsModel.Id)} can not null");
 
         }
     }

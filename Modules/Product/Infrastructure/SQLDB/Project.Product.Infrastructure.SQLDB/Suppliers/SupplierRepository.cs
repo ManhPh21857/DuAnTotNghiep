@@ -19,12 +19,12 @@ namespace Project.Product.Infrastructure.SQLDB.Suppliers
                                 INSERT [dbo].[suppliers] (
 
 	                                [name],
-                                    [address_id],
+                                    [address],
 				                    [status]
                                 )
                                 VALUES (
                                    @Name
-                                   ,@AddressID
+                                   ,@Address
                                    ,@Status
                                    
                                 )";
@@ -32,7 +32,7 @@ namespace Project.Product.Infrastructure.SQLDB.Suppliers
              {
 
                  Name = Supplier.Name,
-                 AddressID = Supplier.AddressID,
+                 Address = Supplier.Address,
                  Status = Supplier.Status,
              });
         }
@@ -43,7 +43,7 @@ namespace Project.Product.Infrastructure.SQLDB.Suppliers
                                 UPDATE [suppliers]
                                 SET 
                                 name = @Name, 
-                                address_id = @AddressID,
+                                address = @Address,
                                 status= @Status
                                 WHERE id = @Id;
                                 ";
@@ -51,7 +51,7 @@ namespace Project.Product.Infrastructure.SQLDB.Suppliers
             {
                 Id = Supplier.Id,
                 Name = Supplier.Name,
-                AddressID = Supplier.AddressID,
+                Address = Supplier.Address,
                 Status = Supplier.Status
             });
         }
@@ -62,7 +62,7 @@ namespace Project.Product.Infrastructure.SQLDB.Suppliers
                                 select 
                                 id As Id, 
                                 name As Name,
-                                address_id As AddressID,
+                                address As Address,
                                 status 
                                 from 
                                 [suppliers]

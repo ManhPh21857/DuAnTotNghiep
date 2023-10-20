@@ -10,11 +10,9 @@ namespace Project.Product.Integration.Trademarks.Command
     public class DeleteTrademarkCommand : ICommand<DeleteTrademarkQueryResult>
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public DeleteTrademarkCommand(int id, string name)
+        public DeleteTrademarkCommand(int id)
         {
             this.Id = id;
-            this.Name = name;
         }
     }
 }
