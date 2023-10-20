@@ -60,7 +60,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins
                 return this.BadRequest(ModelState);
             }
 
-            var registerRequest = request.Adapt<CreateOriginQuery>();
+            var registerRequest = request.Adapt<CreateOriginCommand>();
 
 
             var result = await Mediator.Send(registerRequest);
@@ -102,18 +102,11 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins
 
 
         [AllowAnonymous]
-        [HttpDelete("")]
-        public async Task<ActionResult<ResponseBaseModel<DeleteOriginReponseModel>>> DeleteManufacturers(
-     [FromBody] DeleteOriginModel request)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ResponseBaseModel<DeleteOriginReponseModel>>> DeleteManufacturers(int id)
         {
-            var validator = await deleteOriginValidator.ValidateAsync(request);
-            if (!validator.IsValid)
-            {
-                validator.AddToModelState(ModelState);
-                return this.BadRequest(ModelState);
-            }
-
-            var registerRequest = request.Adapt<DeleteOriginQuery>();
+           
+            var registerRequest = new DeleteOriginCommand(id);
 
 
             var result = await Mediator.Send(registerRequest);

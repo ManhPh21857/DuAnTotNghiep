@@ -87,7 +87,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
                 return this.BadRequest(ModelState);
             }
 
-            var registerRequest = request.Adapt<UpdateTrademarkQuery>();
+            var registerRequest = request.Adapt<UpdateTrademarkCommand>();
 
 
             var result = await Mediator.Send(registerRequest);
@@ -102,18 +102,10 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
 
 
         [AllowAnonymous]
-        [HttpDelete("")]
-        public async Task<ActionResult<ResponseBaseModel<DeleteTrademarkReponseModel>>> DeleteManufacturers(
-     [FromBody] DeleteTrademarkModel request)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ResponseBaseModel<DeleteTrademarkReponseModel>>> DeleteManufacturers(int id)
         {
-            var validator = await deleteTrademarkValidator.ValidateAsync(request);
-            if (!validator.IsValid)
-            {
-                validator.AddToModelState(ModelState);
-                return this.BadRequest(ModelState);
-            }
-
-            var registerRequest = request.Adapt<DeleteTrademarkQuery>();
+            var registerRequest = new DeleteTrademarkCommand(id);
 
 
             var result = await Mediator.Send(registerRequest);

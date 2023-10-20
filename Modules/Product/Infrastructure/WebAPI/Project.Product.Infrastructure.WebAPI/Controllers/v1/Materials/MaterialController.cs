@@ -9,12 +9,8 @@ using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Get;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Put;
-using Project.Product.Integration.Materials;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Project.Product.Integration.Materials.Command;
+using Project.Product.Integration.Materials.Query;
 
 
 namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
@@ -38,7 +34,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
         [HttpGet("")]
         public async Task<ResponseBaseModel<GetMaterialsReponseModel>> GetColors()
         {
-            var result = await Mediator.Send(new GetMaterialsQuery());
+            var result = await Mediator.Send(new GetMaterialQuery());
 
             return new ResponseBaseModel<GetMaterialsReponseModel>
             {
@@ -50,7 +46,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
 
         [AllowAnonymous]
         [HttpPost("")]
-        public async Task<ActionResult<ResponseBaseModel<CreateMaterialsReponseModel>>> CreateManufacturers(
+        public async Task<ActionResult<ResponseBaseModel<CreateMaterialsReponseModel>>> CreateMaterials(
        [FromBody] CreateMaterialsModel request)
         {
             var validator = await createMaterialsValidator.ValidateAsync(request);
@@ -59,62 +55,43 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
                 validator.AddToModelState(ModelState);
                 return this.BadRequest(ModelState);
             }
-
-            var registerRequest = request.Adapt<CreateMaterialsQuery>();
-
-
+            var registerRequest = request.Adapt<CreateMaterialCommand>();
             var result = await Mediator.Send(registerRequest);
-
             var response = new ResponseBaseModel<CreateMaterialsReponseModel>
             {
                 Data = result.Adapt<CreateMaterialsReponseModel>()
             };
-
             return response;
         }
 
-
-
         [AllowAnonymous]
         [HttpPut("")]
-        public async Task<ActionResult<ResponseBaseModel<UpdateMaterialsReponseModel>>> UpdateManufacturers(
+        public async Task<ActionResult<ResponseBaseModel<UpdateMaterialsReponseModel>>> UpdateMaterials(
        [FromBody] UpdateMaterialsModel request)
-        {
-            var validator = await updateMaterialsValidator.ValidateAsync(request);
+        {           
+            var validator= await updateMaterialsValidator.ValidateAsync(request);
             if (!validator.IsValid)
             {
                 validator.AddToModelState(ModelState);
                 return this.BadRequest(ModelState);
             }
-
-            var registerRequest = request.Adapt<UpdateMaterialsQuery>();
-
-
+            var registerRequest = request.Adapt<UpdateMaterialCommand>();
             var result = await Mediator.Send(registerRequest);
-
             var response = new ResponseBaseModel<UpdateMaterialsReponseModel>
             {
                 Data = result.Adapt<UpdateMaterialsReponseModel>()
             };
-
             return response;
         }
 
 
+
         [AllowAnonymous]
-        [HttpDelete("")]
-        public async Task<ActionResult<ResponseBaseModel<DeleteMaterialsReponseModel>>> DeleteManufacturers(
-     [FromBody] DeleteMaterialsModel request)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ResponseBaseModel<DeleteMaterialsReponseModel>>> DeleteMaterials(int id)
         {
-            var validator = await deleteMaterialsValidator.ValidateAsync(request);
-            if (!validator.IsValid)
-            {
-                validator.AddToModelState(ModelState);
-                return this.BadRequest(ModelState);
-            }
 
-            var registerRequest = request.Adapt<DeleteMaterialsQuery>();
-
+            var registerRequest = new DeleteMaterialCommand(id);
 
             var result = await Mediator.Send(registerRequest);
 
@@ -122,7 +99,6 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
             {
                 Data = result.Adapt<DeleteMaterialsReponseModel>()
             };
-
             return response;
         }
     }
