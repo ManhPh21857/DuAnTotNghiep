@@ -18,9 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Controllers\v1\Colors\Delete\" />
 	  <Folder Include="Controllers\v1\Colors\Put\" />
-	  <Folder Include="Controllers\v1\Colors\Post\" />
 	</ItemGroup>
 
 </Project>
