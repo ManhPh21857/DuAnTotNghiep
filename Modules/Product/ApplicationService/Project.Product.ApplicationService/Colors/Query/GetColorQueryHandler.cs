@@ -15,7 +15,7 @@ namespace Project.Product.ApplicationService.Colors.Query
 
         public async override Task<GetColorQueryResult> Handle(GetColorQuery request, CancellationToken cancellationToken)
         {
-            var result = await colorRepository.GetColors();
+            var result = await colorRepository.GetColors(null);
 
             return new GetColorQueryResult(result.ToList());
         }

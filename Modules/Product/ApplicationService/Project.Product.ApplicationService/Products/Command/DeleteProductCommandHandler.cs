@@ -22,7 +22,7 @@ namespace Project.Product.ApplicationService.Products.Command
             await this.productRepository.DeleteProduct(id);
             await this.productRepository.DeleteProductColor(id);
             await this.productRepository.DeleteProductSize(id);
-            await this.productRepository.DeleteProductDetail(id);
+            await this.productRepository.DeleteProductDetailByProductId(id);
 
             await this.imageRepository.DeleteImage(id);
 

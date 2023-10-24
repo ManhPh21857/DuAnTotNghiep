@@ -2,6 +2,11 @@
 {
     public class ColorResponseModel
     {
-        public List<ColorModel> Colors { get; set; }
+        public IEnumerable<ColorModel> Colors { get; set; }
+
+        public ColorResponseModel()
+        {
+            Colors = new List<ColorModel>();
+        }
     }
 }

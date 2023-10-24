@@ -17,6 +17,8 @@ using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Put;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Delete;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors.Get;
 
 namespace Project.Product.Infrastructure.WebAPI;
 
@@ -58,5 +60,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<CreateOriginModel>, CreateOriginModelValidator>();
         services.AddScoped<IValidator<UpdateOriginModel>, UpdateOriginModelValidator>();
         services.AddScoped<IValidator<DeleteOriginModel>, DeleteOriginModelValidator>();
+
+        //Color
+        services.AddScoped<IValidator<UpdateColorRequestModel>, UpdateColorRequestModelValidator>();
+        services.AddScoped<IValidator<UpdateColorModel>, UpdateColorModelValidator>();
     }
 }
