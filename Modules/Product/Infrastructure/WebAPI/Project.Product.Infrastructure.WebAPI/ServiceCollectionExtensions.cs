@@ -17,6 +17,9 @@ using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Put;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Delete;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Put;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Delete;
 
 namespace Project.Product.Infrastructure.WebAPI;
 
@@ -58,5 +61,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<CreateOriginModel>, CreateOriginModelValidator>();
         services.AddScoped<IValidator<UpdateOriginModel>, UpdateOriginModelValidator>();
         services.AddScoped<IValidator<DeleteOriginModel>, DeleteOriginModelValidator>();
+        //CartDetail
+        services.AddScoped<IValidator<CreateCartdetailModel>, CreateCartdetailModelValidator>();
+        services.AddScoped<IValidator<UpdateCartdetailModel>, UpdateCartdetailModelValidator>();
+        services.AddScoped<IValidator<DeleteCartdetailModel>, DeleteCartdetailModelValidator>();
     }
 }

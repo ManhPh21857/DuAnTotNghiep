@@ -55,9 +55,12 @@ namespace Project.Product.Infrastructure.SQLDB.Materials
         {
             await using var connect = await connection.Connect();
             const string sql = @"
-                                Delete From [materials]
-                                where Id=@Id;
+                                UPDATE [materials]
+                                SET 
+                                [is_deleted] =1
+                                WHERE id =@Id
                                 ";
+
             await connect.ExecuteAsync(sql, new
             {
                 Id = material.Id
@@ -74,6 +77,8 @@ namespace Project.Product.Infrastructure.SQLDB.Materials
                                 name As Name
                                 from 
                                 [materials]
+                                where
+                                is_deleted = 0
                                 ";
             var result = await connect.QueryAsync<MaterialInfo>(sql);
             return result;

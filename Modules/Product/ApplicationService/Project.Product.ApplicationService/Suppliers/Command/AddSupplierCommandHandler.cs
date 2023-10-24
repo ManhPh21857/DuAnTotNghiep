@@ -17,18 +17,18 @@ namespace Project.Product.ApplicationService.Suppliers.Command
         }
         public override async Task<AddSupplierCommandResult> Handle(AddSupplierCommand request, CancellationToken cancellationToken)
         {
-            //var abc = new ManufacturerInfo();
-            //abc.Name = request.Name;
 
-            //var neo = manufacturer.AddManufacturers(abc);
             using var scope = TransactionFactory.Create();
             var addsupplier = new SupplierInfo
             {
                 Name = request.Name,
-                Address = request.Address,
-                Status = request.Status,
+                Address = request.Address
             };
-
+            //var check = supplier.CheckSupplierName(request.Name, request.Address);
+            //if(check is not null)
+            //{
+            //    throw new Exception();
+            //}
             await supplier.AddSupplier(addsupplier);
 
             scope.Complete();

@@ -18,6 +18,23 @@ namespace Project.Product.Infrastructure.SQLDB.Trademarks
             this.provider = provider;
         }
 
+        public async Task<TrademarkInfo> CheckTrademarkName(string name)
+        {
+            await using var connect = await provider.Connect();
+            const string sql = @"
+                                select 
+                                name
+                                from 
+                                [trademarks]
+                                where name = @Name 
+                                ";
+            var result = await connect.QueryFirstOrDefaultAsync<TrademarkInfo>(sql, new
+            {
+                Name = name
+            });
+            return result;
+        }
+
         public async Task CreateTrademark(TrademarkInfo trademark)
         {
             await using var connect = await provider.Connect();
@@ -31,17 +48,18 @@ namespace Project.Product.Infrastructure.SQLDB.Trademarks
             await connect.ExecuteAsync(sql, new
             {
 
-                Name = trademark.Name,
+                Name = trademark.Name
             });
         }
-
 
         public async Task DeleteTrademark(TrademarkInfo trademark)
         {
             await using var connect = await provider.Connect();
             const string sql = @"
-                                Delete From [trademarks]
-                                where Id=@Id;
+                                UPDATE [trademarks]
+                                SET 
+                                [is_deleted] =1
+                                WHERE id =@Id
                                 ";
             await connect.ExecuteAsync(sql, new
             {
@@ -59,6 +77,8 @@ namespace Project.Product.Infrastructure.SQLDB.Trademarks
                                 name As Name
                                 from 
                                 [trademarks]
+                                where
+                                is_deleted = 0
                                 ";
             var result = await connect.QueryAsync<TrademarkInfo>(sql);
             return result;

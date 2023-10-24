@@ -12,7 +12,6 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Put
         public int? Id { get; set; }
         public string? Name { get; set; }
         public string? Address { get; set; }
-        public int? Status { get; set; }
     }
     public class UpdateSupplierModelValidator : AbstractValidator<UpdateSupplierModel>
     {
@@ -22,11 +21,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Put
                 .NotEmpty()
                 .WithMessage($"{nameof(UpdateSupplierModel.Name)} can not be empty");
 
-
-            RuleFor(v => v.Status)
-                .NotEmpty()
-                .WithMessage($"{nameof(UpdateSupplierModel.Status)} can not be empty");
-
+         
             RuleFor(v => v.Address)
                .NotEmpty()
                .WithMessage($"{nameof(UpdateSupplierModel.Address)} can not be empty");

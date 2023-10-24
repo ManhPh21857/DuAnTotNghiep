@@ -36,13 +36,13 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
         }
         [AllowAnonymous]
         [HttpGet("")]
-        public async Task<ResponseBaseModel<GetTrademarkReponseModel>> GetColors()
+        public async Task<ResponseBaseModel<GetTrademarkResponseModel>> GetColors()
         {
             var result = await Mediator.Send(new GetTrademarkQuery());
 
-            return new ResponseBaseModel<GetTrademarkReponseModel>
+            return new ResponseBaseModel<GetTrademarkResponseModel>
             {
-                Data = result.Adapt<GetTrademarkReponseModel>()
+                Data = result.Adapt<GetTrademarkResponseModel>()
             };
         }
 
@@ -50,7 +50,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
 
         [AllowAnonymous]
         [HttpPost("")]
-        public async Task<ActionResult<ResponseBaseModel<CreateTrademarkReponseModel>>> CreateManufacturers(
+        public async Task<ActionResult<ResponseBaseModel<CreateTrademarkResponseModel>>> CreateManufacturers(
        [FromBody] CreateTrademarkModel request)
         {
             var validator = await createTrademarkValidator.ValidateAsync(request);
@@ -65,9 +65,9 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
 
             var result = await Mediator.Send(registerRequest);
 
-            var response = new ResponseBaseModel<CreateTrademarkReponseModel>
+            var response = new ResponseBaseModel<CreateTrademarkResponseModel>
             {
-                Data = result.Adapt<CreateTrademarkReponseModel>()
+                Data = result.Adapt<CreateTrademarkResponseModel>()
             };
 
             return response;
@@ -77,7 +77,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
 
         [AllowAnonymous]
         [HttpPut("")]
-        public async Task<ActionResult<ResponseBaseModel<UpdateTrademarkReponseModel>>> UpdateManufacturers(
+        public async Task<ActionResult<ResponseBaseModel<UpdateTrademarkResponseModel>>> UpdateManufacturers(
        [FromBody] UpdateTrademarkModel request)
         {
             var validator = await updateTrademarkValidator.ValidateAsync(request);
@@ -92,9 +92,9 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
 
             var result = await Mediator.Send(registerRequest);
 
-            var response = new ResponseBaseModel<UpdateTrademarkReponseModel>
+            var response = new ResponseBaseModel<UpdateTrademarkResponseModel>
             {
-                Data = result.Adapt<UpdateTrademarkReponseModel>()
+                Data = result.Adapt<UpdateTrademarkResponseModel>()
             };
 
             return response;
@@ -103,16 +103,16 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
 
         [AllowAnonymous]
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ResponseBaseModel<DeleteTrademarkReponseModel>>> DeleteManufacturers(int id)
+        public async Task<ActionResult<ResponseBaseModel<DeleteTrademarkResponseModel>>> DeleteManufacturers(int id)
         {
             var registerRequest = new DeleteTrademarkCommand(id);
 
 
             var result = await Mediator.Send(registerRequest);
 
-            var response = new ResponseBaseModel<DeleteTrademarkReponseModel>
+            var response = new ResponseBaseModel<DeleteTrademarkResponseModel>
             {
-                Data = result.Adapt<DeleteTrademarkReponseModel>()
+                Data = result.Adapt<DeleteTrademarkResponseModel>()
             };
 
             return response;

@@ -24,6 +24,11 @@ namespace Project.Product.ApplicationService.Origins.Command
                 Id = request.Id,
                 Name = request.Name
             };
+            var check = await Origin.CheckOriginName(request.Name);
+            if (check is not null)
+            {
+                throw new Exception();
+            }
             await Origin.UpdateOrigin(update);
             return new UpdateOriginCommandResult(true);
         }

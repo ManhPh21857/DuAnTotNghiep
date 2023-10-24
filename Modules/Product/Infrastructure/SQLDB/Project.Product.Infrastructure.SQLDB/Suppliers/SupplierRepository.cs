@@ -10,8 +10,6 @@ namespace Project.Product.Infrastructure.SQLDB.Suppliers
         {
             this.connection = connection;
         }
-
-
         public async Task AddSupplier(SupplierInfo Supplier)
         {
             await using var connect = await connection.Connect();
@@ -19,21 +17,18 @@ namespace Project.Product.Infrastructure.SQLDB.Suppliers
                                 INSERT [dbo].[suppliers] (
 
 	                                [name],
-                                    [address],
-				                    [status]
+                                    [address]
                                 )
                                 VALUES (
                                    @Name
                                    ,@Address
-                                   ,@Status
                                    
                                 )";
              await connect.ExecuteAsync(sql,new
              {
 
                  Name = Supplier.Name,
-                 Address = Supplier.Address,
-                 Status = Supplier.Status,
+                 Address = Supplier.Address
              });
         }
         public async Task UpdateSupplier(SupplierInfo Supplier)
@@ -43,8 +38,7 @@ namespace Project.Product.Infrastructure.SQLDB.Suppliers
                                 UPDATE [suppliers]
                                 SET 
                                 name = @Name, 
-                                address = @Address,
-                                status= @Status
+                                address = @Address
                                 WHERE id = @Id;
                                 ";
             await connect.ExecuteAsync(sql, new
@@ -52,7 +46,6 @@ namespace Project.Product.Infrastructure.SQLDB.Suppliers
                 Id = Supplier.Id,
                 Name = Supplier.Name,
                 Address = Supplier.Address,
-                Status = Supplier.Status
             });
         }
         public async Task<IEnumerable<SupplierInfo>> GetSupplier()
@@ -62,10 +55,11 @@ namespace Project.Product.Infrastructure.SQLDB.Suppliers
                                 select 
                                 id As Id, 
                                 name As Name,
-                                address As Address,
-                                status 
+                                address As Address
                                 from 
                                 [suppliers]
+								where
+                                is_deleted = 0
                                 ";
             var result = await connect.QueryAsync<SupplierInfo>(sql);
             return result;
@@ -75,14 +69,35 @@ namespace Project.Product.Infrastructure.SQLDB.Suppliers
         {
             await using var connect = await connection.Connect();
             const string sql = @"
-                                Delete From [suppliers]
-                                where Id=@Id;
+                                UPDATE [suppliers]
+                                SET 
+                                [is_deleted] =1
+                                WHERE id =@Id
                                 ";
             await connect.ExecuteAsync(sql, new
             {
                 Id = Supplier.Id,
             
             });
+        }
+
+        public async Task<SupplierInfo> CheckSupplierName(string name,string address)
+        {
+            await using var connect = await connection.Connect();
+            const string sql = @"
+                                select 
+                                name,
+                                address
+                                from 
+                                [suppliers]
+                                where name = @Name and address = @address
+                                ";
+            var result = await connect.QueryFirstOrDefaultAsync<SupplierInfo>(sql, new
+            {
+                Name = name,
+                Address = address
+            });
+            return result;
         }
     }
 }

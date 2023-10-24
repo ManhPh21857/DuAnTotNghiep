@@ -23,6 +23,11 @@ namespace Project.Product.ApplicationService.Trademarks.Command
             {
                 Name = request.Name,
             };
+            var check = await trademark.CheckTrademarkName(request.Name);
+            if (check is not null)
+            {
+                throw new Exception();
+            }
             await trademark.CreateTrademark(create);
             return new CreateTrademarkCommandResult(true);
         }

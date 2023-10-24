@@ -22,7 +22,12 @@ namespace Project.Product.ApplicationService.Origins.Command
             var create = new OriginInfo()
             {
                 Name = request.Name
-            };
+            }; 
+            var check = await Origin.CheckOriginName(request.Name);
+            if (check is not null)
+            {
+                throw new Exception();
+            }
             await Origin.CreateOrigin(create);
             return new CreateOriginCommandResult(true);
         }

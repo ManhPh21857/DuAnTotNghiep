@@ -17,6 +17,11 @@ namespace Project.Product.ApplicationService.Materials.Command
             {
                 Name = request.Name,
             };
+            var check = await materials.CheckMaterialName(request.Name);
+            if (check is not null)
+            {
+                throw new Exception();
+            }
             await materials.CreateMaterial(create);
             return new CreateMaterialCommandResult(true);
             

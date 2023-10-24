@@ -16,6 +16,24 @@ namespace Project.Product.Infrastructure.SQLDB.Origins
         {
             this.connection = connection;
         }
+
+        public async Task<OriginInfo> CheckOriginName(string name)
+        {
+            await using var connect = await connection.Connect();
+            const string sql = @"
+                                select 
+                                name
+                                from 
+                                [origins]
+                                where name = @Name
+                                ";
+            var result = await connect.QueryFirstOrDefaultAsync<OriginInfo>(sql, new
+            {
+                Name = name
+            });
+            return result;
+        }
+
         public async Task CreateOrigin(OriginInfo origin)
         {
             await using var connect = await connection.Connect();
@@ -37,8 +55,10 @@ namespace Project.Product.Infrastructure.SQLDB.Origins
         {
             await using var connect = await connection.Connect();
             const string sql = @"
-                                Delete From [origins]
-                                where id=@Id;
+                                 UPDATE [origins]
+                                SET 
+                                [is_deleted] =1
+                                WHERE id =@Id
                                 ";
             await connect.ExecuteAsync(sql, new
             {
@@ -55,7 +75,10 @@ namespace Project.Product.Infrastructure.SQLDB.Origins
                                 id As Id, 
                                 name As Name
                                 from 
-                                [origins]";
+                                [origins]
+                                where
+                                is_deleted = 0
+                                ";
             var result = await connect.QueryAsync<OriginInfo>(sql);
             return result;
         }

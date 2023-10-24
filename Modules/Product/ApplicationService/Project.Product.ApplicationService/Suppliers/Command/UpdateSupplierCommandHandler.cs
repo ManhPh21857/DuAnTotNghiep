@@ -24,7 +24,11 @@ namespace Project.Product.ApplicationService.Suppliers.Command
             update.Id = request.Id;
             update.Name = request.Name;
             update.Address = request.Address;
-            update.Status = request.Status;
+            //var check = supplier.CheckSupplierName(request.Name, request.Address);
+            //if(check is not null)
+            //{
+            //    throw new Exception();
+            //}
              await supplier.UpdateSupplier(update);
             return new UpdateSupplierCommandResult(true);
         }

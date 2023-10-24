@@ -6,20 +6,17 @@ namespace Project.Product.Integration.Suppliers.Command
 
         public string Name { get; set; }
         public string Address { get; set; }
-        public int Status { get; set; }
 
 
         public AddSupplierCommand(
 
             string name,
-            string address,
-            int status
+            string address
         )
         {
 
             this.Name = name;
             this.Address = address;
-            this.Status = status;
         }
     }
 }

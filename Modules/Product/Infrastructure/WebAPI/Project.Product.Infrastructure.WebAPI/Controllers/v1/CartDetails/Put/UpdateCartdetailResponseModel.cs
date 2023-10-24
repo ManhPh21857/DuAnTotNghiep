@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Put
+namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Put
 {
-    public class UpdateTrademarkReponseModel
+    public class UpdateCartdetailResponseModel
     {
         public bool Result { get; set; }
     }

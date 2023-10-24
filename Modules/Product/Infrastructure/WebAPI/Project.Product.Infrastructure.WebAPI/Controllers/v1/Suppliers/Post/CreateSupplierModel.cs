@@ -12,7 +12,6 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Post
 
         public string? Name { get; set; }
         public string? Address { get; set; }
-        public int? Status { get; set; }
 
     }
     public class CreateSupplierModelValidator : AbstractValidator<CreateSupplierModel>
@@ -23,10 +22,6 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Post
                 .NotEmpty()
                 .WithMessage($"{nameof(CreateSupplierModel.Name)} can not be empty");
 
-
-            RuleFor(v => v.Status)
-                .NotEmpty()
-                .WithMessage($"{nameof(CreateSupplierModel.Status)} can not be empty");
 
             RuleFor(v => v.Address)
             .NotEmpty()

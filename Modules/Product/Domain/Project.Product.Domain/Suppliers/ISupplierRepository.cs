@@ -12,5 +12,6 @@ namespace Project.Product.Domain.Suppliers
         Task AddSupplier(SupplierInfo Supplier);
         Task UpdateSupplier(SupplierInfo Supplier);
         Task DeleteSupplier(SupplierInfo Supplier);
+        Task<SupplierInfo> CheckSupplierName(string name,string address);
     }
 }

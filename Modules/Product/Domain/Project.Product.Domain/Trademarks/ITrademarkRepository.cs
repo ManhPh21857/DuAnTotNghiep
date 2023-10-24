@@ -12,5 +12,6 @@ namespace Project.Product.Domain.Trademarks
         Task CreateTrademark(TrademarkInfo trademark);
         Task UpdateTrademark(TrademarkInfo trademark);
         Task DeleteTrademark(TrademarkInfo trademark);
+        Task<TrademarkInfo> CheckTrademarkName(string name);
     }
 }
