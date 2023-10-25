@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Project.Common.Infrastructure.WebAPI.Controllers.v1.Products.Get;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Delete;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Get;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Post;
 using Project.Product.Integration.Products.Command;
 using Project.Product.Integration.Products.Query;
@@ -34,18 +35,34 @@ public class ProductController : CommonController
         return response;
     }
 
+    [AllowAnonymous]
+    [HttpGet("detail/{id}")]
+    public async Task<ActionResult<ResponseBaseModel<GetProductDetailResponseModel>>> GetProduct(int id)
+    {
+        var query = new GetProductDetailQuery(id);
+
+        var result = await Mediator.Send(query);
+
+        var response = new ResponseBaseModel<GetProductDetailResponseModel>
+        {
+            Data = result.Adapt<GetProductDetailResponseModel>()
+        };
+
+        return response;
+    }
+
 
     [AllowAnonymous]
     [HttpPost]
-    public async Task<ActionResult<ResponseBaseModel<CreateProductResponseModel>>> CreateProduct([FromBody] CreateProductRequestModel request)
+    public async Task<ActionResult<ResponseBaseModel<UpdateProductResponseModel>>> UpdateProduct([FromBody] UpdateProductRequestModel request)
     {
         var command = request.Adapt<CreateProductCommand>();
 
         var result = await Mediator.Send(command);
 
-        var response = new ResponseBaseModel<CreateProductResponseModel>
+        var response = new ResponseBaseModel<UpdateProductResponseModel>
         {
-            Data = result.Adapt<CreateProductResponseModel>()
+            Data = result.Adapt<UpdateProductResponseModel>()
         };
 
         return response;

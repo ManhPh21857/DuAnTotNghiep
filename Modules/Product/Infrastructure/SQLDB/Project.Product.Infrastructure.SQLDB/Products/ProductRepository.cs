@@ -4,6 +4,7 @@ using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.Product.Domain.Constants;
 using Project.Product.Domain.Enums;
 using Project.Product.Domain.Products;
+using System.Drawing;
 
 namespace Project.Product.Infrastructure.SQLDB.Products;
 
@@ -17,6 +18,41 @@ public class ProductRepository : IProductRepository
     }
 
     #region Product
+
+    public async Task<ProductInfo> GetProduct(int id)
+    {
+        await using var connect = await provider.Connect();
+
+        const string query = @"
+            SELECT
+	            [Id]				AS Id
+               ,[Code]				AS Code
+               ,[supplier_id]		AS SupplierId
+               ,[material_id]		AS MaterialId
+               ,[classification_id] AS ClassificationId
+               ,[origin_id]			AS OriginId
+               ,[trademark_id]		AS TrademarkId
+               ,[Name]				AS Name
+               ,[Image]				AS Image
+               ,[Description]		AS Description
+               ,[data_version]		AS DataVersion
+            FROM
+	            [dbo].[products]
+            WHERE
+	            [Id] = @Id
+	            AND [is_deleted] = @IsDeleted
+        ";
+
+        var result = await connect.QuerySingleOrDefaultAsync<ProductInfo>(query,
+            new
+            {
+                Id = id,
+                IsDeleted = IsDeleted.No
+            }
+        );
+
+        return result;
+    }
 
     public async Task<IEnumerable<ProductView>> GetProducts(int skip, int take)
     {
@@ -77,6 +113,7 @@ public class ProductRepository : IProductRepository
             INSERT [dbo].[products] (
 	            [code]
                ,[name]
+               ,[image]
                ,[classification_id]
                ,[material_id]
                ,[supplier_id]
@@ -87,6 +124,7 @@ public class ProductRepository : IProductRepository
             VALUES (
 	            @Code
                ,@Name
+               ,@Image
                ,@ClassificationId
                ,@MaterialId
                ,@SupplierId
@@ -102,6 +140,7 @@ public class ProductRepository : IProductRepository
             {
                 Code = param.Code,
                 Name = param.Name,
+                Image = param.Image,
                 ClassificationId = param.ClassificationId,
                 MaterialId = param.MaterialId,
                 SupplierId = param.SupplierId,
@@ -112,6 +151,10 @@ public class ProductRepository : IProductRepository
         );
 
         return result;
+    }
+
+    public async Task UpdateProduct(ProductInfo param)
+    {
     }
 
     public async Task DeleteProduct(int id)
@@ -140,33 +183,75 @@ public class ProductRepository : IProductRepository
 
     #region Product Color
 
-    public async Task<int> CreateProductColor(int productId, int colorId, int imageId)
+    public async Task<IEnumerable<ProductColorInfo>> GetProductColor(int productId)
+    {
+        await using var connect = await provider.Connect();
+        const string query = @"
+            SELECT
+                [color_id]  AS ColorId
+               ,[image]	    AS Image
+            FROM
+	            [dbo].[product_colors]
+            WHERE
+	            [product_id] = @ProductId
+	            AND [is_deleted] = @IsDeleted
+        ";
+
+        var result = await connect.QueryAsync<ProductColorInfo>(query,
+            new
+            {
+                ProductId = productId,
+                IsDeleted = IsDeleted.No
+            }
+        );
+
+        return result;
+    }
+
+    public async Task CreateProductColor(ProductColorInfo param)
     {
         await using var connect = await provider.Connect();
         const string command = @"
             INSERT [dbo].[product_colors] (
 	            [product_id]
                ,[color_id]
-               ,[image_id]
+               ,[image]
             )
             VALUES (
 	            @ProductId
                ,@ColorId
-               ,@ImageId
+               ,@Image
             )
-            SELECT @@IDENTITY 
         ";
 
-        int result = await connect.QueryFirstOrDefaultAsync<int>(command,
+        await connect.ExecuteAsync(command,
             new
             {
-                ProductId = productId,
-                ColorId = colorId,
-                ImageId = imageId
+                ProductId = param.ProductId,
+                ColorId = param.ColorId,
+                Image = param.Image
+            }
+        );
+    }
+
+    public async Task HardDeleteProductColor(int productId)
+    {
+        await using var connect = await provider.Connect();
+        const string command = @"
+            DELETE FROM
+	            [dbo].[product_colors]
+            WHERE
+	            [product_id] = @ProductId
+        ";
+
+        int result = await connect.ExecuteAsync(command,
+            new
+            {
+                ProductId = productId
             }
         );
 
-        return result;
+        result.IsOptimisticLocked();
     }
 
     public async Task DeleteProductColor(int productId)
@@ -195,7 +280,31 @@ public class ProductRepository : IProductRepository
 
     #region Product Size
 
-    public async Task<int> CreateProductSize(int productId, int sizeId)
+    public async Task<IEnumerable<ProductSizeInfo>> GetProductSize(int productId)
+    {
+        await using var connect = await provider.Connect();
+        const string query = @"
+            SELECT
+                [size_id] AS SizeId
+            FROM
+	            [dbo].[product_sizes]
+            WHERE
+	            [product_id] = @ProductId
+	            AND [is_deleted] = @IsDeleted
+        ";
+
+        var result = await connect.QueryAsync<ProductSizeInfo>(query,
+            new
+            {
+                ProductId = productId,
+                IsDeleted = IsDeleted.No
+            }
+        );
+
+        return result;
+    }
+
+    public async Task CreateProductSize(ProductSizeInfo param)
     {
         await using var connect = await provider.Connect();
         const string command = @"
@@ -207,18 +316,35 @@ public class ProductRepository : IProductRepository
 	            @ProductId
                ,@SizeId
             )
-            SELECT @@IDENTITY
         ";
 
-        int result = await connect.QueryFirstOrDefaultAsync<int>(command,
+        await connect.ExecuteAsync(command,
             new
             {
-                ProductId = productId,
-                SizeId = sizeId
+                ProductId = param.ProductId,
+                SizeId = param.SizeId
+            }
+        );
+    }
+
+    public async Task HardDeleteProductSize(int productId)
+    {
+        await using var connect = await provider.Connect();
+        const string command = @"
+            DELETE FROM
+	            [dbo].[product_sizes]
+            WHERE
+	            [product_id] = @ProductId
+        ";
+
+        int result = await connect.ExecuteAsync(command,
+            new
+            {
+                ProductId = productId
             }
         );
 
-        return result;
+        result.IsOptimisticLocked();
     }
 
     public async Task DeleteProductSize(int productId)
@@ -247,14 +373,44 @@ public class ProductRepository : IProductRepository
 
     #region Product Detail
 
+    public async Task<IEnumerable<ProductDetailInfo>> GetProductDetail(int productId)
+    {
+        await using var connect = await provider.Connect();
+        const string query = @"
+            SELECT
+	            [Id]		   AS Id
+               ,[color_id]     AS ColorId
+               ,[size_id]      AS SizeId
+               ,[import_price] AS ImportPrice
+               ,[Price]		   AS Price
+               ,[Quantity]	   AS Quantity
+               ,[data_version] AS DataVersion
+            FROM
+	            [dbo].[product_details]
+            WHERE
+	            [product_id] = @ProductId
+	            AND [is_deleted] = @IsDeleted
+        ";
+
+        var result = await connect.QueryAsync<ProductDetailInfo>(query,
+            new
+            {
+                ProductId = productId,
+                IsDeleted = IsDeleted.No
+            }
+        );
+
+        return result;
+    }
+
     public async Task CreateProductDetail(ProductDetailInfo param)
     {
         await using var connect = await provider.Connect();
         const string command = @"
             INSERT [dbo].[product_details] (
 	            [product_id]
-               ,[product_color_id]
-               ,[product_size_id]
+               ,[color_id]
+               ,[size_id]
                ,[import_price]
                ,[price]
                ,[quantity]
@@ -282,7 +438,43 @@ public class ProductRepository : IProductRepository
         );
     }
 
-    public async Task DeleteProductDetail(int productId)
+    public async Task UpdateProductDetail(ProductDetailInfo param)
+    {
+        await using var connect = await provider.Connect();
+        const string command = @"
+            UPDATE [dbo].[product_details]
+            SET
+	            [import_price] = @ImportPrice
+               ,[price]		   = @Price
+               ,[quantity]	   = @Quantity
+            WHERE
+	            [id] = @Id
+	            AND [product_id] = @ProductId
+	            AND [color_id] = @ColorId
+	            AND [size_id] = @SizeId
+	            AND data_version = @DataVersion
+	            AND is_deleted = @IsDeleted
+        ";
+
+        var result = await connect.ExecuteAsync(command,
+            new
+            {
+                ImportPrice = param.ImportPrice,
+                Price = param.Price,
+                Quantity = param.Quantity,
+                Id = param.Id,
+                ProductId = param.ProductId,
+                ColorId = param.ColorId,
+                SizeId = param.SizeId,
+                DataVersion = param.DataVersion,
+                IsDeleted = IsDeleted.No
+            }
+        );
+
+        result.IsOptimisticLocked();
+    }
+
+    public async Task DeleteProductDetailByProductId(int productId)
     {
         await using var connect = await provider.Connect();
         const string command = @"
@@ -298,6 +490,28 @@ public class ProductRepository : IProductRepository
             {
                 IsDeleted = IsDeleted.Yes,
                 ProductId = productId
+            }
+        );
+
+        result.IsOptimisticLocked();
+    }
+
+    public async Task DeleteProductDetail(int id)
+    {
+        await using var connect = await provider.Connect();
+        const string command = @"
+            UPDATE [dbo].[product_details]
+            SET
+	            [is_deleted] = @IsDeleted
+            WHERE
+	            [id] = @Id
+        ";
+
+        int result = await connect.ExecuteAsync(command,
+            new
+            {
+                IsDeleted = IsDeleted.Yes,
+                Id = id
             }
         );
 
