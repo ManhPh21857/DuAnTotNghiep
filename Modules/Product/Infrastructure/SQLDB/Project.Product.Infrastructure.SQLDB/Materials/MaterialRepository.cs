@@ -72,13 +72,12 @@ namespace Project.Product.Infrastructure.SQLDB.Materials
         {
             var connect = await connection.Connect();
             const string sql = @"
-                                select 
+                               select 
                                 id As Id, 
                                 name As Name
                                 from 
                                 [materials]
-                                where
-                                is_deleted = 0
+                                
                                 ";
             var result = await connect.QueryAsync<MaterialInfo>(sql);
             return result;

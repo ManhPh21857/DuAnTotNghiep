@@ -5,19 +5,19 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Delet
 {
     public class DeleteCartdetailModel
     {
-        public int? Cart_id { get; set; }
-        public int? Product_detail_id { get; set; }
+        public int? Cartid { get; set; }
+        public int? Productdetailid { get; set; }
     }
     public class DeleteCartdetailModelValidator : AbstractValidator<DeleteCartdetailModel>
     {
         public DeleteCartdetailModelValidator()
         {
-            RuleFor(v => v.Cart_id)
+            RuleFor(v => v.Cartid)
                 .NotEmpty()
-                .WithMessage($"{nameof(DeleteCartdetailModel.Cart_id)} can not be empty");
-            RuleFor(v => v.Product_detail_id)
+                .WithMessage($"{nameof(DeleteCartdetailModel.Cartid)} can not be empty");
+            RuleFor(v => v.Productdetailid)
                 .NotEmpty()
-                .WithMessage($"{nameof(DeleteCartdetailModel.Product_detail_id)} can not be empty");
+                .WithMessage($"{nameof(DeleteCartdetailModel.Productdetailid)} can not be empty");
         }
     }
 }

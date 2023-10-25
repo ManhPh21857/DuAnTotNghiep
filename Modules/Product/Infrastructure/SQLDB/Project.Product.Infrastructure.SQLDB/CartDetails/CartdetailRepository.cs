@@ -21,13 +21,13 @@ namespace Project.Product.Infrastructure.SQLDB.CartDetails
                                 )
                                 VALUES 
                                 (
-                                   @Cart_id, @Product_detail_id, @Price, @Quantity
+                                   @Cartid, @Productdetailid, @Price, @Quantity
                                 )";
             await connect.ExecuteAsync(sql, new
             {
 
-                Cart_id = Cartdetai.Cart_id,
-                Product_detail_id = Cartdetai.Product_detail_id,
+                Cartid = Cartdetai.Cartid,
+                Productdetailid = Cartdetai.Productdetailid,
                 Price = Cartdetai.Price,
                 Quantity = Cartdetai.Quantity
             });
@@ -42,8 +42,8 @@ namespace Project.Product.Infrastructure.SQLDB.CartDetails
                                 ";
             await connect.ExecuteAsync(sql, new
             {
-                Cart_id = Cartdetai.Cart_id,
-                Product_detail_id = Cartdetai.Product_detail_id
+                Cart_id = Cartdetai.Cartid,
+                Product_detail_id = Cartdetai.Productdetailid
             });
         }
 
@@ -71,8 +71,8 @@ namespace Project.Product.Infrastructure.SQLDB.CartDetails
                                 ";
             await connect.ExecuteAsync(sql, new
             {
-                Cart_id = Cartdetai.Cart_id,
-                Product_detail_id = Cartdetai.Product_detail_id,
+                Cart_id = Cartdetai.Cartid,
+                Product_detail_id = Cartdetai.Productdetailid,
                 Price = Cartdetai.Price,
                 Quantity = Cartdetai.Quantity
             });

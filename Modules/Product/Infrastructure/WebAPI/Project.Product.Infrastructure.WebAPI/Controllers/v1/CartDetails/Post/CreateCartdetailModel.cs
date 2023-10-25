@@ -5,8 +5,8 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post
 {
     public class CreateCartdetailModel
     {
-        public int? Cart_id { get; set; }
-        public int? Product_detail_id { get; set; }
+        public int? Cartid { get; set; }
+        public int? Productdetailid { get; set; }
         public float? Price { get; set; }
         public int? Quantity { get; set; }
 
@@ -15,12 +15,12 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post
     {
         public CreateCartdetailModelValidator()
         {
-            RuleFor(v => v.Cart_id)
+            RuleFor(v => v.Cartid)
                 .NotEmpty()
-                .WithMessage($"{nameof(CreateCartdetailModel.Cart_id)} can not be empty");
-            RuleFor(v => v.Product_detail_id)
+                .WithMessage($"{nameof(CreateCartdetailModel.Cartid)} can not be empty");
+            RuleFor(v => v.Productdetailid)
                .NotEmpty()
-               .WithMessage($"{nameof(CreateCartdetailModel.Product_detail_id)} can not be empty");
+               .WithMessage($"{nameof(CreateCartdetailModel.Productdetailid)} can not be empty");
             RuleFor(v => v.Price)
                .NotEmpty()
                .WithMessage($"{nameof(CreateCartdetailModel.Price)} can not be empty");

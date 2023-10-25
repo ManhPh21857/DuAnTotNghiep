@@ -18,8 +18,8 @@ namespace Project.Product.ApplicationService.CartDetails.Command
         {
             var update = new CartdetailInfo()
             {
-                Cart_id = request.Cart_id,
-                Product_detail_id = request.Product_detail_id,
+                Cartid = request.Cartid,
+                Productdetailid = request.Productdetailid,
                 Price = request.Price,
                 Quantity = request.Quantity
             };

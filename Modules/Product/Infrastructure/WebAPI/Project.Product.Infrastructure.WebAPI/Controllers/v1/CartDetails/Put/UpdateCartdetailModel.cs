@@ -5,8 +5,8 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Put
 {
     public class UpdateCartdetailModel
     {
-        public int? Cart_id { get; set; }
-        public int? Product_detail_id { get; set; }
+        public int? Cartid { get; set; }
+        public int? Productdetailid { get; set; }
         public float? Price { get; set; }
         public int? Quantity { get; set; }
     }
@@ -14,14 +14,14 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Put
     {
         public UpdateCartdetailModelValidator()
         {
-            RuleFor(v => v.Cart_id)
+            RuleFor(v => v.Cartid)
                 .NotEmpty()
-                .WithMessage($"{nameof(UpdateCartdetailModel.Cart_id)} can not be empty");
+                .WithMessage($"{nameof(UpdateCartdetailModel.Cartid)} can not be empty");
 
 
-            RuleFor(v => v.Product_detail_id)
+            RuleFor(v => v.Productdetailid)
                 .NotEmpty()
-                .WithMessage($"{nameof(UpdateCartdetailModel.Product_detail_id)} can not be empty");
+                .WithMessage($"{nameof(UpdateCartdetailModel.Productdetailid)} can not be empty");
 
             RuleFor(v => v.Price)
                 .NotEmpty()
