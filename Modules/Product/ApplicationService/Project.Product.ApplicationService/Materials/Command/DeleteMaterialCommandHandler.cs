@@ -19,11 +19,10 @@ namespace Project.Product.ApplicationService.Materials.Command
         }
         public override async Task<DeleteMaterialCommandResult> Handle(DeleteMaterialCommand request, CancellationToken cancellationToken)
         {
-            var delete = new MaterialInfo()
-            {
-                Id = request.Id
-            };
-            await materials.DeleteMaterial(delete);
+            var param = new MaterialInfo { Id = request.Id, DataVersion = request.DataVersion };
+
+            await this.materials.DeleteMaterial(param);
+
             return new DeleteMaterialCommandResult(true);
         }
     }

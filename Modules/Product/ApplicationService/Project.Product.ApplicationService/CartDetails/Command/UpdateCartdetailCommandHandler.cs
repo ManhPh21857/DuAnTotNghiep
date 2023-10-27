@@ -1,5 +1,6 @@
 ﻿
 
+using Microsoft.IdentityModel.Tokens;
 using Project.Core.ApplicationService.Commands;
 using Project.Product.Domain.CartDetails;
 using Project.Product.Integration.CartDetails.Command;
@@ -16,16 +17,17 @@ namespace Project.Product.ApplicationService.CartDetails.Command
         }
         public async override Task<UpdateCartdetailCommandResult> Handle(UpdateCartdetailCommand request, CancellationToken cancellationToken)
         {
-            var update = new CartdetailInfo()
+            foreach (var item in request.Cartdetails)
             {
-                Cartid = request.Cartid,
-                Productdetailid = request.Productdetailid,
-                Price = request.Price,
-                Quantity = request.Quantity
-            };
-
-            await cartdetailRepository.UpdateCartdetai(update);
-
+                if (item.DataVersion.IsNullOrEmpty())
+                {
+                    await this.cartdetailRepository.CreateCartdetai(item);
+                }
+                else
+                {
+                    await this.cartdetailRepository.UpdateCartdetai(item);
+                }
+            }
 
             return new UpdateCartdetailCommandResult(true);
         }

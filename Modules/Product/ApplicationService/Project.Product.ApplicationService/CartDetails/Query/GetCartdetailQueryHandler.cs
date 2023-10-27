@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Project.Product.ApplicationService.CartDetails.Query
 {
-    public class GetCartdetailQueryHandler : QueryHandler<GetCartdetaiQuery, GetCartdetailQueryResult>
+    public class GetCartdetailQueryHandler : QueryHandler<GetCartdetailQuery, GetCartdetailQueryResult>
     {
         private readonly ICartdetailRepository cartService;
 
@@ -18,7 +18,7 @@ namespace Project.Product.ApplicationService.CartDetails.Query
             this.cartService = cartService;
         }
 
-        public async override Task<GetCartdetailQueryResult> Handle(GetCartdetaiQuery request, CancellationToken cancellationToken)
+        public async override Task<GetCartdetailQueryResult> Handle(GetCartdetailQuery request, CancellationToken cancellationToken)
         {
             var result = await cartService.GetCartdetai();
 

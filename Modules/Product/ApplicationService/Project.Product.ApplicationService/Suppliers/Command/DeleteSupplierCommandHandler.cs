@@ -1,12 +1,6 @@
 ﻿using Project.Core.ApplicationService.Commands;
 using Project.Product.Domain.Suppliers;
 using Project.Product.Integration.Suppliers.Command;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Project.Product.ApplicationService.Suppliers.Command
 {
     public class DeleteSupplierCommandHandler : CommandHandler<DeleteSupplierCommand, DeleteSupplierCommandResult>
@@ -19,10 +13,10 @@ namespace Project.Product.ApplicationService.Suppliers.Command
         }
         public async override Task<DeleteSupplierCommandResult> Handle(DeleteSupplierCommand request, CancellationToken cancellationToken)
         {
-            var delete = new SupplierInfo();
-            delete.Id = request.Id;
-     
-            await supplier.DeleteSupplier(delete);
+            var param = new SupplierInfo { Id = request.Id, DataVersion = request.DataVersion };
+
+            await this.supplier.DeleteSupplier(param);
+
             return new DeleteSupplierCommandResult(true);
         }
     }

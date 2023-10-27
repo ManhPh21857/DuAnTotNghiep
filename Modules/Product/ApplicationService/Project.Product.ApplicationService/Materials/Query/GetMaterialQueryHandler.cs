@@ -19,7 +19,7 @@ namespace Project.Product.ApplicationService.Materials.Query
         }
         public override async Task<GetMaterialQueryResult> Handle(GetMaterialQuery request, CancellationToken cancellationToken)
         {
-            var result = await materials.GetMaterial();
+            var result = await materials.GetMaterial(null);
             return new GetMaterialQueryResult(result.ToList());
         }
     }

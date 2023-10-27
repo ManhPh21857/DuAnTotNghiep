@@ -1,11 +1,7 @@
-﻿using Project.Core.ApplicationService.Commands;
+﻿using Microsoft.IdentityModel.Tokens;
+using Project.Core.ApplicationService.Commands;
 using Project.Product.Domain.Suppliers;
 using Project.Product.Integration.Suppliers.Command;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Product.ApplicationService.Suppliers.Command
 {
@@ -20,16 +16,18 @@ namespace Project.Product.ApplicationService.Suppliers.Command
 
         public override async Task<UpdateSupplierCommandResult> Handle(UpdateSupplierCommand request, CancellationToken cancellationToken)
         {
-            var update = new SupplierInfo();
-            update.Id = request.Id;
-            update.Name = request.Name;
-            update.Address = request.Address;
-            //var check = supplier.CheckSupplierName(request.Name, request.Address);
-            //if(check is not null)
-            //{
-            //    throw new Exception();
-            //}
-             await supplier.UpdateSupplier(update);
+            foreach (var item in request.Suppliers)
+            {
+                if (item.DataVersion.IsNullOrEmpty())
+                {
+                    await this.supplier.AddSupplier(item);
+                }
+                else
+                {
+                    await this.supplier.UpdateSupplier(item);
+                }
+            }
+
             return new UpdateSupplierCommandResult(true);
         }
     }

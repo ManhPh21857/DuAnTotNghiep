@@ -16,12 +16,10 @@ namespace Project.Product.ApplicationService.CartDetails.Command
 
         public async override Task<DeleteCartdetailCommandResult> Handle(DeleteCartdetailCommand request, CancellationToken cancellationToken)
         {
-            var delete = new CartdetailInfo()
-            {
-                Cartid = request.Cartid,
-                Productdetailid = request.Productdetailid
-            };
-            await cardetailRepository.DeleteCartdetai(delete);
+            var param = new CartdetailInfo { CartId = request.CartId, ProductDetailId = request.ProductDetailId, DataVersion = request.DataVersion };
+
+            await this.cardetailRepository.DeleteCartdetai(param);
+
             return new DeleteCartdetailCommandResult(true);
         }
     }

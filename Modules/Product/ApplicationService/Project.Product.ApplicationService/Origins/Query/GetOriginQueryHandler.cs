@@ -19,7 +19,7 @@ namespace Project.Product.ApplicationService.Origins.Query
 
         public async override Task<GetOriginQueryResult> Handle(GetOriginQuery request, CancellationToken cancellationToken)
         {
-            var result = await Origin.GetOrigin();
+            var result = await Origin.GetOrigin(null);
             return new GetOriginQueryResult(result.ToList());
         }
     }

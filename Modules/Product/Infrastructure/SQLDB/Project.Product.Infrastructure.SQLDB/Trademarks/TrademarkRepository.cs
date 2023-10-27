@@ -1,5 +1,7 @@
 ﻿using Dapper;
+using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
+using Project.Product.Domain.Enums;
 using Project.Product.Domain.Trademarks;
 using System;
 using System.Collections.Generic;
@@ -37,67 +39,133 @@ namespace Project.Product.Infrastructure.SQLDB.Trademarks
 
         public async Task CreateTrademark(TrademarkInfo trademark)
         {
-            await using var connect = await provider.Connect();
-            const string sql = @"
-                                INSERT [dbo].[trademarks] (
-	                                [name]
-                                )
-                                VALUES (
-                                   @Name
-                                )";
-            await connect.ExecuteAsync(sql, new
-            {
+            var connect = await provider.Connect();
 
-                Name = trademark.Name
-            });
+            const string query = @"
+                INSERT [dbo].[trademarks] (
+	                [name]
+                )
+                VALUES (
+	                @Name
+                )
+            ";
+
+            await connect.ExecuteAsync(query,
+                new
+                {
+                    Name = trademark.Name
+                }
+            );
         }
 
         public async Task DeleteTrademark(TrademarkInfo trademark)
         {
-            await using var connect = await provider.Connect();
-            const string sql = @"
-                                UPDATE [trademarks]
-                                SET 
-                                [is_deleted] =1
-                                WHERE id =@Id
-                                ";
-            await connect.ExecuteAsync(sql, new
-            {
-                Id = trademark.Id,
+            var connect = await provider.Connect();
 
-            });
+            const string query = @"
+                UPDATE [dbo].[trademarks]
+                SET
+	                [is_deleted] = @IsDeleted
+                WHERE
+	                [id] = @Id
+                    AND [data_version] = @DataVersion
+                    AND [is_deleted] = @NotDeleted
+            ";
+
+            int result = await connect.ExecuteAsync(query,
+                new
+                {
+                    IsDeleted = IsDeleted.Yes,
+                    Id = trademark.Id,
+                    DataVersion = trademark.DataVersion,
+                    NotDeleted = IsDeleted.No
+                }
+            );
+
+            result.IsOptimisticLocked();
         }
 
-        public async Task<IEnumerable<TrademarkInfo>> GetTrademark()
+        public async Task<IEnumerable<TrademarkInfo>> GetTrademark(int? id)
         {
             var connect = await provider.Connect();
-            const string sql = @"
-                                select 
-                                id As Id, 
-                                name As Name
-                                from 
-                                [trademarks]
-                                where
-                                is_deleted = 0
-                                ";
-            var result = await connect.QueryAsync<TrademarkInfo>(sql);
+
+            var builder = new SqlBuilder();
+
+            const string query = @"
+                SELECT
+	                [id]            AS Id
+                   ,[name]          AS Name
+                   ,[is_deleted]    AS IsDeleted
+                   ,[data_version]  AS DataVersion
+                FROM
+	                [trademarks]
+                /**where**/
+            ";
+
+            var template = builder.AddTemplate(query);
+
+            if (id.HasValue)
+            {
+                builder.Where("[id] = @Id", new { Id = id });
+            }
+
+            var result = await connect.QueryAsync<TrademarkInfo>(template.RawSql);
+
             return result;
+        }
+
+        public async Task ReactiveTrademark(TrademarkInfo trademark)
+        {
+            var connect = await provider.Connect();
+
+            const string query = @"
+                UPDATE [dbo].[trademarks]
+                SET
+	                [is_deleted] = @NotDeleted
+                WHERE
+	                [id] = @Id
+                    AND [data_version] = @DataVersion
+                    AND [is_deleted] = @IsDeleted
+            ";
+
+            int result = await connect.ExecuteAsync(query,
+                new
+                {
+                    IsDeleted = IsDeleted.Yes,
+                    Id = trademark.Id,
+                    DataVersion = trademark.DataVersion,
+                    NotDeleted = IsDeleted.No
+                }
+            );
+
+            result.IsOptimisticLocked();
         }
 
         public async Task UpdateTrademark(TrademarkInfo trademark)
         {
-            await using var connect = await provider.Connect();
-            const string sql = @"
-                                UPDATE [trademarks]
-                                SET 
-                                name = @Name
-                                WHERE id = @Id;
-                                ";
-            await connect.ExecuteAsync(sql, new
-            {
-                Id = trademark.Id,
-                Name = trademark.Name
-            });
+            var connect = await provider.Connect();
+
+            const string query = @"
+                UPDATE [dbo].[trademarks]
+                SET 
+                    [name] = @Name
+                WHERE
+                    [id] = @Id
+                    AND [data_version] = @DataVersion
+                    AND [is_deleted] = @IsDeleted
+            ";
+
+            int result = await connect.ExecuteAsync(query,
+                new
+                {
+                    Name = trademark.Name,
+                    Id = trademark.Id,
+                    DataVersion = trademark.DataVersion,
+                    IsDeleted = IsDeleted.No
+                }
+            );
+
+            result.IsOptimisticLocked();
         }
     }
 }

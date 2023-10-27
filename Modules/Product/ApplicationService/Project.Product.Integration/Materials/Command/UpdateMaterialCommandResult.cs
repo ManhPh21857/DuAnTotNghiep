@@ -8,5 +8,6 @@ namespace Project.Product.Integration.Materials.Command
         {
             Result = result;
         }
+
     }
 }

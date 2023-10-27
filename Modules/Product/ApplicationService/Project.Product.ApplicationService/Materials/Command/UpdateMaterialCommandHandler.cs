@@ -1,4 +1,5 @@
-﻿using Project.Core.ApplicationService.Commands;
+﻿using Microsoft.IdentityModel.Tokens;
+using Project.Core.ApplicationService.Commands;
 using Project.Product.Domain.Materials;
 using Project.Product.Integration.Materials;
 using Project.Product.Integration.Materials.Command;
@@ -13,23 +14,20 @@ namespace Project.Product.ApplicationService.Materials.Command
         {
             this.material = material;
         }
-        public override async Task<UpdateMaterialCommandResult> Handle(UpdateMaterialCommand request, CancellationToken cancellationToken)
+        public async override  Task<UpdateMaterialCommandResult> Handle(UpdateMaterialCommand request, CancellationToken cancellationToken)
         {
-            var update = new MaterialInfo()
+            foreach (var item in request.Materials)
             {
-                Id = request.Id,
-                Name = request.Name
-            };
-
-             var check = await material.CheckMaterialName(request.Name);
-            if(check is not null)
-            {
-                throw new Exception();
+                if (item.DataVersion.IsNullOrEmpty())
+                {
+                    await this.material.CreateMaterial(item);
+                }
+                else
+                {
+                    await this.material.UpdateMaterial(item);
+                }
             }
 
-            await material.UpdateMaterial(update);
-            
-            
             return new UpdateMaterialCommandResult(true);
         }
     }

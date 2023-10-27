@@ -5,10 +5,10 @@ namespace Project.Product.Integration.CartDetails.Query
 {
     public class GetCartdetailQueryResult 
     {
-        public IList<GetCartdetailInfo> Cartdetail { get; set; }
-        public GetCartdetailQueryResult(IList<GetCartdetailInfo> cartdetail)
+        public IList<CartdetailInfo> Cartdetails { get; set; }
+        public GetCartdetailQueryResult(IList<CartdetailInfo> cartdetails)
         {
-            Cartdetail = cartdetail;
+            Cartdetails = cartdetails;
         }
     }
 }

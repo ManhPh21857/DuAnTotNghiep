@@ -1,15 +1,11 @@
-﻿using Project.Core.ApplicationService.Commands;
+﻿using Microsoft.IdentityModel.Tokens;
+using Project.Core.ApplicationService.Commands;
 using Project.Product.Domain.Origins;
 using Project.Product.Integration.Origins.Command;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Product.ApplicationService.Origins.Command
 {
-    public class UpdateOriginCommandHandler : CommandHandler<UpdateOriginQuery, UpdateOriginCommandResult>
+    public class UpdateOriginCommandHandler : CommandHandler<UpdateOriginCommand, UpdateOriginCommandResult>
     {
         private readonly IOriginRepository Origin;
         public UpdateOriginCommandHandler(IOriginRepository origin)
@@ -17,19 +13,20 @@ namespace Project.Product.ApplicationService.Origins.Command
             this.Origin = origin;
         }
 
-        public async override Task<UpdateOriginCommandResult> Handle(UpdateOriginQuery request, CancellationToken cancellationToken)
+        public async override Task<UpdateOriginCommandResult> Handle(UpdateOriginCommand request, CancellationToken cancellationToken)
         {
-            var update = new OriginInfo()
+            foreach (var item in request.Origins)
             {
-                Id = request.Id,
-                Name = request.Name
-            };
-            var check = await Origin.CheckOriginName(request.Name);
-            if (check is not null)
-            {
-                throw new Exception();
+                if (item.DataVersion.IsNullOrEmpty())
+                {
+                    await this.Origin.CreateOrigin(item);
+                }
+                else
+                {
+                    await this.Origin.UpdateOrigin(item);
+                }
             }
-            await Origin.UpdateOrigin(update);
+
             return new UpdateOriginCommandResult(true);
         }
     }

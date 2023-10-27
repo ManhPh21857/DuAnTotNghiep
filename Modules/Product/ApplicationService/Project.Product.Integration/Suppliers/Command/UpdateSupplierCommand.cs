@@ -1,18 +1,15 @@
 ﻿using Project.Core.ApplicationService.Commands;
+using Project.Product.Domain.Suppliers;
+
 namespace Project.Product.Integration.Suppliers.Command
 {
     public class UpdateSupplierCommand : ICommand<UpdateSupplierCommandResult>
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Address { get; set; }
- 
-        public UpdateSupplierCommand(int id,string name,string address)
-        {
+        public IEnumerable<SupplierInfo> Suppliers { get; set; }
 
-            this.Id = id;
-            this.Name = name;
-            this.Address = address;
+        public UpdateSupplierCommand(IEnumerable<SupplierInfo> suppliers)
+        {
+            Suppliers = suppliers;
         }
     }
 }

@@ -5,12 +5,14 @@ namespace Project.Product.Integration.CartDetails.Command
 {
     public class DeleteCartdetailCommand : ICommand<DeleteCartdetailCommandResult>
     {
-        public int Cartid { get; set; }
-        public int Productdetailid { get; set; }
-        public DeleteCartdetailCommand(int cartid, int productdetailid)
+        public int CartId { get; set; }
+        public int ProductDetailId { get; set; }
+        public byte[]? DataVersion { get; set; }
+        public DeleteCartdetailCommand(int cartid, int productdetailid, byte[]? dataversion)
         {
-            this.Cartid = cartid;
-            this.Productdetailid = productdetailid;
+            this.CartId = cartid;
+            this.ProductDetailId = productdetailid;
+            this.DataVersion = dataversion;
         }
     }
 }

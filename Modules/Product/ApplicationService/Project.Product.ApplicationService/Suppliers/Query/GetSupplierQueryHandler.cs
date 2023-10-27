@@ -16,7 +16,7 @@ namespace Project.Product.ApplicationService.Suppliers.Query
         public override async Task<GetSupplierQueryResult> Handle(GetSupplierQuery request, CancellationToken cancellationToken)
         {
 
-            var result = await supplier.GetSupplier();
+            var result = await supplier.GetSupplier(null);
            
             return new GetSupplierQueryResult(result.ToList());
         }

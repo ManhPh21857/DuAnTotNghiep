@@ -5,10 +5,10 @@ namespace Project.Product.Integration.Suppliers.Query
 {
     public class GetSupplierQueryResult
     {
-        public IList<SupplierInfo> Supplier { get; set; }
+        public IList<SupplierInfo> Suppliers { get; set; }
         public GetSupplierQueryResult(IList<SupplierInfo> supplier)
         {
-            Supplier = supplier;
+            Suppliers = supplier;
         }
        
     }

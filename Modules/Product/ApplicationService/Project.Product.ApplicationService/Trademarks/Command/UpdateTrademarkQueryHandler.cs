@@ -1,11 +1,8 @@
-﻿using Project.Core.ApplicationService.Commands;
+﻿using Microsoft.IdentityModel.Tokens;
+using Project.Core.ApplicationService.Commands;
 using Project.Product.Domain.Trademarks;
 using Project.Product.Integration.Trademarks.Command;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Project.Product.ApplicationService.Trademarks.Command
 {
@@ -18,17 +15,18 @@ namespace Project.Product.ApplicationService.Trademarks.Command
         }
         public async override Task<UpdateTrademarkCommandResult> Handle(UpdateTrademarkCommand request, CancellationToken cancellationToken)
         {
-            var update = new TrademarkInfo()
+            foreach (var item in request.Trademarks)
             {
-                Id = request.Id,
-                Name = request.Name
-            };
-            var check = await trademark.CheckTrademarkName(request.Name);
-            if (check is not null)
-            {
-                throw new Exception();
+                if (item.DataVersion.IsNullOrEmpty())
+                {
+                    await this.trademark.CreateTrademark(item);
+                }
+                else
+                {
+                    await this.trademark.UpdateTrademark(item);
+                }
             }
-            await trademark.UpdateTrademark(update);
+
             return new UpdateTrademarkCommandResult(true);
         }
     }

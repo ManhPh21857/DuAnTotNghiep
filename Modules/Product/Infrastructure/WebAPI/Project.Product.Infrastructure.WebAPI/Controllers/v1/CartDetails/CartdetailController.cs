@@ -8,7 +8,6 @@ using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Get;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post;
-using Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Put;
 using Project.Product.Integration.CartDetails.Command;
 using Project.Product.Integration.CartDetails.Query;
 
@@ -16,98 +15,58 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails
 {
     public class CartdetailController : CommonController
     {
-        private readonly IValidator<CreateCartdetailModel> createCartdetailValidator;
-        private readonly IValidator<UpdateCartdetailModel> updateCartdetailValidator;
-        private readonly IValidator<DeleteCartdetailModel> deleteCartdetailValidator;
-        public CartdetailController(ISender meadiator,
-            IValidator<CreateCartdetailModel> createCartdetailValidator,
-            IValidator<UpdateCartdetailModel> updateCartdetailValidator,
-            IValidator<DeleteCartdetailModel> deleteCartdetailValidator
-            ) : base(meadiator)
+        private readonly IValidator<UpdateCartdetailRequestModel> cartdetailValidator;
+        public CartdetailController(ISender mediator, IValidator<UpdateCartdetailRequestModel> cartdetailValidator) : base(mediator)
         {
-            this.createCartdetailValidator = createCartdetailValidator;
-            this.updateCartdetailValidator = updateCartdetailValidator;
-            this.deleteCartdetailValidator = deleteCartdetailValidator;
+            this.cartdetailValidator = cartdetailValidator;
         }
-        [AllowAnonymous]
-        [HttpGet("")]
-        public async Task<ResponseBaseModel<GetCartdetailReponseModel>> GetCartdetail()
-        {
-            var result = await Mediator.Send(new GetCartdetaiQuery());
 
-            return new ResponseBaseModel<GetCartdetailReponseModel>
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<ActionResult<ResponseBaseModel<CartdetailResponseModel>>> GetCartdetail()
+        {
+            var result = await this.Mediator.Send(new GetCartdetailQuery());
+
+            return new ResponseBaseModel<CartdetailResponseModel>
             {
-                Data = result.Adapt<GetCartdetailReponseModel>()
+                Data = result.Adapt<CartdetailResponseModel>()
             };
         }
+
         [AllowAnonymous]
-        [HttpPost("")]
-        public async Task<ActionResult<ResponseBaseModel<CreateCartdetailResponseModel>>> CreateCartdetail(
-       [FromBody] CreateCartdetailModel request)
+        [HttpPost]
+        public async Task<ActionResult<ResponseBaseModel<CommandBaseModel>>> UpdateCartdetail(UpdateCartdetailRequestModel request)
         {
-            var validator = await createCartdetailValidator.ValidateAsync(request);
+            var validator = await this.cartdetailValidator.ValidateAsync(request);
             if (!validator.IsValid)
             {
                 validator.AddToModelState(ModelState);
                 return this.BadRequest(ModelState);
             }
 
-            var registerRequest = request.Adapt<CreateCartdetailCommand>();
+            var command = request.Adapt<UpdateCartdetailCommand>();
 
+            var result = await this.Mediator.Send(command);
 
-            var result = await Mediator.Send(registerRequest);
-
-            var response = new ResponseBaseModel<CreateCartdetailResponseModel>
+            return new ResponseBaseModel<CommandBaseModel>
             {
-                Data = result.Adapt<CreateCartdetailResponseModel>()
+                Data = result.Adapt<CommandBaseModel>()
             };
-
-            return response;
         }
 
-
-
         [AllowAnonymous]
-        [HttpPut("")]
-        public async Task<ActionResult<ResponseBaseModel<UpdateCartdetailResponseModel>>> UpdateCartdetail(
-       [FromBody] UpdateCartdetailModel request)
+        [HttpDelete("delete")]
+        public async Task<ResponseBaseModel<CommandBaseModel>> DeleteCartdetail(DeleteCartdetailRequestModel request)
         {
-            var validator = await updateCartdetailValidator.ValidateAsync(request);
-            if (!validator.IsValid)
+
+            var command = request.Adapt<DeleteCartdetailCommand>();
+
+            var result = await Mediator.Send(command);
+
+            return new ResponseBaseModel<CommandBaseModel>
             {
-                validator.AddToModelState(ModelState);
-                return this.BadRequest(ModelState);
-            }
-
-            var registerRequest = request.Adapt<UpdateCartdetailCommand>();
-
-
-            var result = await Mediator.Send(registerRequest);
-
-            var response = new ResponseBaseModel<UpdateCartdetailResponseModel>
-            {
-                Data = result.Adapt<UpdateCartdetailResponseModel>()
+                Data = result.Adapt<CommandBaseModel>()
             };
-
-            return response;
-        }
-
-
-        [AllowAnonymous]
-        [HttpDelete("{cart_id}/{product_detail_id}")]
-        public async Task<ActionResult<ResponseBaseModel<DeleteCartdetailResponseModel>>> DeleteCartdetail(int cart_id,int product_detail_id)
-        {
-            var registerRequest = new DeleteCartdetailCommand(cart_id, product_detail_id);
-
-
-            var result = await Mediator.Send(registerRequest);
-
-            var response = new ResponseBaseModel<DeleteCartdetailResponseModel>
-            {
-                Data = result.Adapt<DeleteCartdetailResponseModel>()
-            };
-
-            return response;
         }
     }
 }
