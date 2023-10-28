@@ -8,114 +8,80 @@ using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Get;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Post;
-using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Put;
 using Project.Product.Integration.Trademarks.Command;
 using Project.Product.Integration.Trademarks.Query;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
 {
     public class TrademarkController : CommonController
     {
-        private readonly IValidator<CreateTrademarkModel> createTrademarkValidator;
-        private readonly IValidator<UpdateTrademarkModel> updateTrademarkValidator;
-        private readonly IValidator<DeleteTrademarkModel> deleteTrademarkValidator;
-        public TrademarkController(ISender meadiator,
-            IValidator<CreateTrademarkModel> createTrademarkValidator,
-            IValidator<UpdateTrademarkModel> updateTrademarkValidator,
-            IValidator<DeleteTrademarkModel> deleteTrademarkValidator
-            ) : base(meadiator)
+        private readonly IValidator<UpdateTrademarkRequestModel> trademarkValidator;
+        public TrademarkController(ISender mediator, IValidator<UpdateTrademarkRequestModel> trademarkValidator) : base(mediator)
         {
-            this.createTrademarkValidator = createTrademarkValidator;
-            this.updateTrademarkValidator = updateTrademarkValidator;
-            this.deleteTrademarkValidator = deleteTrademarkValidator;
+            this.trademarkValidator = trademarkValidator;
         }
-        [AllowAnonymous]
-        [HttpGet("")]
-        public async Task<ResponseBaseModel<GetTrademarkReponseModel>> GetColors()
-        {
-            var result = await Mediator.Send(new GetTrademarkQuery());
 
-            return new ResponseBaseModel<GetTrademarkReponseModel>
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<ActionResult<ResponseBaseModel<TrademarkResponseModel>>> GetColors()
+        {
+            var result = await this.Mediator.Send(new GetTrademarkQuery());
+
+            return new ResponseBaseModel<TrademarkResponseModel>
             {
-                Data = result.Adapt<GetTrademarkReponseModel>()
+                Data = result.Adapt<TrademarkResponseModel>()
             };
         }
 
-
-
         [AllowAnonymous]
-        [HttpPost("")]
-        public async Task<ActionResult<ResponseBaseModel<CreateTrademarkReponseModel>>> CreateManufacturers(
-       [FromBody] CreateTrademarkModel request)
+        [HttpPost]
+        public async Task<ActionResult<ResponseBaseModel<CommandBaseModel>>> UpdateColors(UpdateTrademarkRequestModel request)
         {
-            var validator = await createTrademarkValidator.ValidateAsync(request);
+            var validator = await this.trademarkValidator.ValidateAsync(request);
             if (!validator.IsValid)
             {
                 validator.AddToModelState(ModelState);
                 return this.BadRequest(ModelState);
             }
 
-            var registerRequest = request.Adapt<CreateTrademarkQuery>();
+            var command = request.Adapt<UpdateTrademarkCommand>();
 
+            var result = await this.Mediator.Send(command);
 
-            var result = await Mediator.Send(registerRequest);
-
-            var response = new ResponseBaseModel<CreateTrademarkReponseModel>
+            return new ResponseBaseModel<CommandBaseModel>
             {
-                Data = result.Adapt<CreateTrademarkReponseModel>()
+                Data = result.Adapt<CommandBaseModel>()
             };
-
-            return response;
         }
 
-
-
         [AllowAnonymous]
-        [HttpPut("")]
-        public async Task<ActionResult<ResponseBaseModel<UpdateTrademarkReponseModel>>> UpdateManufacturers(
-       [FromBody] UpdateTrademarkModel request)
+        [HttpPut("delete")]
+        public async Task<ResponseBaseModel<CommandBaseModel>> DeleteColors(DeleteTrademarkRequestModel request)
         {
-            var validator = await updateTrademarkValidator.ValidateAsync(request);
-            if (!validator.IsValid)
+
+            var command = request.Adapt<DeleteTrademarkCommand>();
+
+            var result = await Mediator.Send(command);
+
+            return new ResponseBaseModel<CommandBaseModel>
             {
-                validator.AddToModelState(ModelState);
-                return this.BadRequest(ModelState);
-            }
-
-            var registerRequest = request.Adapt<UpdateTrademarkCommand>();
-
-
-            var result = await Mediator.Send(registerRequest);
-
-            var response = new ResponseBaseModel<UpdateTrademarkReponseModel>
-            {
-                Data = result.Adapt<UpdateTrademarkReponseModel>()
+                Data = result.Adapt<CommandBaseModel>()
             };
-
-            return response;
         }
 
-
         [AllowAnonymous]
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ResponseBaseModel<DeleteTrademarkReponseModel>>> DeleteManufacturers(int id)
+        [HttpPut("reactive")]
+        public async Task<ResponseBaseModel<CommandBaseModel>> ReactiveColors(DeleteTrademarkRequestModel request)
         {
-            var registerRequest = new DeleteTrademarkCommand(id);
 
+            var command = request.Adapt<ReactiveTrademarkCommand>();
 
-            var result = await Mediator.Send(registerRequest);
+            var result = await Mediator.Send(command);
 
-            var response = new ResponseBaseModel<DeleteTrademarkReponseModel>
+            return new ResponseBaseModel<CommandBaseModel>
             {
-                Data = result.Adapt<DeleteTrademarkReponseModel>()
+                Data = result.Adapt<CommandBaseModel>()
             };
-
-            return response;
         }
     }
 }

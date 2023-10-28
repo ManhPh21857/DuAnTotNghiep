@@ -1,18 +1,15 @@
 ﻿using Project.Core.ApplicationService.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Project.Product.Integration.Trademarks.Command
 {
-    public class DeleteTrademarkCommand : ICommand<DeleteTrademarkQueryResult>
+    public class DeleteTrademarkCommand : ICommand<DeleteTrademarkCommandResult>
     {
         public int Id { get; set; }
-        public DeleteTrademarkCommand(int id)
+        public byte[]? DataVersion { get; set; }
+
+        public DeleteTrademarkCommand(int id, byte[]? dataVersion)
         {
             this.Id = id;
+            this.DataVersion = dataVersion;
         }
     }
 }

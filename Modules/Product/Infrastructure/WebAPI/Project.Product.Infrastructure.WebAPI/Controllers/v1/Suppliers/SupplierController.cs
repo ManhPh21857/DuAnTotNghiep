@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Delete;
-using Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Put;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Get;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Post;
 using Project.Product.Integration.Suppliers.Query;
@@ -16,97 +15,73 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers
 {
     public class SupplierController : CommonController
     {
-        private readonly IValidator<CreateSupplierModel> createSupplierValidator;
-        private readonly IValidator<UpdateSupplierModel> updateSupplierValidator;
-        private readonly IValidator<DeleteSupplierModel> deleteSupplierValidator;
-        public SupplierController(ISender mediator,
-            IValidator<CreateSupplierModel> createSupplierValidator,
-            IValidator<UpdateSupplierModel> updateSupplierValidator,
-            IValidator<DeleteSupplierModel> deleteSupplierValidator
-                                     ) :base(mediator)
+        private readonly IValidator<UpdateSupplierRequestModel> supplierValidator;
+        public SupplierController(ISender mediator, IValidator<UpdateSupplierRequestModel> supplierValidator) : base(mediator)
         {
-            this.updateSupplierValidator = updateSupplierValidator;
-            this.createSupplierValidator = createSupplierValidator;
-            this.deleteSupplierValidator = deleteSupplierValidator;
+            this.supplierValidator = supplierValidator;
         }
+
         [AllowAnonymous]
-        [HttpGet("")]
-        public async Task<ResponseBaseModel<SupplierReponseModel>> GetSupplier()
+        [HttpGet]
+        public async Task<ActionResult<ResponseBaseModel<SupplierResponseModel>>> GetSupplier()
         {
-            var result = await Mediator.Send(new GetSupplierQuery());
-            return new ResponseBaseModel<SupplierReponseModel>
+            var result = await this.Mediator.Send(new GetSupplierQuery());
+
+            return new ResponseBaseModel<SupplierResponseModel>
             {
-                Data = result.Adapt<SupplierReponseModel>()
+                Data = result.Adapt<SupplierResponseModel>()
             };
         }
+
         [AllowAnonymous]
-        [HttpPost("")]
-        public async Task<ActionResult<ResponseBaseModel<CreateSupplierReponseModel>>> CreateSupplier(
-       [FromBody] CreateSupplierModel request)
+        [HttpPost]
+        public async Task<ActionResult<ResponseBaseModel<CommandBaseModel>>> UpdateSupplier(UpdateSupplierRequestModel request)
         {
-            var validator = await createSupplierValidator.ValidateAsync(request);
+            var validator = await this.supplierValidator.ValidateAsync(request);
             if (!validator.IsValid)
             {
                 validator.AddToModelState(ModelState);
                 return this.BadRequest(ModelState);
             }
 
-            var registerRequest = request.Adapt<AddSupplierCommand>();
-          
+            var command = request.Adapt<UpdateSupplierCommand>();
 
-            var result = await Mediator.Send(registerRequest);
+            var result = await this.Mediator.Send(command);
 
-            var response = new ResponseBaseModel<CreateSupplierReponseModel>
+            return new ResponseBaseModel<CommandBaseModel>
             {
-                Data = result.Adapt<CreateSupplierReponseModel>()
+                Data = result.Adapt<CommandBaseModel>()
             };
-
-            return response;
         }
 
-
         [AllowAnonymous]
-        [HttpPut("")]
-        public async Task<ActionResult<ResponseBaseModel<UpdateSupplierReponseModel>>> UpdateSupplier(
-       [FromBody] UpdateSupplierModel request)
+        [HttpPut("delete")]
+        public async Task<ResponseBaseModel<CommandBaseModel>> DeleteSupplier(DeleteSupplierRequestModel request)
         {
-            var validator = await updateSupplierValidator.ValidateAsync(request);
-            if (!validator.IsValid)
+
+            var command = request.Adapt<DeleteSupplierCommand>();
+
+            var result = await Mediator.Send(command);
+
+            return new ResponseBaseModel<CommandBaseModel>
             {
-                validator.AddToModelState(ModelState);
-                return this.BadRequest(ModelState);
-            }
-
-            var registerRequest = request.Adapt<UpdateSupplierCommand>();
-
-
-            var result = await Mediator.Send(registerRequest);
-
-            var response = new ResponseBaseModel<UpdateSupplierReponseModel>
-            {
-                Data = result.Adapt<UpdateSupplierReponseModel>()
+                Data = result.Adapt<CommandBaseModel>()
             };
-
-            return response;
         }
 
-
         [AllowAnonymous]
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ResponseBaseModel<DeleteSupplierReponseModel>>> DeleteManufacturers(int id)
+        [HttpPut("reactive")]
+        public async Task<ResponseBaseModel<CommandBaseModel>> ReactiveSupplier(DeleteSupplierRequestModel request)
         {
-          
-            var registerRequest = new DeleteSupplierCommand(id);
 
+            var command = request.Adapt<ReactiveSupplierCommand>();
 
-            var result = await Mediator.Send(registerRequest);
+            var result = await Mediator.Send(command);
 
-            var response = new ResponseBaseModel<DeleteSupplierReponseModel>
+            return new ResponseBaseModel<CommandBaseModel>
             {
-                Data = result.Adapt<DeleteSupplierReponseModel>()
+                Data = result.Adapt<CommandBaseModel>()
             };
-
-            return response;
         }
     }
 }
