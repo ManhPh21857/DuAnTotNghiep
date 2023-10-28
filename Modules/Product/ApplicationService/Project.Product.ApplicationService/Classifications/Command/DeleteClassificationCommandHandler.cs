@@ -1,27 +1,22 @@
 ﻿using Project.Core.ApplicationService.Commands;
 using Project.Product.Domain.Classifications;
 using Project.Product.Integration.Classifications.Command;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Product.ApplicationService.Classifications.Command
 {
-    public class DeleteClassificationQueryHandler : CommandHandler<DeleteClassificationCommand, DeleteClassificationCommandResult>
+    public class DeleteClassificationCommandHandler : CommandHandler<DeleteClassificationCommand, DeleteClassificationCommandResult>
     {
-        private readonly IClassificationRepository classification;
-        public DeleteClassificationQueryHandler(IClassificationRepository classification)
+        private readonly IClassificationRepository classificationRepository;
+        public DeleteClassificationCommandHandler(IClassificationRepository classificationRepository)
         {
-            this.classification = classification;
+            this.classificationRepository = classificationRepository;
         }
-        public async override Task<DeleteClassificationCommandResult> Handle(DeleteClassificationCommand request, CancellationToken cancellationToken)
+        public override async Task<DeleteClassificationCommandResult> Handle(DeleteClassificationCommand request, CancellationToken cancellationToken)
         {
-            var delete = new ClassificationInfo();
-            delete.Id = request.Id;
+            var param = new ClassificationInfo { Id = request.Id, DataVersion = request.DataVersion };
 
-            await classification.DeleteClassifications(delete);
+            await this.classificationRepository.DeleteClassification(param);
+
             return new DeleteClassificationCommandResult(true);
         }
     }

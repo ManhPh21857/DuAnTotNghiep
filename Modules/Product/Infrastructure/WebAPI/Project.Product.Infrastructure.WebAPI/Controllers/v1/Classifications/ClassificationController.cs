@@ -56,7 +56,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications
                 validator.AddToModelState(ModelState);
                 return this.BadRequest(ModelState);
             }
-            var registerRequest = request.Adapt<AddClassificationCommand>();
+            var registerRequest = request.Adapt<ReactiveClassificationCommand>();
             var result = await Mediator.Send(registerRequest);
             var response = new ResponseBaseModel<AddClassificationsReponseModel>
             {

@@ -6,17 +6,14 @@ namespace Project.Product.ApplicationService.Classifications.Query
 {
     public class GetClassificationQueryHandler : QueryHandler<GetClassificationQuery, GetClassificationQueryResult>
     {
-        private readonly IClassificationRepository classificationRepository;
-
-        public GetClassificationQueryHandler(IClassificationRepository classificationRepository)
+        private readonly IClassificationRepository classifications;
+        public GetClassificationQueryHandler(IClassificationRepository classifications)
         {
-            this.classificationRepository = classificationRepository;
+            this.classifications = classifications;
         }
-
-        public async override Task<GetClassificationQueryResult> Handle(GetClassificationQuery request, CancellationToken cancellationToken)
+        public override async Task<GetClassificationQueryResult> Handle(GetClassificationQuery request, CancellationToken cancellationToken)
         {
-            var result = await classificationRepository.GetClassifications();
-
+            var result = await classifications.GetClassification(null);
             return new GetClassificationQueryResult(result.ToList());
         }
     }
