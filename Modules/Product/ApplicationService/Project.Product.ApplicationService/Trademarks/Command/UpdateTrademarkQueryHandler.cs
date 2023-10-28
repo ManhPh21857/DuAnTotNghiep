@@ -19,10 +19,20 @@ namespace Project.Product.ApplicationService.Trademarks.Command
             {
                 if (item.DataVersion.IsNullOrEmpty())
                 {
+                    var check = await trademark.CheckTrademarkName(item.Name);
+                    if (check != null)
+                    {
+                        throw new InvalidOperationException();
+                    }
                     await this.trademark.CreateTrademark(item);
                 }
                 else
                 {
+                    var check = await trademark.CheckTrademarkName(item.Name);
+                    if (check != null)
+                    {
+                        throw new InvalidOperationException();
+                    }
                     await this.trademark.UpdateTrademark(item);
                 }
             }

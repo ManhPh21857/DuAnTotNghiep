@@ -19,10 +19,20 @@ namespace Project.Product.ApplicationService.Materials.Command
             {
                 if (item.DataVersion.IsNullOrEmpty())
                 {
+                    var check = await this.materialRepository.CheckMaterialName(item.Name);
+                    if(check != null)
+                    {
+                        throw new InvalidOperationException();
+                    }
                     await this.materialRepository.CreateMaterial(item);
                 }
                 else
                 {
+                    var check = await this.materialRepository.CheckMaterialName(item.Name);
+                    if (check != null)
+                    {
+                        throw new InvalidOperationException();
+                    }
                     await this.materialRepository.UpdateMaterial(item);
                 }
             }
