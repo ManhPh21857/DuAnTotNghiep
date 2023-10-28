@@ -8,10 +8,10 @@ namespace Project.Product.Integration.Materials.Command
 {
     public class ReactiveMaterialCommandResult
     {
-        public bool Result { get; set; }
-        public ReactiveMaterialCommandResult(bool result)
+        public bool IsSuccess { get; set; }
+        public ReactiveMaterialCommandResult(bool isSuccess)
         {
-            Result = result;
+            IsSuccess = isSuccess;
         }
     }
 }

@@ -3,10 +3,10 @@ namespace Project.Product.Integration.Trademarks.Command
 {
     public class UpdateTrademarkCommandResult
     {
-        public bool Result { get; set; }
-        public UpdateTrademarkCommandResult(bool result)
+        public bool IsSuccess { get; set; }
+        public UpdateTrademarkCommandResult(bool isSuccess)
         {
-            Result = result;
+            IsSuccess = isSuccess;
         }
     }
 }

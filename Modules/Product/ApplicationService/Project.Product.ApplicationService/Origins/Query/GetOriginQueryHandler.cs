@@ -1,11 +1,6 @@
 ﻿using Project.Core.ApplicationService.Queries;
 using Project.Product.Domain.Origins;
 using Project.Product.Integration.Origins.Query;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Product.ApplicationService.Origins.Query
 {

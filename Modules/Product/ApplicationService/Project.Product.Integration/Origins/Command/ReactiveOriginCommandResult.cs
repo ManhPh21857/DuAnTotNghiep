@@ -4,10 +4,10 @@ namespace Project.Product.Integration.Origins.Command
 {
     public class ReactiveOriginCommandResult
     {
-        public bool Result { get; set; }
-        public ReactiveOriginCommandResult(bool result)
+        public bool IsSuccess { get; set; }
+        public ReactiveOriginCommandResult(bool isSuccess)
         {
-            Result = result;
+            IsSuccess = isSuccess;
         }
     }
 }

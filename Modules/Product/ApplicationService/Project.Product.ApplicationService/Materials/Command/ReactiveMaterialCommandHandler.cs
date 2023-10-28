@@ -7,19 +7,21 @@ namespace Project.Product.ApplicationService.Materials.Command
 {
     public class ReactiveMaterialCommandHandler : CommandHandler<ReactiveMaterialCommand, ReactiveMaterialCommandResult>
     {
-        private readonly IMaterialRepository material;
+        private readonly IMaterialRepository materialRepository;
 
-        public ReactiveMaterialCommandHandler(IMaterialRepository material)
+        public ReactiveMaterialCommandHandler(IMaterialRepository materialRepository)
         {
-            this.material = material;
+            this.materialRepository = materialRepository;
         }
         public async override Task<ReactiveMaterialCommandResult> Handle(ReactiveMaterialCommand request, CancellationToken cancellationToken)
         {
             var param = new MaterialInfo { Id = request.Id, DataVersion = request.DataVersion };
 
-            await this.material.ReActiveMaterial(param);
+            await this.materialRepository.ReActiveMaterial(param);
 
             return new ReactiveMaterialCommandResult(true);
         }
+
+
     }
 }

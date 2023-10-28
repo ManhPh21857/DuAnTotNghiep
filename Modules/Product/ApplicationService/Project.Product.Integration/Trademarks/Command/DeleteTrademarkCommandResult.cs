@@ -3,10 +3,10 @@ namespace Project.Product.Integration.Trademarks.Command
 {
     public class DeleteTrademarkCommandResult
     {
-        public bool Result { get; set; }
-        public DeleteTrademarkCommandResult(bool result)
+        public bool IsSuccess { get; set; }
+        public DeleteTrademarkCommandResult(bool isSuccess)
         {
-            Result = result;
+            IsSuccess = isSuccess;
         }
     }
 }

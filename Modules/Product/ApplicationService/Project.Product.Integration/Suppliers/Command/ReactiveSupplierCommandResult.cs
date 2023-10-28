@@ -3,10 +3,10 @@ namespace Project.Product.Integration.Suppliers.Command
 {
     public class ReactiveSupplierCommandResult
     {
-        public bool Result { get; set; }
-        public ReactiveSupplierCommandResult(bool result)
+        public bool IsSuccess { get; set; }
+        public ReactiveSupplierCommandResult(bool isSuccess)
         {
-            Result = result;
+            IsSuccess = isSuccess;
         }
     }
 }
