@@ -3,9 +3,22 @@
 public class ProductInfo
 {
     public int Id { get; set; }
-    public string? Name { get; set; }
-    public string? Url { get; set; }
-    public float MinPrice { get; set; }
-    public float MaxPrice { get; set; }
-    public int Evaluate { get; set; }
+    public string Code { get; set; }
+    public string Name { get; set; }
+    public string Image { get; set; }
+    public int ClassificationId { get; set; }
+    public int MaterialId { get; set; }
+    public int SupplierId { get; set; }
+    public int TrademarkId { get; set; }
+    public int OriginId { get; set; }
+    public string Description { get; set; }
+    public byte[]? DataVersion { get; set; }
+
+    public ProductInfo()
+    {
+        Image = string.Empty;
+        Code = string.Empty;
+        Name = string.Empty;
+        Description = string.Empty;
+    }
 }

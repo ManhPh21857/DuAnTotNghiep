@@ -1,10 +1,15 @@
-﻿using Mapster;
+﻿using Azure.Core;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Common.Infrastructure.WebAPI.Controllers.v1.Products.Get;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
-using Project.Product.Integration.Products;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Delete;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Get;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Post;
+using Project.Product.Integration.Products.Command;
+using Project.Product.Integration.Products.Query;
 
 namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Products;
 
@@ -15,16 +20,65 @@ public class ProductController : CommonController
     }
 
     [AllowAnonymous]
-    [HttpGet("infos/{pageNumber}")]
-    public async Task<ActionResult<ResponseBaseModel<GetProductResponseModel>>> GetProducts(int pageNumber)
+    [HttpGet("{pageNo}")]
+    public async Task<ActionResult<ResponseBaseModel<GetProductResponseModel>>> GetProducts(int pageNo)
     {
-        var query = new GetProductQuery(pageNumber);
+        var query = new GetProductQuery(pageNo);
 
         var result = await Mediator.Send(query);
 
         var response = new ResponseBaseModel<GetProductResponseModel>
         {
             Data = result.Adapt<GetProductResponseModel>()
+        };
+
+        return response;
+    }
+
+    [AllowAnonymous]
+    [HttpGet("detail/{id}")]
+    public async Task<ActionResult<ResponseBaseModel<GetProductDetailResponseModel>>> GetProduct(int id)
+    {
+        var query = new GetProductDetailQuery(id);
+
+        var result = await Mediator.Send(query);
+
+        var response = new ResponseBaseModel<GetProductDetailResponseModel>
+        {
+            Data = result.Adapt<GetProductDetailResponseModel>()
+        };
+
+        return response;
+    }
+
+
+    [AllowAnonymous]
+    [HttpPost]
+    public async Task<ActionResult<ResponseBaseModel<UpdateProductResponseModel>>> UpdateProduct([FromBody] UpdateProductRequestModel request)
+    {
+        var command = request.Adapt<CreateProductCommand>();
+
+        var result = await Mediator.Send(command);
+
+        var response = new ResponseBaseModel<UpdateProductResponseModel>
+        {
+            Data = result.Adapt<UpdateProductResponseModel>()
+        };
+
+        return response;
+    }
+
+    [AllowAnonymous]
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<ResponseBaseModel<DeleteProductResponseModel>>> DeleteProduct(int id)
+    {
+        var command = new DeleteProductCommand(id);
+
+        var result = await Mediator.Send(command);
+
+        var response = new ResponseBaseModel<DeleteProductResponseModel>
+        {
+            Data = result.Adapt<DeleteProductResponseModel>()
         };
 
         return response;
