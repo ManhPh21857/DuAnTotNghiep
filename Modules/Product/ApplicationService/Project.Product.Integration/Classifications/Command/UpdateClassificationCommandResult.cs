@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Product.Integration.Classifications
+namespace Project.Product.Integration.Classifications.Command
 {
-    public class UpdateClassificationQueryResult
+    public class UpdateClassificationCommandResult
     {
         public bool Result { get; set; }
 
-        public UpdateClassificationQueryResult(bool result)
+        public UpdateClassificationCommandResult(bool result)
         {
             Result = result;
         }

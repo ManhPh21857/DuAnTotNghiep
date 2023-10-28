@@ -1,8 +1,8 @@
 ﻿using Project.Core.ApplicationService.Queries;
 using Project.Product.Domain.Classifications;
-using Project.Product.Integration.Classifications;
+using Project.Product.Integration.Classifications.Query;
 
-namespace Project.Product.ApplicationService.Classifications
+namespace Project.Product.ApplicationService.Classifications.Query
 {
     public class GetClassificationQueryHandler : QueryHandler<GetClassificationQuery, GetClassificationQueryResult>
     {

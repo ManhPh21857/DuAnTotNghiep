@@ -6,18 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Product.Integration.Classifications
+namespace Project.Product.Integration.Classifications.Command
 {
-    public class UpdateClassificationQuery : ICommand<UpdateClassificationQueryResult>
+    public class UpdateClassificationCommand : ICommand<UpdateClassificationCommandResult>
     {
         public int Id { get; set; }
         public string Name { get; set; }
 
- 
-        public UpdateClassificationQuery(int id,string name)
+
+        public UpdateClassificationCommand(int id, string name)
         {
-            this.Id = id;
-            this.Name = name;
+            Id = id;
+            Name = name;
         }
     }
 }

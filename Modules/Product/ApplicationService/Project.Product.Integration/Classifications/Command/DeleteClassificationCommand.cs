@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Product.Integration.Classifications
+namespace Project.Product.Integration.Classifications.Command
 {
-    public class DeleteClassificationQuery : ICommand<DeleteClassificationQueryResult>
+    public class DeleteClassificationCommand : ICommand<DeleteClassificationCommandResult>
     {
         public int Id { get; set; }
 
-        public DeleteClassificationQuery(int id)
+        public DeleteClassificationCommand(int id)
         {
-            this.Id = id;
+            Id = id;
         }
     }
 }

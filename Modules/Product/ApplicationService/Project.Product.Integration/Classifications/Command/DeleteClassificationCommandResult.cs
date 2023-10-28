@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Product.Integration.Classifications
+namespace Project.Product.Integration.Classifications.Command
 {
-    public class DeleteClassificationQueryResult
+    public class DeleteClassificationCommandResult
     {
         public bool Result { get; set; }
 
-        public DeleteClassificationQueryResult(bool result)
+        public DeleteClassificationCommandResult(bool result)
         {
             Result = result;
         }
