@@ -2,11 +2,11 @@
 
 namespace Project.Product.Integration.Classifications.Query
 {
-    public class GetClassificationCommandResult
+    public class GetClassificationQueryResult
     {
         public IList<ClassificationInfo> Classifications { get; set; }
 
-        public GetClassificationCommandResult(IList<ClassificationInfo> classifications)
+        public GetClassificationQueryResult(IList<ClassificationInfo> classifications)
         {
             Classifications = classifications;
         }
