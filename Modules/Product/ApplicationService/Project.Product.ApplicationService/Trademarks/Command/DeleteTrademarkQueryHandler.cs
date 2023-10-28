@@ -4,21 +4,20 @@ using Project.Product.Integration.Trademarks.Command;
 
 namespace Project.Product.ApplicationService.Trademarks.Command
 {
-    public class DeleteTrademarkQueryHandler : CommandHandler<DeleteTrademarkCommand, DeleteTrademarkQueryResult>
+    public class DeleteTrademarkQueryHandler : CommandHandler<DeleteTrademarkCommand, DeleteTrademarkCommandResult>
     {
         private readonly ITrademarkRepository trademark;
         public DeleteTrademarkQueryHandler(ITrademarkRepository trademark)
         {
             this.trademark = trademark;
         }
-        public async override Task<DeleteTrademarkQueryResult> Handle(DeleteTrademarkCommand request, CancellationToken cancellationToken)
+        public async override Task<DeleteTrademarkCommandResult> Handle(DeleteTrademarkCommand request, CancellationToken cancellationToken)
         {
-            var delete = new TrademarkInfo()
-            {
-                Id = request.Id
-            };
-            await trademark.DeleteTrademark(delete);
-            return new DeleteTrademarkQueryResult(true);
+            var param = new TrademarkInfo { Id = request.Id, DataVersion = request.DataVersion };
+
+            await this.trademark.DeleteTrademark(param);
+
+            return new DeleteTrademarkCommandResult(true);
         }
     }
 }

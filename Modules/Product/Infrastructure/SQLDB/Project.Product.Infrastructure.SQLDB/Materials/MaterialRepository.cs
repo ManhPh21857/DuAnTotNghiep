@@ -1,5 +1,7 @@
 ﻿using Dapper;
+using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
+using Project.Product.Domain.Enums;
 using Project.Product.Domain.Materials;
 using System;
 using System.Collections.Generic;
@@ -36,7 +38,7 @@ namespace Project.Product.Infrastructure.SQLDB.Materials
 
         public async Task CreateMaterial(MaterialInfo materials)
         {
-            await using var connect = await connection.Connect();
+             var connect = await connection.Connect();
             const string sql = @"
                                 INSERT [dbo].[materials] (
 	                                [name]
@@ -46,53 +48,115 @@ namespace Project.Product.Infrastructure.SQLDB.Materials
                                 )";
             await connect.ExecuteAsync(sql, new
             {
-
                 Name = materials.Name,
             });
         }
 
         public async Task DeleteMaterial(MaterialInfo material)
         {
-            await using var connect = await connection.Connect();
-            const string sql = @"
-                                Delete From [materials]
-                                where Id=@Id;
-                                ";
-            await connect.ExecuteAsync(sql, new
-            {
-                Id = material.Id
+            var connect = await connection.Connect();
 
-            });
+            const string query = @"
+                UPDATE [dbo].[materials]
+                SET
+	                [is_deleted] = @IsDeleted
+                WHERE
+	                [id] = @Id
+                    AND [data_version] = @DataVersion
+                    AND [is_deleted] = @NotDeleted
+            ";
+
+            int result = await connect.ExecuteAsync(query,
+                new
+                {
+                    IsDeleted = IsDeleted.Yes,
+                    Id = material.Id,
+                    DataVersion = material.DataVersion,
+                    NotDeleted = IsDeleted.No
+                }
+            );
+
+            result.IsOptimisticLocked();
         }
 
-        public async Task<IEnumerable<MaterialInfo>> GetMaterial()
+        public async Task<IEnumerable<MaterialInfo>> GetMaterial(int? id)
         {
             var connect = await connection.Connect();
+            var builder = new SqlBuilder();
             const string sql = @"
-                                select 
-                                id As Id, 
-                                name As Name
-                                from 
-                                [materials]
+                                SELECT
+	                                [id]            AS Id
+                                   ,[name]          AS Name
+                                   ,[is_deleted]    AS IsDeleted
+                                   ,[data_version]  AS DataVersion
+                                FROM
+	                                [materials]
+                                
                                 ";
-            var result = await connect.QueryAsync<MaterialInfo>(sql);
+            var template = builder.AddTemplate(sql);
+
+            if (id.HasValue)
+            {
+                builder.Where("[id] = @Id", new { Id = id });
+            }
+
+            var result = await connect.QueryAsync<MaterialInfo>(template.RawSql);
+
             return result;
+        }
+
+        public async Task ReActiveMaterial(MaterialInfo material)
+        {
+            var connect = await connection.Connect();
+
+            const string query = @"
+                UPDATE [dbo].[materials]
+                SET
+	                [is_deleted] = @NotDeleted
+                WHERE
+	                [id] = @Id
+                    AND [data_version] = @DataVersion
+                    AND [is_deleted] = @IsDeleted
+            ";
+
+            int result = await connect.ExecuteAsync(query,
+                new
+                {
+                    IsDeleted = IsDeleted.Yes,
+                    Id = material.Id,
+                    DataVersion = material.DataVersion,
+                    NotDeleted = IsDeleted.No
+                }
+            );
+
+            result.IsOptimisticLocked();
         }
 
         public async Task UpdateMaterial(MaterialInfo materials)
         {
-            await using var connect = await connection.Connect();
-            const string sql = @"
-                                UPDATE [materials]
-                                SET 
-                                name = @Name
-                                WHERE id = @Id;
-                                ";
-            await connect.ExecuteAsync(sql, new
-            {
-                Id = materials.Id,
-                Name = materials.Name
-            });
+            var connect = await connection.Connect();
+
+            const string query = @"
+                UPDATE [dbo].[materials]
+                SET 
+                    [name] = @Name
+                WHERE
+                    [id] = @Id
+                    AND [data_version] = @DataVersion
+                    AND [is_deleted] = @IsDeleted
+            ";
+
+            int result = await connect.ExecuteAsync(query,
+                new
+                {
+                    Name = materials.Name,
+                    Id = materials.Id,
+                    DataVersion = materials.DataVersion,
+                    IsDeleted = IsDeleted.No
+                }
+            );
+
+            result.IsOptimisticLocked();
         }
 
     }

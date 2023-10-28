@@ -13,6 +13,11 @@ using Project.Product.Infrastructure.SQLDB.Origins;
 using Project.Product.Infrastructure.SQLDB.Products;
 using Project.Product.Infrastructure.SQLDB.Suppliers;
 using Project.Product.Infrastructure.SQLDB.Trademarks;
+using Project.Product.Domain.Suppliers;
+using Project.Product.Infrastructure.SQLDB.Suppliers;
+using Project.Product.Domain.Materials;
+using Project.Product.Domain.CartDetails;
+using Project.Product.Infrastructure.SQLDB.CartDetails;
 
 namespace Project.Product.Infrastructure.SQLDB;
 
@@ -27,5 +32,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IMaterialRepository, MaterialRepository>();
         services.AddScoped<ITrademarkRepository, TrademarkRepository>();
         services.AddScoped<IOriginRepository, OriginRepository>();
+        services.AddScoped<ICartdetailRepository, CartdetailRepository>();
     }
 }

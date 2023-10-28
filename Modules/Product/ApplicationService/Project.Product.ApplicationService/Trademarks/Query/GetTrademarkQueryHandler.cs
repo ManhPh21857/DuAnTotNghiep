@@ -1,11 +1,6 @@
 ﻿using Project.Core.ApplicationService.Queries;
 using Project.Product.Domain.Trademarks;
 using Project.Product.Integration.Trademarks.Query;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Product.ApplicationService.Trademarks.Query
 {
@@ -20,7 +15,7 @@ namespace Project.Product.ApplicationService.Trademarks.Query
 
         public async override Task<GetTrademarkQueryResult> Handle(GetTrademarkQuery request, CancellationToken cancellationToken)
         {
-            var result = await Trademark.GetTrademark();
+            var result = await Trademark.GetTrademark(null);
 
             return new GetTrademarkQueryResult(result.ToList());
         }

@@ -3,10 +3,10 @@ namespace Project.Product.Integration.Materials.Command
 {
     public class DeleteMaterialCommandResult
     {
-        public bool Result { get; set; }
-        public DeleteMaterialCommandResult(bool result)
+        public bool IsSuccess { get; set; }
+        public DeleteMaterialCommandResult(bool isSuccess)
         {
-            Result = result;
+            IsSuccess = isSuccess;
         }
     }
 }

@@ -1,35 +1,31 @@
-﻿using Project.Core.ApplicationService.Commands;
+﻿using Microsoft.IdentityModel.Tokens;
+using Project.Core.ApplicationService.Commands;
 using Project.Product.Domain.Materials;
-using Project.Product.Integration.Materials;
 using Project.Product.Integration.Materials.Command;
 
 namespace Project.Product.ApplicationService.Materials.Command
 {
     public class UpdateMaterialCommandHandler : CommandHandler<UpdateMaterialCommand, UpdateMaterialCommandResult>
     {
-        private readonly IMaterialRepository material;
+        private readonly IMaterialRepository materialRepository;
 
-        public UpdateMaterialCommandHandler(IMaterialRepository material)
+        public UpdateMaterialCommandHandler(IMaterialRepository materialRepository)
         {
-            this.material = material;
+            this.materialRepository = materialRepository;
         }
-        public override async Task<UpdateMaterialCommandResult> Handle(UpdateMaterialCommand request, CancellationToken cancellationToken)
-        {
-            var update = new MaterialInfo()
+        public async override  Task<UpdateMaterialCommandResult> Handle(UpdateMaterialCommand request, CancellationToken cancellationToken)
+        {          
+            foreach (var item in request.Materials)
             {
-                Id = request.Id,
-                Name = request.Name
-            };
-
-             var check = await material.CheckMaterialName(request.Name);
-            if(check is not null)
-            {
-                throw new Exception();
+                if (item.DataVersion.IsNullOrEmpty())
+                {
+                    await this.materialRepository.CreateMaterial(item);
+                }
+                else
+                {
+                    await this.materialRepository.UpdateMaterial(item);
+                }
             }
-
-            await material.UpdateMaterial(update);
-            
-            
             return new UpdateMaterialCommandResult(true);
         }
     }

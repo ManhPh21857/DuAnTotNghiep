@@ -10,11 +10,14 @@ namespace Project.Product.ApplicationService.Suppliers.Query
         public GetSupplierQueryHandler(ISupplierRepository supplier)
         {
             this.supplier = supplier;
+
         }
 
         public override async Task<GetSupplierQueryResult> Handle(GetSupplierQuery request, CancellationToken cancellationToken)
         {
-            var result = await supplier.GetSupplier();
+
+            var result = await supplier.GetSupplier(null);
+           
             return new GetSupplierQueryResult(result.ToList());
         }
     }

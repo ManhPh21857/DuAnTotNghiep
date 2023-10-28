@@ -1,6 +1,9 @@
 ﻿using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.Product.Domain.Suppliers;
 using Dapper;
+using Project.Product.Domain.Enums;
+using Project.Core.Infrastructure.SQLDB.Extensions;
+
 namespace Project.Product.Infrastructure.SQLDB.Suppliers
 {
     public class SupplierRepository : ISupplierRepository
@@ -10,79 +13,159 @@ namespace Project.Product.Infrastructure.SQLDB.Suppliers
         {
             this.connection = connection;
         }
-
-
         public async Task AddSupplier(SupplierInfo Supplier)
         {
-            await using var connect = await connection.Connect();
-            const string sql = @"
-                                INSERT [dbo].[suppliers] (
+            var connect = await connection.Connect();
 
-	                                [name],
-                                    [address],
-				                    [status]
-                                )
-                                VALUES (
-                                   @Name
-                                   ,@Address
-                                   ,@Status
-                                   
-                                )";
-             await connect.ExecuteAsync(sql,new
-             {
+            const string query = @"
+                INSERT [dbo].[suppliers] (
+	                [name],
+                    [address]
+                )
+                VALUES (
+	                @Name,
+                    @Address
+                )
+            ";
 
-                 Name = Supplier.Name,
-                 Address = Supplier.Address,
-                 Status = Supplier.Status,
-             });
+            await connect.ExecuteAsync(query,
+                new
+                {
+                    Name = Supplier.Name,
+                    Address = Supplier.Address
+                }
+            );
         }
         public async Task UpdateSupplier(SupplierInfo Supplier)
         {
-            await using var connect = await connection.Connect();
-            const string sql = @"
-                                UPDATE [suppliers]
-                                SET 
-                                name = @Name, 
-                                address = @Address,
-                                status= @Status
-                                WHERE id = @Id;
-                                ";
-            await connect.ExecuteAsync(sql, new
-            {
-                Id = Supplier.Id,
-                Name = Supplier.Name,
-                Address = Supplier.Address,
-                Status = Supplier.Status
-            });
-        }
-        public async Task<IEnumerable<SupplierInfo>> GetSupplier()
-        {
             var connect = await connection.Connect();
-            const string sql = @"
-                                select 
-                                id As Id, 
-                                name As Name,
-                                address As Address,
-                                status 
-                                from 
-                                [suppliers]
-                                ";
-            var result = await connect.QueryAsync<SupplierInfo>(sql);
-            return result;
+
+            const string query = @"
+                UPDATE [dbo].[suppliers]
+                SET 
+                    [name] = @Name,
+                    [address] = @Address
+                WHERE
+                    [id] = @Id
+                    AND [data_version] = @DataVersion
+                    AND [is_deleted] = @IsDeleted
+            ";
+
+            int result = await connect.ExecuteAsync(query,
+                new
+                {
+                    Name = Supplier.Name,
+                    Id = Supplier.Id,
+                    Address = Supplier.Address,
+                    DataVersion = Supplier.DataVersion,
+                    IsDeleted = IsDeleted.No
+                }
+            );
+
+            result.IsOptimisticLocked();
         }
 
         public async Task DeleteSupplier(SupplierInfo Supplier)
         {
+            var connect = await connection.Connect();
+
+            const string query = @"
+                UPDATE [dbo].[suppliers]
+                SET
+	                [is_deleted] = @IsDeleted
+                WHERE
+	                [id] = @Id
+                    AND [data_version] = @DataVersion
+                    AND [is_deleted] = @NotDeleted
+            ";
+
+            int result = await connect.ExecuteAsync(query,
+                new
+                {
+                    IsDeleted = IsDeleted.Yes,
+                    Id = Supplier.Id,
+                    DataVersion = Supplier.DataVersion,
+                    NotDeleted = IsDeleted.No
+                }
+            );
+
+            result.IsOptimisticLocked();
+        }
+
+        public async Task<SupplierInfo> CheckSupplierName(string name,string address)
+        {
             await using var connect = await connection.Connect();
             const string sql = @"
-                                Delete From [suppliers]
-                                where Id=@Id;
+                                select 
+                                name,
+                                address
+                                from 
+                                [suppliers]
+                                where name = @Name and address = @address
                                 ";
-            await connect.ExecuteAsync(sql, new
+            var result = await connect.QueryFirstOrDefaultAsync<SupplierInfo>(sql, new
             {
-                Id = Supplier.Id,
-            
+                Name = name,
+                Address = address
             });
+            return result;
+        }
+
+        public async Task<IEnumerable<SupplierInfo>> GetSupplier(int? id)
+        {
+            var connect = await connection.Connect();
+
+            var builder = new SqlBuilder();
+
+            const string query = @"
+                SELECT
+	                [id]            AS Id
+                   ,[name]          AS Name
+                   ,[address]       As Address
+                   ,[is_deleted]    AS IsDeleted
+                   ,[data_version]  AS DataVersion
+                FROM
+	                [suppliers]
+                /**where**/
+            ";
+
+            var template = builder.AddTemplate(query);
+
+            if (id.HasValue)
+            {
+                builder.Where("[id] = @Id", new { Id = id });
+            }
+
+            var result = await connect.QueryAsync<SupplierInfo>(template.RawSql);
+
+            return result;
+        }
+
+        public async Task ReactiveSupplier(SupplierInfo Supplier)
+        {
+            var connect = await connection.Connect();
+
+            const string query = @"
+                UPDATE [dbo].[suppliers]
+                SET
+	                [is_deleted] = @NotDeleted
+                WHERE
+	                [id] = @Id
+                    AND [data_version] = @DataVersion
+                    AND [is_deleted] = @IsDeleted
+            ";
+
+            int result = await connect.ExecuteAsync(query,
+                new
+                {
+                    IsDeleted = IsDeleted.Yes,
+                    Id = Supplier.Id,
+                    DataVersion = Supplier.DataVersion,
+                    NotDeleted = IsDeleted.No
+                }
+            );
+
+            result.IsOptimisticLocked();
         }
     }
 }

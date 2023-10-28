@@ -8,115 +8,81 @@ using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Get;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Post;
-using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Put;
 using Project.Product.Integration.Origins.Command;
 using Project.Product.Integration.Origins.Query;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins
 {
     public class OriginController : CommonController
     {
-        private readonly IValidator<CreateOriginModel> createOriginValidator;
-        private readonly IValidator<UpdateOriginModel> updateOriginValidator;
-        private readonly IValidator<DeleteOriginModel> deleteOriginValidator;
-        public OriginController(ISender meadiator,
-             IValidator<CreateOriginModel> createOriginValidator,
-             IValidator<UpdateOriginModel> updateOriginValidator,
-             IValidator<DeleteOriginModel> deleteOriginValidator
-            ) : base(meadiator)
+        private readonly IValidator<UpdateOriginRequestModel> originValidator;
+        public OriginController(ISender mediator, IValidator<UpdateOriginRequestModel> originValidator) : base(mediator)
         {
-            this.createOriginValidator = createOriginValidator;
-            this.updateOriginValidator = updateOriginValidator;
-            this.deleteOriginValidator = deleteOriginValidator;
+            this.originValidator = originValidator;
         }
-        [AllowAnonymous]
-        [HttpGet("")]
-        public async Task<ResponseBaseModel<GetOriginReponseModel>> GetColors()
-        {
-            var result = await Mediator.Send(new GetOriginQuery());
 
-            return new ResponseBaseModel<GetOriginReponseModel>
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<ActionResult<ResponseBaseModel<OriginResponseModel>>> GetColors()
+        {
+            var result = await this.Mediator.Send(new GetOriginQuery());
+
+            return new ResponseBaseModel<OriginResponseModel>
             {
-                Data = result.Adapt<GetOriginReponseModel>()
+                Data = result.Adapt<OriginResponseModel>()
             };
         }
 
-
-
         [AllowAnonymous]
-        [HttpPost("")]
-        public async Task<ActionResult<ResponseBaseModel<CreateOriginReponseModel>>> CreateManufacturers(
-       [FromBody] CreateOriginModel request)
+        [HttpPost]
+        public async Task<ActionResult<ResponseBaseModel<CommandBaseModel>>> UpdateOrigin(UpdateOriginRequestModel request)
         {
-            var validator = await createOriginValidator.ValidateAsync(request);
+            var validator = await this.originValidator.ValidateAsync(request);
             if (!validator.IsValid)
             {
                 validator.AddToModelState(ModelState);
                 return this.BadRequest(ModelState);
             }
 
-            var registerRequest = request.Adapt<CreateOriginCommand>();
+            var command = request.Adapt<UpdateOriginCommand>();
 
+            var result = await this.Mediator.Send(command);
 
-            var result = await Mediator.Send(registerRequest);
-
-            var response = new ResponseBaseModel<CreateOriginReponseModel>
+            return new ResponseBaseModel<CommandBaseModel>
             {
-                Data = result.Adapt<CreateOriginReponseModel>()
+                Data = result.Adapt<CommandBaseModel>()
             };
-
-            return response;
         }
 
-
-
         [AllowAnonymous]
-        [HttpPut("")]
-        public async Task<ActionResult<ResponseBaseModel<UpdateOriginReponseModel>>> UpdateManufacturers(
-       [FromBody] UpdateOriginModel request)
+        [HttpPut("delete")]
+        public async Task<ResponseBaseModel<CommandBaseModel>> DeleteOrigin(DeleteOriginRequestModel request)
         {
-            var validator = await updateOriginValidator.ValidateAsync(request);
-            if (!validator.IsValid)
+
+            var command = request.Adapt<DeleteOriginCommand>();
+
+            var result = await Mediator.Send(command);
+
+            return new ResponseBaseModel<CommandBaseModel>
             {
-                validator.AddToModelState(ModelState);
-                return this.BadRequest(ModelState);
-            }
-
-            var registerRequest = request.Adapt<UpdateOriginQuery>();
-
-
-            var result = await Mediator.Send(registerRequest);
-
-            var response = new ResponseBaseModel<UpdateOriginReponseModel>
-            {
-                Data = result.Adapt<UpdateOriginReponseModel>()
+                Data = result.Adapt<CommandBaseModel>()
             };
-
-            return response;
         }
 
-
         [AllowAnonymous]
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ResponseBaseModel<DeleteOriginReponseModel>>> DeleteManufacturers(int id)
+        [HttpPut("reactive")]
+        public async Task<ResponseBaseModel<CommandBaseModel>> ReactiveỎrigin(DeleteOriginRequestModel request)
         {
-           
-            var registerRequest = new DeleteOriginCommand(id);
 
+            var command = request.Adapt<ReactiveOriginCommand>();
 
-            var result = await Mediator.Send(registerRequest);
+            var result = await Mediator.Send(command);
 
-            var response = new ResponseBaseModel<DeleteOriginReponseModel>
+            return new ResponseBaseModel<CommandBaseModel>
             {
-                Data = result.Adapt<DeleteOriginReponseModel>()
+                Data = result.Adapt<CommandBaseModel>()
             };
-
-            return response;
         }
     }
 }

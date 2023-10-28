@@ -2,11 +2,11 @@
 {
     public class DeleteSupplierCommandResult
     {
-        public bool Result { get; set; }
+        public bool IsSuccess { get; set; }
 
-        public DeleteSupplierCommandResult(bool result)
+        public DeleteSupplierCommandResult(bool isSuccess)
         {
-            Result = result;
+            IsSuccess = isSuccess;
         }
     }
 }
