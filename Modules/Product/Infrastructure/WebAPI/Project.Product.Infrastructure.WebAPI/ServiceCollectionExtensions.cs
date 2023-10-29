@@ -11,8 +11,7 @@ using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post;
-using static Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Post.UpdateMaterialRequestModel;
-using static Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post.UpdateCartdetailRequestModel;
+
 
 namespace Project.Product.Infrastructure.WebAPI;
 
