@@ -49,7 +49,6 @@ public static class ServiceCollectionExtensions
         // Origin: Xuất xứ
         services.AddScoped<IValidator<UpdateOriginModel>, UpdateOriginModelValidator>();
         services.AddScoped<IValidator<UpdateOriginRequestModel>, UpdateOriginRequestModelValidator>();
-
         //Color
         services.AddScoped<IValidator<UpdateColorRequestModel>, UpdateColorRequestModelValidator>();
         services.AddScoped<IValidator<UpdateColorModel>, UpdateColorModelValidator>();
