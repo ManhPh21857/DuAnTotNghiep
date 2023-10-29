@@ -1,5 +1,4 @@
 ﻿using Project.Core.ApplicationService.Commands;
-
 namespace Project.Product.Integration.Colors.Command
 {
     public class DeleteColorCommand : ICommand<DeleteColorCommandResult>
