@@ -13,11 +13,12 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post
         }
         
     }
-    public class UpdateCartdetailRequestModelValidator : AbstractValidator<UpdateCartdetailRequestModel>
-    {
-        public UpdateCartdetailRequestModelValidator(IValidator<UpdateCartdetailModel> updateCartdetailModelValidator)
-        {
-            this.RuleForEach(x => x.Cartdetails).SetValidator(updateCartdetailModelValidator);
-        }
-    }
+
+	public class UpdateCartdetailRequestModelValidator : AbstractValidator<UpdateCartdetailRequestModel>
+	{
+		public UpdateCartdetailRequestModelValidator(IValidator<UpdateCartdetailModel> updateCartdetailModelValidator)
+		{
+			this.RuleForEach(x => x.Cartdetails).SetValidator(updateCartdetailModelValidator);
+		}
+	}
 }

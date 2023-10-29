@@ -4,13 +4,29 @@ using Microsoft.Extensions.DependencyInjection;
 using Project.Product.ApplicationService;
 using Project.Product.Domain;
 using Project.Product.Infrastructure.SQLDB;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Post;
 using System.Reflection;
-using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Post;
-using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Delete;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Put;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Delete;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Delete;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Sizes.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Post;
+using System.Reflection;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Sizes.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Post;
+using System.Reflection;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors.Get;
 
 
 namespace Project.Product.Infrastructure.WebAPI;
@@ -48,12 +64,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<UpdateTrademarkRequestModel>, UpdateTrademarkRequestModelValidator>();
         // Origin: Xuất xứ
         services.AddScoped<IValidator<UpdateOriginModel>, UpdateOriginModelValidator>();
-        services.AddScoped<IValidator<UpdateOriginRequestModel>, UpdateOriginRequestModelValidator>();
+        services.AddScoped<IValidator<DeleteOriginModel>, DeleteOriginModelValidator>();
+
         //Color
         services.AddScoped<IValidator<UpdateColorRequestModel>, UpdateColorRequestModelValidator>();
         services.AddScoped<IValidator<UpdateColorModel>, UpdateColorModelValidator>();
-        //CartDetail
-        services.AddScoped<IValidator<UpdateCartdetailRequestModel>, UpdateCartdetailRequestModelValidator>();
-        services.AddScoped<IValidator<UpdateCartdetailModel>, UpdateCartdetailModelValidator>();
     }
 }

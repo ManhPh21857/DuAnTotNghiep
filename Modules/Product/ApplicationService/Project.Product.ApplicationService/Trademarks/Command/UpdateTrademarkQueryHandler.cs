@@ -4,6 +4,7 @@ using Project.Product.Domain.Trademarks;
 using Project.Product.Integration.Trademarks.Command;
 
 
+
 namespace Project.Product.ApplicationService.Trademarks.Command
 {
     public class UpdateTrademarkQueryHandler : CommandHandler<UpdateTrademarkCommand, UpdateTrademarkCommandResult>
