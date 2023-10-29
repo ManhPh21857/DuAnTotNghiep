@@ -8,10 +8,10 @@ namespace Project.Product.Integration.Origins.Command
 {
     public class UpdateOriginCommandResult
     {
-        public bool Result { get; set; }
-        public UpdateOriginCommandResult(bool result)
+        public bool IsSuccess { get; set; }
+        public UpdateOriginCommandResult(bool isSuccess)
         {
-            Result = result;
+            IsSuccess = isSuccess;
         }
     }
 }

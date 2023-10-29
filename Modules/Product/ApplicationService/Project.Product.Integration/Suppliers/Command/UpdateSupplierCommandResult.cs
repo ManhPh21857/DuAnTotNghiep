@@ -2,11 +2,11 @@
 {
     public class UpdateSupplierCommandResult
     {
-        public bool Result { get; set; }
+        public bool IsSuccess { get; set; }
 
-        public UpdateSupplierCommandResult(bool result)
+        public UpdateSupplierCommandResult(bool isSuccess)
         {
-            Result = result;
+            IsSuccess = isSuccess;
         }
     }
 }

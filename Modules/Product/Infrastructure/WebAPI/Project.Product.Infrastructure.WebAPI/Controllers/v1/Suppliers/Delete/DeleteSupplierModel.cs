@@ -10,14 +10,6 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Delete
     public class DeleteSupplierModel
     {
         public int? Id { get; set; }
-    }
-    public class DeleteManufacturerModelValidator : AbstractValidator<DeleteSupplierModel>
-    {
-        public DeleteManufacturerModelValidator()
-        {
-            RuleFor(v => v.Id)
-                .NotEmpty()
-                .WithMessage($"{nameof(DeleteSupplierModel.Id)} can not be empty");
-        }
+        public byte[]? DataVersion { get; set; }
     }
 }
