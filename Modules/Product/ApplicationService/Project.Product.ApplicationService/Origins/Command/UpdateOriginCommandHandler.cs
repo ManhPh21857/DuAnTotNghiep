@@ -19,10 +19,20 @@ namespace Project.Product.ApplicationService.Origins.Command
             {
                 if (item.DataVersion.IsNullOrEmpty())
                 {
+                    var check = await Origin.CheckOriginName(item.Name);
+                    if (check != null)
+                    {
+                        throw new InvalidOperationException();
+                    }
                     await this.Origin.CreateOrigin(item);
                 }
                 else
                 {
+                    var check = await Origin.CheckOriginName(item.Name);
+                    if (check != null)
+                    {
+                        throw new InvalidOperationException();
+                    }
                     await this.Origin.UpdateOrigin(item);
                 }
             }

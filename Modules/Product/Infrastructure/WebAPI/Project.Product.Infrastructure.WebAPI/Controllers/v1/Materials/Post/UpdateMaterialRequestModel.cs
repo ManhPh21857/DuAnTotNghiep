@@ -15,6 +15,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Post
 		{
 			Materials = new List<UpdateMaterialModel>();
 		}
+       
 	}
 
 	public class UpdateMaterialRequestModelValidator : AbstractValidator<UpdateMaterialRequestModel>

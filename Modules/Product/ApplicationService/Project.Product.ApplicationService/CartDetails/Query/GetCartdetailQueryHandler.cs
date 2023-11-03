@@ -20,9 +20,9 @@ namespace Project.Product.ApplicationService.CartDetails.Query
 
         public async override Task<GetCartdetailQueryResult> Handle(GetCartdetailQuery request, CancellationToken cancellationToken)
         {
-            var result = await cartService.GetCartdetai();
+            var result = (await this.cartService.GetCartDetails()).ToList();
 
-            return new GetCartdetailQueryResult(result.ToList());
+            return new GetCartdetailQueryResult(result);
         }
     }
 }
