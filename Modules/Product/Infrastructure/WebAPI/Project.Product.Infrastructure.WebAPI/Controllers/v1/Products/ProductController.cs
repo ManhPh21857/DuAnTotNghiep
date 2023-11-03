@@ -20,6 +20,39 @@ public class ProductController : CommonController
     }
 
     [AllowAnonymous]
+    [HttpPost("view/{pageNo}")]
+    public async Task<ActionResult<ResponseBaseModel<GetProductViewResponseModel>>> GetProductView(int pageNo, [FromBody] ProductFilter filter)
+    {
+        var query = new GetProductViewQuery(pageNo);
+
+        var result = await Mediator.Send(query);
+
+        var response = new ResponseBaseModel<GetProductViewResponseModel>
+        {
+            Data = result.Adapt<GetProductViewResponseModel>()
+        };
+
+        return response;
+    }
+
+    [AllowAnonymous]
+    [HttpGet("item/{id}")]
+    public async Task<ActionResult<ResponseBaseModel<GetProductItemResponseModel>>> GetProductItem(int id)
+    {
+        var query = new GetProductItemQuery(id);
+
+        var result = await Mediator.Send(query);
+
+        var response = new ResponseBaseModel<GetProductItemResponseModel>
+        {
+            Data = result.Adapt<GetProductItemResponseModel>()
+        };
+
+        return response;
+    }
+
+
+    [AllowAnonymous]
     [HttpGet("{pageNo}")]
     public async Task<ActionResult<ResponseBaseModel<GetProductResponseModel>>> GetProducts(int pageNo)
     {

@@ -39,6 +39,30 @@ public class AuthenticationController : HumanResourcesController
         this.memoryCache = memoryCache;
     }
 
+    [HttpPost("employee/login")]
+    public async Task<ActionResult<ResponseBaseModel<LoginResponseModel>>> EmployeeLogin(
+        [FromBody] LoginRequestModel request)
+    {
+        var validator = await loginValidator.ValidateAsync(request);
+        if (!validator.IsValid)
+        {
+            validator.AddToModelState(ModelState);
+            return this.BadRequest(ModelState);
+        }
+
+        var loginRequest = request.Adapt<LoginRequest>();
+
+        var result = await Mediator.Send(loginRequest);
+
+        var response = new ResponseBaseModel<LoginResponseModel>
+        {
+            Data = result.Adapt<LoginResponseModel>()
+        };
+
+        return response;
+    }
+
+
     [HttpPost("login")]
     public async Task<ActionResult<ResponseBaseModel<LoginResponseModel>>> Login(
         [FromBody] LoginRequestModel request)
