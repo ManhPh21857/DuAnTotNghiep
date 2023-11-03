@@ -5,11 +5,11 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post
 {
     public class UpdateCartdetailRequestModel
     {
-        public IEnumerable<UpdateCartdetailModel> Cartdetails { get; set; }
+        public IEnumerable<UpdateCartdetailModel> CartDetails { get; set; }
 
         public UpdateCartdetailRequestModel()
         {
-            Cartdetails = new List<UpdateCartdetailModel>();
+            CartDetails = new List<UpdateCartdetailModel>();
         }
         
     }
@@ -18,7 +18,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post
 	{
 		public UpdateCartdetailRequestModelValidator(IValidator<UpdateCartdetailModel> updateCartdetailModelValidator)
 		{
-			this.RuleForEach(x => x.Cartdetails).SetValidator(updateCartdetailModelValidator);
+			this.RuleForEach(x => x.CartDetails).SetValidator(updateCartdetailModelValidator);
 		}
 	}
 }

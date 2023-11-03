@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Project.Product.ApplicationService;
 using Project.Product.Domain;
 using Project.Product.Infrastructure.SQLDB;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Post;
@@ -35,6 +36,9 @@ public static class ServiceCollectionExtensions
 
     public static void AddValidator(this IServiceCollection services)
     {
+        //Cartdetail
+        services.AddScoped<IValidator<UpdateCartdetailModel>, UpdateCartdetailModelValidator>();
+        services.AddScoped<IValidator<UpdateCartdetailRequestModel>, UpdateCartdetailRequestModelValidator>();
         // Supplier: Nha xan xuat
         services.AddScoped<IValidator<UpdateSupplierModel>, UpdateSupplierModelValidator>();
         services.AddScoped<IValidator<UpdateSupplierRequestModel>, UpdateSupplierRequestModelValidator>();

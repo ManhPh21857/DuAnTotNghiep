@@ -33,6 +33,24 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails
             };
         }
 
+
+        [AllowAnonymous]
+        [HttpGet("detail")]
+        public async Task<ActionResult<ResponseBaseModel<GetCartdetailsResponseModel>>> GetCartdetails()
+        {
+            var query = new GetCartdetailsQuery();
+
+            var result = await Mediator.Send(query);
+
+            var response = new ResponseBaseModel<GetCartdetailsResponseModel>
+            {
+                Data = result.Adapt<GetCartdetailsResponseModel>()
+            };
+
+            return response;
+        }
+
+
         [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<ResponseBaseModel<CommandBaseModel>>> UpdateCartdetail(UpdateCartdetailRequestModel request)
