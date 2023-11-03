@@ -4,6 +4,8 @@ public interface IProductRepository
 {
     #region Product
 
+    Task<ProductViewResponse> GetProductView(int skip, int take);
+    Task<ProductView> GetProductView(int id);
     Task<ProductInfo> GetProduct(int id);
     Task<IEnumerable<ProductView>> GetProducts(int skip, int take);
     Task<int> CreateProduct(ProductInfo param);

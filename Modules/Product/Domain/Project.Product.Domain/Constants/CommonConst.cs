@@ -3,6 +3,6 @@
     public static class CommonConst
     {
         public const int Valid = 0;
-        public const int PageSize = 10;
+        public const int PageSize = 12;
     }
 }
