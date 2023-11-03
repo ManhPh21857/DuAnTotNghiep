@@ -283,13 +283,16 @@ public class ProductRepository : IProductRepository
         await using var connect = await provider.Connect();
         const string query = @"
             SELECT
-                [color_id]  AS ColorId
-               ,[image]	    AS Image
+	            pc.[color_id] AS ColorId
+               ,pc.[Image]	  AS Image
+               ,c.Color		  AS Color
             FROM
-	            [dbo].[product_colors]
+	            [dbo].[product_colors] AS pc
+	            LEFT JOIN [dbo].[colors] AS c
+		            ON pc.[color_id] = c.[id]
             WHERE
-	            [product_id] = @ProductId
-	            AND [is_deleted] = @IsDeleted
+	            pc.[product_id] = @ProductId
+	            AND pc.[is_deleted] = @IsDeleted
         ";
 
         var result = await connect.QueryAsync<ProductColorInfo>(query,
@@ -380,12 +383,15 @@ public class ProductRepository : IProductRepository
         await using var connect = await provider.Connect();
         const string query = @"
             SELECT
-                [size_id] AS SizeId
+	            ps.[size_id] AS SizeId
+               ,s.Size		 AS Size
             FROM
-	            [dbo].[product_sizes]
+	            [dbo].[product_sizes] AS ps
+	            LEFT JOIN [dbo].[sizes] AS s
+		            ON ps.[size_id] = s.[id]
             WHERE
-	            [product_id] = @ProductId
-	            AND [is_deleted] = @IsDeleted
+	            ps.[product_id] = @ProductId
+	            AND ps.[is_deleted] = @IsDeleted
         ";
 
         var result = await connect.QueryAsync<ProductSizeInfo>(query,
