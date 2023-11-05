@@ -8,6 +8,8 @@ using Project.Product.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Sizes.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Post;
 using System.Reflection;
@@ -55,5 +57,16 @@ public static class ServiceCollectionExtensions
         //Color
         services.AddScoped<IValidator<UpdateColorRequestModel>, UpdateColorRequestModelValidator>();
         services.AddScoped<IValidator<UpdateColorModel>, UpdateColorModelValidator>();
+
+        //Size
+        services.AddScoped<IValidator<UpdateSizeRequestModel>, UpdateSizeRequestModelValidator>();
+        services.AddScoped<IValidator<UpdateSizeModel>, UpdateSizeModelValidator>();
+
+        //Product
+        services.AddScoped<IValidator<UpdateProductModel>, UpdateProductModelValidator>();
+        services.AddScoped<IValidator<UpdateProductColorModel>, UpdateProductColorModelValidator>();
+        services.AddScoped<IValidator<UpdateProductSizeModel>, UpdateProductSizeModelValidator>();
+        services.AddScoped<IValidator<UpdateProductDetailModel>, UpdateProductDetailModelValidator>();
+        services.AddScoped<IValidator<UpdateProductRequestModel>, UpdateProductRequestModelValidator>();
     }
 }

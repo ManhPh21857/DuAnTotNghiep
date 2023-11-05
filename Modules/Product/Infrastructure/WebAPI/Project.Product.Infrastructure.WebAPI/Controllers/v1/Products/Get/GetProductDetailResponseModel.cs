@@ -1,6 +1,4 @@
-﻿using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Post;
-
-namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Get
+﻿namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Get
 {
     public class GetProductDetailResponseModel
     {
