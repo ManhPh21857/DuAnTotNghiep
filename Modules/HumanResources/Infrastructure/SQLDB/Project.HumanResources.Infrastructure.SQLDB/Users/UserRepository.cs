@@ -44,7 +44,8 @@ public class UserRepository : IUserRepository
 
         const string query = @"
             SELECT
-	            [UID]           AS UID
+                [id]            AS Id
+	           ,[UID]           AS UID
                ,[user_name]     AS Username
                ,[is_deleted]    AS IsDeleted
             FROM
