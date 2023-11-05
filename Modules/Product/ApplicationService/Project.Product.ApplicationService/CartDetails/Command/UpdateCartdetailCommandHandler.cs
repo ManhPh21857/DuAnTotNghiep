@@ -19,13 +19,23 @@ namespace Project.Product.ApplicationService.CartDetails.Command
         {
             foreach (var item in request.Cartdetails)
             {
+                var check = await this.cartdetailRepository.CheckCartdetailName((int)item.CartId,(int)item.ProductDetailId);
                 if (item.DataVersion.IsNullOrEmpty())
                 {
-                    await this.cartdetailRepository.CreateCartdetai(item);
+                    if (check != null)
+                    {
+                        await this.cartdetailRepository.UpdateQuantityCartdetail((int)item.CartId,(int)item.ProductDetailId);
+                    }
+                    else
+                    {
+                        await this.cartdetailRepository.CreateCartdetai(item);
+                    }
+                    //await this.cartdetailRepository.CreateCartdetai(item);
                 }
                 else
                 {
                     await this.cartdetailRepository.UpdateCartdetai(item);
+                    
                 }
             }
 

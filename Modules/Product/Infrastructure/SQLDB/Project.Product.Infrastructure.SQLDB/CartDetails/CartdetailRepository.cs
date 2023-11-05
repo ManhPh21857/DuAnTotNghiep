@@ -13,6 +13,67 @@ namespace Project.Product.Infrastructure.SQLDB.CartDetails
         {
             this.connection = connection;
         }
+
+        public async Task<CartdetailInfo> CheckCartdetailName(int cartid, int productdetailid)
+        {
+            await using var connect = await connection.Connect();
+            const string sql = @"
+                                SELECT  product_detail_id As ProductDetailId, cart_id As CartId
+                                FROM 
+                                cart_details 
+                                WHERE cart_details.cart_id =@CartId
+                                AND cart_details.product_detail_id = @ProductDetailId
+                                ";
+            var result = await connect.QueryFirstOrDefaultAsync<CartdetailInfo>(sql, new
+            {
+                CartId = cartid,
+                ProductDetailId = productdetailid
+            });
+            return result;
+        }
+
+
+        public async Task<IEnumerable<CartdetailInfo>> GetCartdetai()
+        {
+            var connect = await connection.Connect();
+            const string sql = @"
+                                SELECT 
+                                       cart_id As CartId, product_detail_id As ProductDetailId,
+								       price As Price, quantity As Quantity, data_version As DataVersion
+								FROM 
+                                       cart_details
+                                Where
+                                      cart_id = @CartId and product_detail_id = @ProductDetailId
+                                ";
+
+            var result = await connect.QueryAsync<CartdetailInfo>(sql);
+
+            return result;
+        }
+
+        public async Task<IEnumerable<CartDetailView>> GetCartDetails()
+        {
+            var connect = await connection.Connect();
+            const string sql = @"
+                                SELECT cart_details.cart_id As CartId, cart_details.product_detail_id As ProductDetailId, 
+								products.image As Image,
+								cart_details.data_version As DataVersion, products.name As Name, 
+								colors.color As Color, sizes.size As Size,
+                                cart_details.quantity As Quantity, cart_details.price As Price
+                                FROM 
+                                cart_details left join product_details
+                                on cart_details.product_detail_id = product_details.id
+								left join colors on product_details.color_id = colors.id
+								left join sizes on product_details.size_id = sizes.id
+                                left join products on product_details.product_id = products.id
+                                ";
+
+            var result = await connect.QueryAsync<CartDetailView>(sql);
+
+            return result;
+        }
+
+
         public async Task CreateCartdetai(CartdetailInfo Cartdetai)
         {
             await using var connect = await connection.Connect();
@@ -55,64 +116,15 @@ namespace Project.Product.Infrastructure.SQLDB.CartDetails
 
             result.IsOptimisticLocked();
         }
-
-        public async Task<IEnumerable<CartdetailInfo>> GetCartdetai()
-        {
-            var connect = await connection.Connect();
-            const string sql = @"
-                                SELECT cart_details.cart_id As CartId, cart_details.product_detail_id As ProductDetailId, 
-								cart_details.data_version As DataVersion, products.name As Name, 
-                                cart_details.price As Price, cart_details.quantity As Quantity, 
-								products.image As Image
-                                FROM 
-                                cart_details inner join product_details
-                                on cart_details.product_detail_id = product_details.id
-                                inner join products on product_details.product_id = products.id
-                                ";
-           
-            var result = await connect.QueryAsync<CartdetailInfo>(sql);
-
-            return result;
-        }
-
-        public async Task ReactiveCartdetail(CartdetailInfo cartdetail)
-        {
-            var connect = await connection.Connect();
-
-            const string query = @"
-                UPDATE [dbo].[cart_details]
-                SET
-	                [is_deleted] = @NotDeleted
-                WHERE
-	                [cart_id] = @Cartid
-                    AND [product_detail_id] = @Productdetailid
-                    AND [data_version] = @DataVersion
-                    AND [is_deleted] = @IsDeleted
-            ";
-
-            int result = await connect.ExecuteAsync(query,
-                new
-                {
-                    IsDeleted = IsDeleted.Yes,
-                    Id = cartdetail.CartId,
-                    Productdetailid = cartdetail.ProductDetailId,
-                    DataVersion = cartdetail.DataVersion,
-                    NotDeleted = IsDeleted.No
-                }
-            );
-
-            result.IsOptimisticLocked();
-        }
+      
 
         public async Task UpdateCartdetai(CartdetailInfo Cartdetai)
         {
             await using var connect = await connection.Connect();
             const string sql = @"
-                               UPDATE  product_detail_id =@ProductdetailId, price =@Price, quantity =@Quantity 
-                               WHERE cart_id =@CartId 
-                               AND product_detail_id =@Productdetailid 
-                               AND [data_version] = @DataVersion
-                               AND [is_deleted] = @IsDeleted
+                               UPDATE  cart_details
+			                   SET  product_detail_id =@Productdetailid, quantity =@Quantity, price = @Price
+			                   WHERE cart_id =@Cartid and product_detail_id =@Productdetailid AND data_version = @DataVersion
                                 ";
             await connect.ExecuteAsync(sql, new
             {
@@ -120,8 +132,22 @@ namespace Project.Product.Infrastructure.SQLDB.CartDetails
                 Productdetailid = Cartdetai.ProductDetailId,
                 Price = Cartdetai.Price,
                 Quantity = Cartdetai.Quantity,
-                DataVersion = Cartdetai.DataVersion,
-                IsDeleted = IsDeleted.No
+                DataVersion = Cartdetai.DataVersion
+            });
+        }
+
+        public async Task UpdateQuantityCartdetail(int cartid, int productdetailid)
+        {
+            await using var connect = await connection.Connect();
+            const string sql = @"
+                               UPDATE cart_details
+								SET quantity = quantity+1
+								where cart_id =@CartId AND product_detail_id =@ProductDetailId
+                                ";
+            await connect.ExecuteAsync(sql, new
+            {
+                Cartid = cartid,
+                ProductDetailId = productdetailid
             });
         }
     }

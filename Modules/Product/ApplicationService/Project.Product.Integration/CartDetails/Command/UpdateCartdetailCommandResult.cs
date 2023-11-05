@@ -3,10 +3,10 @@ namespace Project.Product.Integration.CartDetails.Command
 {
     public class UpdateCartdetailCommandResult
     {
-        public bool Result { get; set; }
-        public UpdateCartdetailCommandResult(bool result)
+        public bool IsSuccess { get; set; }
+        public UpdateCartdetailCommandResult(bool isSuccess)
         {
-            Result = result;
+            IsSuccess = isSuccess;
         }
     }
 }

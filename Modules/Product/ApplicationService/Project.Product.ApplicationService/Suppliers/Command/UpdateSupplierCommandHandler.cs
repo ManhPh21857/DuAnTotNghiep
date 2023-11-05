@@ -20,10 +20,20 @@ namespace Project.Product.ApplicationService.Suppliers.Command
             {
                 if (item.DataVersion.IsNullOrEmpty())
                 {
+                    var check = await supplier.CheckSupplierName(item.Name, item.Address);
+                    if (check != null)
+                    {
+                        throw new InvalidOperationException();
+                    }
                     await this.supplier.AddSupplier(item);
                 }
                 else
                 {
+                    var check = await supplier.CheckSupplierName(item.Name, item.Address);
+                    if (check != null)
+                    {
+                        throw new InvalidOperationException();
+                    }
                     await this.supplier.UpdateSupplier(item);
                 }
             }
