@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Project.Core.Domain.User;
 
 namespace Project.HumanResources.ApplicationService.Authentication;
 
@@ -55,6 +56,7 @@ public class LoginService : CommandHandler<LoginRequest, LoginResponse>
             new(JwtRegisteredClaimNames.Sub, configuration["Jwt:Subject"]),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString(CultureInfo.CurrentCulture)),
+            new($"{nameof(UserId).ToLower()}", user.Id.ToString()),
             new("UID", user.UID),
             new("Username", user.Username),
         };
