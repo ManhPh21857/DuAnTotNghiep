@@ -35,7 +35,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<ResponseBaseModel<CommandBaseModel>>> UpdateColors(UpdateTrademarkRequestModel request)
+        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateColors(UpdateTrademarkRequestModel request)
         {
             var validator = await this.trademarkValidator.ValidateAsync(request);
             if (!validator.IsValid)
@@ -48,39 +48,39 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
 
             var result = await this.Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
 
         [AllowAnonymous]
         [HttpPut("delete")]
-        public async Task<ResponseBaseModel<CommandBaseModel>> DeleteColors(DeleteTrademarkRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> DeleteColors(DeleteTrademarkRequestModel request)
         {
 
             var command = request.Adapt<DeleteTrademarkCommand>();
 
             var result = await Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
 
         [AllowAnonymous]
         [HttpPut("reactive")]
-        public async Task<ResponseBaseModel<CommandBaseModel>> ReactiveColors(DeleteTrademarkRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> ReactiveColors(DeleteTrademarkRequestModel request)
         {
 
             var command = request.Adapt<ReactiveTrademarkCommand>();
 
             var result = await Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
     }
