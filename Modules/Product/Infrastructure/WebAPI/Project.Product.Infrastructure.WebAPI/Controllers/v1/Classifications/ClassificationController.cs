@@ -92,7 +92,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications
         public async Task<ActionResult<ResponseBaseModel<DeleteClassificationsReponseModel>>> DeleteClassifications(int id)
         {
 
-            var registerRequest = new DeleteClassificationCommand(id);
+            var registerRequest = new DeleteClassificationCommand(id, null);
 
             var result = await Mediator.Send(registerRequest);
 
