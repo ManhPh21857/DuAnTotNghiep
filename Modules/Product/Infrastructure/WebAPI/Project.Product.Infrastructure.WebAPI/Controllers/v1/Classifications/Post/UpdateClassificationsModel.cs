@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
 
-namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications.Put
+namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications.Post
 {
     public class UpdateClassificationsModel
     {
         public int? Id { get; set; }
         public string? Name { get; set; }
+        public byte[]? DataVersion { get; set; }
     }
     public class UpdateClassificationsModelValidator : AbstractValidator<UpdateClassificationsModel>
     {
@@ -17,9 +18,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications.P
                 .NotNull()
                 .WithMessage($"{nameof(UpdateClassificationsModel.Name)} can not null");
 
-            RuleFor(v => v.Id)
-                .NotNull()
-                .WithMessage($"{nameof(UpdateClassificationsModel.Id)} can not null");
+           
 
         }
     }

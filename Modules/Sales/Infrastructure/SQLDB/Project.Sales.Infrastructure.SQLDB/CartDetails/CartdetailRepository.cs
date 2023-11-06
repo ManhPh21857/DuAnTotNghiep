@@ -31,28 +31,41 @@ namespace Project.Sales.Infrastructure.SQLDB.CartDetails
             return result;
         }
 
-        public async Task<IEnumerable<CartDetailInfo>> GetCartdetail()
+        public async Task<IEnumerable<CartDetailInfo>> GetCartdetail(int id)
         {
             var connect = await connection.Connect();
             const string sql = @"
-                                SELECT cart_details.cart_id As CartId, cart_details.product_detail_id As ProductDetailId, 
-								products.image As Image,
-								cart_details.data_version As DataVersion, products.name As Name, 
-								colors.color As Color, sizes.size As Size,
-                                cart_details.quantity As Quantity, cart_details.price As Price
-                                FROM 
-                                cart_details left join product_details
-                                on cart_details.product_detail_id = product_details.id
-								left join colors on product_details.color_id = colors.id
-								left join sizes on product_details.size_id = sizes.id
-                                left join products on product_details.product_id = products.id
-                                ";
+                SELECT 
+	                cd.cart_id AS CartId
+	                ,cd.product_detail_id AS ProductDetailId
+	                ,p.id AS ProductId
+	                ,p.[name] AS ProductName
+	                ,pd.color_id AS ColorId
+	                ,pd.size_id AS SizeId
+	                ,pd.price AS Price
+	                ,pd.quantity AS Quantity
+	                ,pd.data_version AS DataVersion
+                FROM 
+	                cart_details AS cd
+		                left join product_details AS pd
+		                ON cd.product_detail_id = pd.id
+		                LEFT JOIN products AS p
+		                ON pd.product_id = p.id
+                WHERE
+	                cd.cart_id = @CartId
+            ";
 
-            var result = await connect.QueryAsync<CartDetailInfo>(sql);
+            var result = await connect.QueryAsync<CartDetailInfo>(sql,
+                new
+                {
+                    CartId = id
+                }
+            );
 
             return result;
         }
 
+       
 
         public async Task CreateCartdetai(CartDetailInfo Cartdetai)
         {
