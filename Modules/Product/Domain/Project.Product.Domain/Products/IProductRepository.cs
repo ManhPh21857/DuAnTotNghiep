@@ -16,7 +16,7 @@ public interface IProductRepository
 
     #region Product Color
 
-    Task<IEnumerable<ProductColorInfo>> GetProductColor(List<int> productIds);
+    Task<IEnumerable<ProductColorInfo>> GetProductColor(int productId);
     Task CreateProductColor(ProductColorInfo param);
     Task HardDeleteProductColor(int productId);
     Task DeleteProductColor(int productId);
@@ -25,7 +25,7 @@ public interface IProductRepository
 
     #region Product Size
 
-    Task<IEnumerable<ProductSizeInfo>> GetProductSize(List<int> productIds);
+    Task<IEnumerable<ProductSizeInfo>> GetProductSize(int productId);
     Task CreateProductSize(ProductSizeInfo param);
     Task HardDeleteProductSize(int productId);
     Task DeleteProductSize(int productId);

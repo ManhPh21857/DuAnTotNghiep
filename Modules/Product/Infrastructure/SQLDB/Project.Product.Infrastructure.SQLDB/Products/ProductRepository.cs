@@ -278,7 +278,7 @@ public class ProductRepository : IProductRepository
 
     #region Product Color
 
-    public async Task<IEnumerable<ProductColorInfo>> GetProductColor(List<int> productIds)
+    public async Task<IEnumerable<ProductColorInfo>> GetProductColor(int productId)
     {
         await using var connect = await provider.Connect();
         const string query = @"
@@ -291,14 +291,14 @@ public class ProductRepository : IProductRepository
 	            LEFT JOIN [dbo].[colors] AS c
 		            ON pc.[color_id] = c.[id]
             WHERE
-	            pc.[product_id] IN @ProductId
+	            pc.[product_id] = @ProductId
 	            AND pc.[is_deleted] = @IsDeleted
         ";
 
         var result = await connect.QueryAsync<ProductColorInfo>(query,
             new
             {
-                ProductId = productIds,
+                ProductId = productId,
                 IsDeleted = IsDeleted.No
             }
         );
@@ -378,7 +378,7 @@ public class ProductRepository : IProductRepository
 
     #region Product Size
 
-    public async Task<IEnumerable<ProductSizeInfo>> GetProductSize(List<int> productIds)
+    public async Task<IEnumerable<ProductSizeInfo>> GetProductSize(int productId)
     {
         await using var connect = await provider.Connect();
         const string query = @"
@@ -390,14 +390,14 @@ public class ProductRepository : IProductRepository
 	            LEFT JOIN [dbo].[sizes] AS s
 		            ON ps.[size_id] = s.[id]
             WHERE
-	            ps.[product_id] IN @ProductId
+	            ps.[product_id] = @ProductId
 	            AND ps.[is_deleted] = @IsDeleted
         ";
 
         var result = await connect.QueryAsync<ProductSizeInfo>(query,
             new
             {
-                ProductId = productIds,
+                ProductId = productId,
                 IsDeleted = IsDeleted.No
             }
         );

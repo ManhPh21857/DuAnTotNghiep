@@ -63,10 +63,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<UpdateClassificationsRequestModel>, UpdateClassificationsRequestModelValidator>();
         services.AddScoped<IValidator<UpdateClassificationsModel>, UpdateClassificationsModelValidator>();
 
-        //Size
-        services.AddScoped<IValidator<UpdateSizeRequestModel>, UpdateSizeRequestModelValidator>();
-        services.AddScoped<IValidator<UpdateSizeModel>, UpdateSizeModelValidator>();
-
         //Product
         services.AddScoped<IValidator<UpdateProductModel>, UpdateProductModelValidator>();
         services.AddScoped<IValidator<UpdateProductColorModel>, UpdateProductColorModelValidator>();

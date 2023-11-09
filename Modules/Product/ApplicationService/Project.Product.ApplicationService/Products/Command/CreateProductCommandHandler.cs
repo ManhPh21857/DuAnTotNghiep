@@ -62,7 +62,7 @@ namespace Project.Product.ApplicationService.Products.Command
                 //update
                 await this.productRepository.UpdateProduct(product);
 
-                var oldProductColor = (await this.productRepository.GetProductColor(new List<int> { product.Id })).ToList();
+                var oldProductColor = (await this.productRepository.GetProductColor(product.Id ));
 
                 
 
