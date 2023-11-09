@@ -10,6 +10,7 @@ using Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Get;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Post;
 using Project.Product.Integration.Suppliers.Query;
 using Project.Product.Integration.Suppliers.Command;
+using Project.Core.Domain.Enums;
 
 namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers
 {
@@ -21,7 +22,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers
             this.supplierValidator = supplierValidator;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.SupplierView))]
         [HttpGet]
         public async Task<ActionResult<ResponseBaseModel<SupplierResponseModel>>> GetSupplier()
         {
@@ -33,7 +34,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.SupplierEdit))]
         [HttpPost]
         public async Task<ActionResult<ResponseBaseModel<CommandBaseModel>>> UpdateSupplier(UpdateSupplierRequestModel request)
         {
@@ -54,7 +55,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.SupplierDelete))]
         [HttpPut("delete")]
         public async Task<ResponseBaseModel<CommandBaseModel>> DeleteSupplier(DeleteSupplierRequestModel request)
         {
@@ -69,7 +70,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.SupplierEdit))]
         [HttpPut("reactive")]
         public async Task<ResponseBaseModel<CommandBaseModel>> ReactiveSupplier(DeleteSupplierRequestModel request)
         {

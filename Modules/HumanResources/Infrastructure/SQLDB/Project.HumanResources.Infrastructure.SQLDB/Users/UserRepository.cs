@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.IdentityModel.Tokens;
 using Project.Core.Infrastructure.SQLDB.Providers;
+using Project.HumanResources.Domain.Roles;
 using Project.HumanResources.Domain.Users;
 
 namespace Project.HumanResources.Infrastructure.SQLDB.Users;
@@ -81,13 +82,14 @@ public class UserRepository : IUserRepository
         return result;
     }
 
-    public async Task<List<string>> GetUserRoles(string uid)
+    public async Task<IEnumerable<RoleInfo>> GetUserRoles(int id)
     {
         await using var connect = await provider.Connect();
 
         const string query = @"
             SELECT
-	            r.[role_name]
+                r.[id]          AS Id
+	           ,r.[role_name]   AS RoleName
             FROM
                 [users] AS u
                 LEFT JOIN [user_roles] AS ur
@@ -95,13 +97,15 @@ public class UserRepository : IUserRepository
 	            JOIN [roles] AS r
 		            ON ur.[role_id] = r.[id]
             WHERE
-	            u.[UID] = @UID";
+	            u.[id] = @Id
+                u.[is_deleted] = 0";
 
-        var result = (await connect.QueryAsync<string>(query,
+        var result = await connect.QueryAsync<RoleInfo>(query,
             new
             {
-                UID = uid
-            })).ToList();
+                Id = id
+            }
+        );
 
         return result;
     }

@@ -4,6 +4,7 @@ using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Project.Core.Domain.Enums;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications.Get;
@@ -31,7 +32,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications
             this.updateClassificationsValidator = updateClassificationsValidator;
             this.deleteClassificationsValidator = deleteClassificationsValidator;
         }
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.ClassificationView))]
         [HttpGet("")]
         public async Task<ResponseBaseModel<GetClassificationsReponseModel>> GetClassifications()
         {
@@ -45,7 +46,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications
 
 
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.ClassificationView))]
         [HttpPost("")]
         public async Task<ActionResult<ResponseBaseModel<AddClassificationsReponseModel>>> AddClassifications(
        [FromBody] AddClassificationsModel request)
@@ -65,7 +66,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications
             return response;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.ClassificationEdit))]
         [HttpPut("")]
         public async Task<ActionResult<ResponseBaseModel<UpdateClassificationsReponseModel>>> UpdateClassifications(
        [FromBody] UpdateClassificationsModel request)
@@ -87,7 +88,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications
 
 
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.ClassificationDelete))]
         [HttpDelete("{id}")]
         public async Task<ActionResult<ResponseBaseModel<DeleteClassificationsReponseModel>>> DeleteClassifications(int id)
         {

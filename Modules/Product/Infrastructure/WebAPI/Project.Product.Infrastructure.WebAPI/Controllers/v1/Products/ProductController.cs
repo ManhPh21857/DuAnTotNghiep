@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Common.Infrastructure.WebAPI.Controllers.v1.Products.Get;
+using Project.Core.Domain.Enums;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Get;
@@ -51,7 +52,7 @@ public class ProductController : CommonController
     }
 
 
-    [AllowAnonymous]
+    [Authorize(Roles = nameof(Role.ProductView))]
     [HttpGet("{pageNo}")]
     public async Task<ActionResult<ResponseBaseModel<GetProductResponseModel>>> GetProducts(int pageNo)
     {
@@ -67,7 +68,7 @@ public class ProductController : CommonController
         return response;
     }
 
-    [AllowAnonymous]
+    [Authorize(Roles = nameof(Role.ProductView))]
     [HttpGet("detail/{id}")]
     public async Task<ActionResult<ResponseBaseModel<GetProductDetailResponseModel>>> GetProduct(int id)
     {
@@ -84,7 +85,7 @@ public class ProductController : CommonController
     }
 
 
-    [AllowAnonymous]
+    [Authorize(Roles = nameof(Role.ProductEdit))]
     [HttpPost]
     public async Task<ActionResult<ResponseBaseModel<UpdateProductResponseModel>>> UpdateProduct([FromBody] UpdateProductRequestModel request)
     {
@@ -100,7 +101,7 @@ public class ProductController : CommonController
         return response;
     }
 
-    [AllowAnonymous]
+    [Authorize(Roles = nameof(Role.ProductDelete))]
     [HttpDelete("{id}")]
     public async Task<ActionResult<ResponseBaseModel<DeleteProductResponseModel>>> DeleteProduct(int id)
     {

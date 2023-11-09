@@ -49,7 +49,7 @@ public class LoginService : CommandHandler<LoginRequest, LoginResponse>
             throw exception;
         }
 
-        var roles = await userRepository.GetUserRoles(user.UID);
+        var roles = await userRepository.GetUserRoles(user.Id);
 
         var claims = new List<Claim>
         {
@@ -61,7 +61,7 @@ public class LoginService : CommandHandler<LoginRequest, LoginResponse>
             new("Username", user.Username),
         };
 
-        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role.RoleName.ToString())));
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
         var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

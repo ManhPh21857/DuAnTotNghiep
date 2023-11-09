@@ -4,6 +4,7 @@ using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Project.Core.Domain.Enums;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Get;
@@ -21,7 +22,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
             this.trademarkValidator = trademarkValidator;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.TrademarkView))]
         [HttpGet]
         public async Task<ActionResult<ResponseBaseModel<TrademarkResponseModel>>> GetColors()
         {
@@ -33,7 +34,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.TrademarkEdit))]
         [HttpPost]
         public async Task<ActionResult<ResponseBaseModel<CommandBaseModel>>> UpdateColors(UpdateTrademarkRequestModel request)
         {
@@ -54,7 +55,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.TrademarkDelete))]
         [HttpPut("delete")]
         public async Task<ResponseBaseModel<CommandBaseModel>> DeleteColors(DeleteTrademarkRequestModel request)
         {
@@ -69,7 +70,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.TrademarkEdit))]
         [HttpPut("reactive")]
         public async Task<ResponseBaseModel<CommandBaseModel>> ReactiveColors(DeleteTrademarkRequestModel request)
         {
