@@ -16,7 +16,7 @@ public class UserController : HumanResourcesController
     }
 
     [Authorize(Roles = nameof(Role.Customer))]
-    [HttpGet("")]
+    [HttpGet("list")]
     public async Task<ActionResult<ResponseBaseModel<UsersModel>>> GetUsers()
     {
         //create query
@@ -35,11 +35,11 @@ public class UserController : HumanResourcesController
     }
 
     [Authorize(Roles = nameof(Role.Admin))]
-    [HttpGet("{id}")]
-    public async Task<ActionResult<ResponseBaseModel<UserModel>>> GetUser(int id)
+    [HttpGet]
+    public async Task<ActionResult<ResponseBaseModel<UserModel>>> GetUser()
     {
         //create query
-        var query = new UserQuery(id);
+        var query = new UserQuery();
 
         //result
         var result = await Mediator.Send(query);

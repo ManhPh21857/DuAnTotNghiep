@@ -4,6 +4,7 @@ using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Project.Core.Domain.Enums;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Sizes.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Sizes.Get;
@@ -21,7 +22,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Sizes
             this.sizeValidator = sizeValidator;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.SizeView))]
         [HttpGet]
         public async Task<ActionResult<ResponseBaseModel<SizeResponseModel>>> GetSizes()
         {
@@ -33,7 +34,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Sizes
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.SizeEdit))]
         [HttpPost]
         public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateSizes(UpdateSizeRequestModel request)
         {
@@ -54,7 +55,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Sizes
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.SizeDelete))]
         [HttpPut("delete")]
         public async Task<ResponseBaseModel<CommandProductBase>> DeleteSizes(DeleteSizeRequestModel request)
         {
@@ -69,7 +70,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Sizes
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.SizeEdit))]
         [HttpPut("reactive")]
         public async Task<ResponseBaseModel<CommandProductBase>> ReactiveSizes(DeleteSizeRequestModel request)
         {

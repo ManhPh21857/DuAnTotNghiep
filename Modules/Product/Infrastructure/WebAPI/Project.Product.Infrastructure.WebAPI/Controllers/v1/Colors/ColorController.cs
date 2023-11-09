@@ -4,6 +4,7 @@ using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Project.Core.Domain.Enums;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors.Get;
@@ -21,7 +22,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors
             this.colorValidator = colorValidator;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.ColorView))]
         [HttpGet]
         public async Task<ActionResult<ResponseBaseModel<ColorResponseModel>>> GetColors()
         {
@@ -33,7 +34,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.ColorEdit))]
         [HttpPost]
         public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateColors(UpdateColorRequestModel request)
         {
@@ -54,7 +55,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.ColorDelete))]
         [HttpPut("delete")]
         public async Task<ResponseBaseModel<CommandProductBase>> DeleteColors(DeleteColorRequestModel request)
         {
@@ -69,7 +70,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.ColorEdit))]
         [HttpPut("reactive")]
         public async Task<ResponseBaseModel<CommandProductBase>> ReactiveColors(DeleteColorRequestModel request)
         {

@@ -56,17 +56,29 @@ public class ErrorHandlingMiddleWare
         }
         else if (ex is SqlExecuteException)
         {
-            result = JsonSerializer.Serialize(new { ERROE = SqlExecuteException.CommonErrorMessage });
+            result = JsonSerializer.Serialize(new
+            {
+                errorCode = "500",
+                errorMessage = SqlExecuteException.CommonErrorMessage
+            });
         }
         else
         {
             if (!string.IsNullOrEmpty(ex.StackTrace) && ex.StackTrace.Contains("SqlClient"))
             {
-                result = JsonSerializer.Serialize(new { error = SqlExecuteException.CommonErrorMessage });
+                result = JsonSerializer.Serialize(new
+                {
+                    errorCode = "500",
+                    errorMessage = SqlExecuteException.CommonErrorMessage
+                });
             }
             else
             {
-                result = JsonSerializer.Serialize(new { erroe = ex.Message });
+                result = JsonSerializer.Serialize(new
+                {
+                    errorCode = "500",
+                    errorMessage = ex.Message
+                });
             }
         }
 

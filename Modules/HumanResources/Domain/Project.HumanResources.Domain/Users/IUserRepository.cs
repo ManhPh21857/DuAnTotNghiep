@@ -1,10 +1,12 @@
-﻿namespace Project.HumanResources.Domain.Users;
+﻿using Project.HumanResources.Domain.Roles;
+
+namespace Project.HumanResources.Domain.Users;
 
 public interface IUserRepository
 {
     Task<List<User>> GetUser(GetUserParam param);
 
-    Task<List<string>> GetUserRoles(string uid);
+    Task<IEnumerable<RoleInfo>> GetUserRoles(int id);
 
     Task<int> RegisterUser(RegisterUserParam param);
 

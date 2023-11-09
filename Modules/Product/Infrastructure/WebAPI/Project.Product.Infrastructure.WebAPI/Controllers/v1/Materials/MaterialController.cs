@@ -4,6 +4,7 @@ using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Project.Core.Domain.Enums;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Get;
@@ -22,7 +23,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
             this.materialValidator = materialValidator;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.MaterialView))]
         [HttpGet]
         public async Task<ActionResult<ResponseBaseModel<MaterialResponseModel>>> GetMaterial()
         {
@@ -34,7 +35,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.MaterialEdit))]
         [HttpPost]
         public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateMaterial(UpdateMaterialRequestModel request)
         {
@@ -55,7 +56,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.MaterialDelete))]
         [HttpPut("delete")]
         public async Task<ResponseBaseModel<CommandProductBase>> DeleteMaterial(DeleteMaterialRequestModel request)
         {
@@ -70,7 +71,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.MaterialEdit))]
         [HttpPut("reactive")]
         public async Task<ResponseBaseModel<CommandProductBase>> ReactiveMaterial(DeleteMaterialRequestModel request)
         {

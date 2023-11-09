@@ -4,6 +4,7 @@ using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Project.Core.Domain.Enums;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Get;
@@ -22,7 +23,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins
             this.originValidator = originValidator;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.OriginView))]
         [HttpGet]
         public async Task<ActionResult<ResponseBaseModel<OriginResponseModel>>> GetOrigins()
         {
@@ -34,7 +35,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.OriginEdit))]
         [HttpPost]
         public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateOrigin(UpdateOriginRequestModel request)
         {
@@ -55,7 +56,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.OriginDelete))]
         [HttpPut("delete")]
         public async Task<ResponseBaseModel<CommandProductBase>> DeleteOrigin(DeleteOriginRequestModel request)
         {
@@ -70,7 +71,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.OriginEdit))]
         [HttpPut("reactive")]
         public async Task<ResponseBaseModel<CommandProductBase>> ReactiveOrigin(DeleteOriginRequestModel request)
         {

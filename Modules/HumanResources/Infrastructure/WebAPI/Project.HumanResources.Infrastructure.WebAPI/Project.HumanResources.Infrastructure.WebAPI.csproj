@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\v1\Roles\" />
     <Folder Include="Controllers\v1\Users\Post\" />
   </ItemGroup>
 

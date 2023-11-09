@@ -4,6 +4,7 @@ using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Project.Core.Domain.Enums;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications.Get;
@@ -22,8 +23,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications
         {
             this.classificationValidator = classificationValidator;
         }
-
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.ClassificationView))]
         [HttpGet]
         public async Task<ActionResult<ResponseBaseModel<GetClassificationsReponseModel>>> GetClassifications()
         {
@@ -35,7 +35,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.ClassificationEdit))]
         [HttpPost]
         public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateClassification(UpdateClassificationsRequestModel request)
         {
@@ -55,7 +55,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications
                 Data = result.Adapt<CommandProductBase>()
             };
         }
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.ClassificationDelete))]
         [HttpPut("delete")]
         public async Task<ResponseBaseModel<CommandProductBase>> DeleteClassification(DeleteClassificationsRequestModel request)
         {
@@ -70,7 +70,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications
             };
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.ClassificationEdit))]
         [HttpPut("reactive")]
         public async Task<ResponseBaseModel<CommandProductBase>> ReactiveColors(DeleteClassificationsRequestModel request)
         {
