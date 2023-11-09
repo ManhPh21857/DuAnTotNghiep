@@ -86,8 +86,8 @@ public class ProductRepository : IProductRepository
                ,p.[Code]
             ORDER BY
 	            p.[Code]
-            OFFSET 0 ROWS
-            FETCH NEXT 12 ROWS ONLY
+            OFFSET @Skip ROWS
+            FETCH NEXT @Take ROWS ONLY
 
             SELECT
 	            COUNT([id]) AS TotalProduct

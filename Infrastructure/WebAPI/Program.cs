@@ -80,10 +80,14 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseMiddleware<SessionInfoMiddleware>();
+
 app.MapControllers();
 
 if(app.Environment.IsDevelopment()) {
     app.UseCors("AllowAll");
 }
+
+app.UseMiddleware<NotFoundHandlingMiddleware>();
 
 app.Run();

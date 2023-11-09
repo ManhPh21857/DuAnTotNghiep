@@ -14,10 +14,10 @@ public class LoginRequestModelValidator : AbstractValidator<LoginRequestModel>
     {
         RuleFor(x => x.UserName)
             .NotEmpty()
-            .WithMessage("Username must has a value");
+            .WithMessage($"{nameof(LoginRequestModel.UserName)} must has a value");
 
         RuleFor(x => x.Password)
             .NotEmpty()
-            .WithMessage("Username must has a value");
+            .WithMessage($"{nameof(LoginRequestModel.Password)} must has a value");
     }
 }

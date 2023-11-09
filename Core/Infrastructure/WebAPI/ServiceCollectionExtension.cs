@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Project.Core.Domain;
 using Project.Core.Infrastructure.SQLDB;
 using Project.Core.Infrastructure.WebAPI.Middlewares.Jwt.Extension;
 
@@ -10,5 +11,6 @@ public static class ServiceCollectionExtension
     {
         services.AddCoreSQLDB();
         services.AddJwt();
+        services.AddScoped<ISessionInfo, SessionInfo>();
     }
 }
