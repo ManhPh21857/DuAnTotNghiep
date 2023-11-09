@@ -8,17 +8,11 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails.Get
     public class CartdetailResponseModel
     {
         public IEnumerable<CartDetailModel> Cartdetails { get; set; }
-        public IEnumerable<ProductColorModel> ProductColors { get; set; }
-        public IEnumerable<ProductSizeModel> ProductSizes { get; set; }
 
         public CartdetailResponseModel(
-            IEnumerable<CartDetailModel> cartdetails, 
-            IEnumerable<ProductColorModel> productColors, 
-            IEnumerable<ProductSizeModel> productSizes)
+            IEnumerable<CartDetailModel> cartdetails)
         {
             Cartdetails = cartdetails;
-            ProductColors = productColors;
-            ProductSizes = productSizes;
         }
     }
 }

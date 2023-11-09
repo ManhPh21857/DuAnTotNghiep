@@ -24,7 +24,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<ResponseBaseModel<OriginResponseModel>>> GetColors()
+        public async Task<ActionResult<ResponseBaseModel<OriginResponseModel>>> GetOrigins()
         {
             var result = await this.Mediator.Send(new GetOriginQuery());
 
@@ -72,7 +72,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins
 
         [AllowAnonymous]
         [HttpPut("reactive")]
-        public async Task<ResponseBaseModel<CommandProductBase>> ReactiveỎrigin(DeleteOriginRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> ReactiveOrigin(DeleteOriginRequestModel request)
         {
 
             var command = request.Adapt<ReactiveOriginCommand>();

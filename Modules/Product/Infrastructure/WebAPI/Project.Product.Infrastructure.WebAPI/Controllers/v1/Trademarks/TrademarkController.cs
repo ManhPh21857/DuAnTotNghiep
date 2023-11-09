@@ -23,7 +23,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<ResponseBaseModel<TrademarkResponseModel>>> GetColors()
+        public async Task<ActionResult<ResponseBaseModel<TrademarkResponseModel>>> GetTrademark()
         {
             var result = await this.Mediator.Send(new GetTrademarkQuery());
 
@@ -35,7 +35,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateColors(UpdateTrademarkRequestModel request)
+        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateTrademark(UpdateTrademarkRequestModel request)
         {
             var validator = await this.trademarkValidator.ValidateAsync(request);
             if (!validator.IsValid)
@@ -56,7 +56,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
 
         [AllowAnonymous]
         [HttpPut("delete")]
-        public async Task<ResponseBaseModel<CommandProductBase>> DeleteColors(DeleteTrademarkRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> DeleteTrademark(DeleteTrademarkRequestModel request)
         {
 
             var command = request.Adapt<DeleteTrademarkCommand>();
@@ -71,7 +71,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
 
         [AllowAnonymous]
         [HttpPut("reactive")]
-        public async Task<ResponseBaseModel<CommandProductBase>> ReactiveColors(DeleteTrademarkRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> ReactiveTrademark(DeleteTrademarkRequestModel request)
         {
 
             var command = request.Adapt<ReactiveTrademarkCommand>();

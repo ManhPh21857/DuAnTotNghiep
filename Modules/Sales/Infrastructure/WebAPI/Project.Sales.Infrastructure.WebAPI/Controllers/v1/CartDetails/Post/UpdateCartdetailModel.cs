@@ -11,6 +11,7 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post
         public int? Quantity { get; set; }
         public byte[]? DataVersion { get; set; }
 
+
     }
     public class UpdateCartdetailModelValidator : AbstractValidator<UpdateCartdetailModel>
     {

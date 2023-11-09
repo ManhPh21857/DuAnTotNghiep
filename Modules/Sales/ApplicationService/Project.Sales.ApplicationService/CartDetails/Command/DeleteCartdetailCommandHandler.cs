@@ -21,6 +21,7 @@ namespace Project.Sales.ApplicationService.CartDetails.Command
             await this.cardetailRepository.DeleteCartdetai(param);
 
             return new DeleteCartdetailCommandResult(true);
+
         }
     }
 }

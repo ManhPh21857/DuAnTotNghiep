@@ -24,14 +24,7 @@ namespace Project.Sales.ApplicationService.CartDetails.Query
 
             var listProductId = cartDetails.Select(c => c.ProductId ?? 0).Distinct().Where(x => x != 0).ToList();
 
-
-
-            var productColors = await this.productRepository.GetProductColor(listProductId);
-            var productSizes = await this.productRepository.GetProductSize(listProductId);
-
-
-
-            return new GetCartdetailQueryResult(cartDetails, productColors, productSizes);
+            return new GetCartdetailQueryResult(cartDetails);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<ResponseBaseModel<MaterialResponseModel>>> GetColors()
+        public async Task<ActionResult<ResponseBaseModel<MaterialResponseModel>>> GetMaterial()
         {
             var result = await this.Mediator.Send(new GetMaterialQuery());
 
@@ -36,7 +36,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateColors(UpdateMaterialRequestModel request)
+        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateMaterial(UpdateMaterialRequestModel request)
         {
             var validator = await this.materialValidator.ValidateAsync(request);
             if (!validator.IsValid)
@@ -57,7 +57,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
 
         [AllowAnonymous]
         [HttpPut("delete")]
-        public async Task<ResponseBaseModel<CommandProductBase>> DeleteColors(DeleteMaterialRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> DeleteMaterial(DeleteMaterialRequestModel request)
         {
 
             var command = request.Adapt<DeleteMaterialCommand>();
@@ -72,7 +72,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
 
         [AllowAnonymous]
         [HttpPut("reactive")]
-        public async Task<ResponseBaseModel<CommandProductBase>> ReactiveColors(DeleteMaterialRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> ReactiveMaterial(DeleteMaterialRequestModel request)
         {
 
             var command = request.Adapt<ReactiveMaterialCommand>();

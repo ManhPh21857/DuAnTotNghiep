@@ -35,24 +35,29 @@ namespace Project.Sales.Infrastructure.SQLDB.CartDetails
         {
             var connect = await connection.Connect();
             const string sql = @"
-                SELECT 
+                 SELECT 
 	                cd.cart_id AS CartId
 	                ,cd.product_detail_id AS ProductDetailId
 	                ,p.id AS ProductId
+                    ,p.image AS Image
 	                ,p.[name] AS ProductName
-	                ,pd.color_id AS ColorId
-	                ,pd.size_id AS SizeId
+	                ,cl.color AS Color
+	                ,sz.size AS Size
 	                ,pd.price AS Price
-	                ,pd.quantity AS Quantity
-	                ,pd.data_version AS DataVersion
+	                ,cd.quantity AS Quantity
+	                ,cd.data_version AS DataVersion
                 FROM 
 	                cart_details AS cd
 		                left join product_details AS pd
 		                ON cd.product_detail_id = pd.id
 		                LEFT JOIN products AS p
 		                ON pd.product_id = p.id
+						LEFT JOIN colors AS cl
+						ON pd.color_id = cl.id
+						LEFT JOIN sizes AS sz
+						ON pd.size_id = sz.id 
                 WHERE
-	                cd.cart_id = @CartId
+	                cd.cart_id = 1
             ";
 
             var result = await connect.QueryAsync<CartDetailInfo>(sql,
@@ -93,8 +98,9 @@ namespace Project.Sales.Infrastructure.SQLDB.CartDetails
         {
             var connect = await connection.Connect();
             const string sql = @"                            
-                               DELETE FROM
+                               Delete FROM 
 	                                cart_details 
+                                
                                WHERE 
 	                                cart_id = @Cartid AND product_detail_id = @Productdetailid AND data_version = @DataVersion
                                 ";
@@ -103,13 +109,12 @@ namespace Project.Sales.Infrastructure.SQLDB.CartDetails
                 {
                     Cartid = Cartdetai.CartId,
                     Productdetailid = Cartdetai.ProductDetailId,
-                    DataVersion = Cartdetai.DataVersion,
+                    DataVersion = Cartdetai.DataVersion
                 }
             );
 
             result.IsOptimisticLocked();
         }
-      
 
         public async Task UpdateCartdetai(CartDetailInfo Cartdetai)
         {
@@ -117,7 +122,7 @@ namespace Project.Sales.Infrastructure.SQLDB.CartDetails
             const string sql = @"
                                UPDATE  cart_details
 			                   SET  product_detail_id =@Productdetailid, quantity =@Quantity, price = @Price
-			                   WHERE cart_id =@Cartid AND data_version = @DataVersion
+			                   WHERE cart_id =@Cartid AND data_version = @DataVersion AND product_detail_id = @Productdetailid
                                 ";
             await connect.ExecuteAsync(sql, new
             {
