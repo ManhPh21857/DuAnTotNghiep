@@ -36,7 +36,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers
 
         [Authorize(Roles = nameof(Role.SupplierEdit))]
         [HttpPost]
-        public async Task<ActionResult<ResponseBaseModel<CommandBaseModel>>> UpdateSupplier(UpdateSupplierRequestModel request)
+        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateSupplier(UpdateSupplierRequestModel request)
         {
             var validator = await this.supplierValidator.ValidateAsync(request);
             if (!validator.IsValid)
@@ -49,39 +49,39 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers
 
             var result = await this.Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
 
         [Authorize(Roles = nameof(Role.SupplierDelete))]
         [HttpPut("delete")]
-        public async Task<ResponseBaseModel<CommandBaseModel>> DeleteSupplier(DeleteSupplierRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> DeleteSupplier(DeleteSupplierRequestModel request)
         {
 
             var command = request.Adapt<DeleteSupplierCommand>();
 
             var result = await Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
 
         [Authorize(Roles = nameof(Role.SupplierEdit))]
         [HttpPut("reactive")]
-        public async Task<ResponseBaseModel<CommandBaseModel>> ReactiveSupplier(DeleteSupplierRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> ReactiveSupplier(DeleteSupplierRequestModel request)
         {
 
             var command = request.Adapt<ReactiveSupplierCommand>();
 
             var result = await Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
     }

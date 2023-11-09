@@ -24,7 +24,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
 
         [Authorize(Roles = nameof(Role.TrademarkView))]
         [HttpGet]
-        public async Task<ActionResult<ResponseBaseModel<TrademarkResponseModel>>> GetColors()
+        public async Task<ActionResult<ResponseBaseModel<TrademarkResponseModel>>> GetTrademark()
         {
             var result = await this.Mediator.Send(new GetTrademarkQuery());
 
@@ -36,7 +36,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
 
         [Authorize(Roles = nameof(Role.TrademarkEdit))]
         [HttpPost]
-        public async Task<ActionResult<ResponseBaseModel<CommandBaseModel>>> UpdateColors(UpdateTrademarkRequestModel request)
+        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateTrademark(UpdateTrademarkRequestModel request)
         {
             var validator = await this.trademarkValidator.ValidateAsync(request);
             if (!validator.IsValid)
@@ -49,39 +49,39 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
 
             var result = await this.Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
 
         [Authorize(Roles = nameof(Role.TrademarkDelete))]
         [HttpPut("delete")]
-        public async Task<ResponseBaseModel<CommandBaseModel>> DeleteColors(DeleteTrademarkRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> DeleteTrademark(DeleteTrademarkRequestModel request)
         {
 
             var command = request.Adapt<DeleteTrademarkCommand>();
 
             var result = await Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
 
         [Authorize(Roles = nameof(Role.TrademarkEdit))]
         [HttpPut("reactive")]
-        public async Task<ResponseBaseModel<CommandBaseModel>> ReactiveColors(DeleteTrademarkRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> ReactiveTrademark(DeleteTrademarkRequestModel request)
         {
 
             var command = request.Adapt<ReactiveTrademarkCommand>();
 
             var result = await Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
     }

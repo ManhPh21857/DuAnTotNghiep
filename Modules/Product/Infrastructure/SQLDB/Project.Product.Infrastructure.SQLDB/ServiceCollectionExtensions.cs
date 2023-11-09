@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Project.Product.Domain.CartDetails;
 using Project.Product.Domain.Classifications;
 using Project.Product.Domain.Colors;
 using Project.Product.Domain.Images;
@@ -9,7 +8,6 @@ using Project.Product.Domain.Products;
 using Project.Product.Domain.Sizes;
 using Project.Product.Domain.Suppliers;
 using Project.Product.Domain.Trademarks;
-using Project.Product.Infrastructure.SQLDB.CartDetails;
 using Project.Product.Infrastructure.SQLDB.Classifications;
 using Project.Product.Infrastructure.SQLDB.Colors;
 using Project.Product.Infrastructure.SQLDB.Images;
@@ -34,7 +32,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IMaterialRepository, MaterialRepository>();
         services.AddScoped<ITrademarkRepository, TrademarkRepository>();
         services.AddScoped<IOriginRepository, OriginRepository>();
-        services.AddScoped<ICartdetailRepository, CartdetailRepository>();
         services.AddScoped<IClassificationRepository, ClassificationRepository>();
     }
 }

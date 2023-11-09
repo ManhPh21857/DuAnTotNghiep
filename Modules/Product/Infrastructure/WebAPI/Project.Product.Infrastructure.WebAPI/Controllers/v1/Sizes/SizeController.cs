@@ -36,7 +36,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Sizes
 
         [Authorize(Roles = nameof(Role.SizeEdit))]
         [HttpPost]
-        public async Task<ActionResult<ResponseBaseModel<CommandBaseModel>>> UpdateSizes(UpdateSizeRequestModel request)
+        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateSizes(UpdateSizeRequestModel request)
         {
             var validator = await this.sizeValidator.ValidateAsync(request);
             if (!validator.IsValid)
@@ -49,39 +49,39 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Sizes
 
             var result = await this.Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
 
         [Authorize(Roles = nameof(Role.SizeDelete))]
         [HttpPut("delete")]
-        public async Task<ResponseBaseModel<CommandBaseModel>> DeleteSizes(DeleteSizeRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> DeleteSizes(DeleteSizeRequestModel request)
         {
 
             var command = request.Adapt<DeleteSizeCommand>();
 
             var result = await Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
 
         [Authorize(Roles = nameof(Role.SizeEdit))]
         [HttpPut("reactive")]
-        public async Task<ResponseBaseModel<CommandBaseModel>> ReactiveSizes(DeleteSizeRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> ReactiveSizes(DeleteSizeRequestModel request)
         {
 
             var command = request.Adapt<ReactiveSizeCommand>();
 
             var result = await Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
     }

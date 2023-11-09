@@ -36,7 +36,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors
 
         [Authorize(Roles = nameof(Role.ColorEdit))]
         [HttpPost]
-        public async Task<ActionResult<ResponseBaseModel<CommandBaseModel>>> UpdateColors(UpdateColorRequestModel request)
+        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateColors(UpdateColorRequestModel request)
         {
             var validator = await this.colorValidator.ValidateAsync(request);
             if (!validator.IsValid)
@@ -49,39 +49,39 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors
 
             var result = await this.Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
 
         [Authorize(Roles = nameof(Role.ColorDelete))]
         [HttpPut("delete")]
-        public async Task<ResponseBaseModel<CommandBaseModel>> DeleteColors(DeleteColorRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> DeleteColors(DeleteColorRequestModel request)
         {
 
             var command = request.Adapt<DeleteColorCommand>();
             
             var result = await Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
 
         [Authorize(Roles = nameof(Role.ColorEdit))]
         [HttpPut("reactive")]
-        public async Task<ResponseBaseModel<CommandBaseModel>> ReactiveColors(DeleteColorRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> ReactiveColors(DeleteColorRequestModel request)
         {
 
             var command = request.Adapt<ReactiveColorCommand>();
 
             var result = await Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
     }
