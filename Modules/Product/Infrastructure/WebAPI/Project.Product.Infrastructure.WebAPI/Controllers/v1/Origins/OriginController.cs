@@ -24,7 +24,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<ResponseBaseModel<OriginResponseModel>>> GetColors()
+        public async Task<ActionResult<ResponseBaseModel<OriginResponseModel>>> GetOrigins()
         {
             var result = await this.Mediator.Send(new GetOriginQuery());
 
@@ -36,7 +36,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<ResponseBaseModel<CommandBaseModel>>> UpdateOrigin(UpdateOriginRequestModel request)
+        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateOrigin(UpdateOriginRequestModel request)
         {
             var validator = await this.originValidator.ValidateAsync(request);
             if (!validator.IsValid)
@@ -49,39 +49,39 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins
 
             var result = await this.Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
 
         [AllowAnonymous]
         [HttpPut("delete")]
-        public async Task<ResponseBaseModel<CommandBaseModel>> DeleteOrigin(DeleteOriginRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> DeleteOrigin(DeleteOriginRequestModel request)
         {
 
             var command = request.Adapt<DeleteOriginCommand>();
 
             var result = await Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
 
         [AllowAnonymous]
         [HttpPut("reactive")]
-        public async Task<ResponseBaseModel<CommandBaseModel>> ReactiveỎrigin(DeleteOriginRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> ReactiveOrigin(DeleteOriginRequestModel request)
         {
 
             var command = request.Adapt<ReactiveOriginCommand>();
 
             var result = await Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
     }

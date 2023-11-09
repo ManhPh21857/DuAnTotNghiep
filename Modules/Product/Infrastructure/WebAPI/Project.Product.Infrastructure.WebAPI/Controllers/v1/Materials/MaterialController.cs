@@ -24,7 +24,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<ResponseBaseModel<MaterialResponseModel>>> GetColors()
+        public async Task<ActionResult<ResponseBaseModel<MaterialResponseModel>>> GetMaterial()
         {
             var result = await this.Mediator.Send(new GetMaterialQuery());
 
@@ -36,7 +36,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<ResponseBaseModel<CommandBaseModel>>> UpdateColors(UpdateMaterialRequestModel request)
+        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateMaterial(UpdateMaterialRequestModel request)
         {
             var validator = await this.materialValidator.ValidateAsync(request);
             if (!validator.IsValid)
@@ -49,39 +49,39 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
 
             var result = await this.Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
 
         [AllowAnonymous]
         [HttpPut("delete")]
-        public async Task<ResponseBaseModel<CommandBaseModel>> DeleteColors(DeleteMaterialRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> DeleteMaterial(DeleteMaterialRequestModel request)
         {
 
             var command = request.Adapt<DeleteMaterialCommand>();
 
             var result = await Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
 
         [AllowAnonymous]
         [HttpPut("reactive")]
-        public async Task<ResponseBaseModel<CommandBaseModel>> ReactiveColors(DeleteMaterialRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> ReactiveMaterial(DeleteMaterialRequestModel request)
         {
 
             var command = request.Adapt<ReactiveMaterialCommand>();
 
             var result = await Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandBaseModel>
+            return new ResponseBaseModel<CommandProductBase>
             {
-                Data = result.Adapt<CommandBaseModel>()
+                Data = result.Adapt<CommandProductBase>()
             };
         }
     }

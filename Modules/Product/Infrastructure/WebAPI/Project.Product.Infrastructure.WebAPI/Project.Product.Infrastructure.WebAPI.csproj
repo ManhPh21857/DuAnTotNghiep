@@ -18,7 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Controllers\v1\CartDetails\Put\" />
+	  <Folder Include="Controllers\v1\Classifications\Put\" />
 	  <Folder Include="Controllers\v1\Colors\Put\" />
 	  <Folder Include="Controllers\v1\Materials\Put\" />
 	  <Folder Include="Controllers\v1\Origins\Put\" />
