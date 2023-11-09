@@ -17,9 +17,9 @@ namespace Project.Product.ApplicationService.Products.Query
         {
             var product = await productRepository.GetProduct(request.Id);
 
-            var productColor = await productRepository.GetProductColor( request.Id );
+            var productColor = await productRepository.GetProductColor(request.Id);
 
-            var productSize = await productRepository.GetProductSize( request.Id );
+            var productSize = await productRepository.GetProductSize(request.Id);
 
             var productDetail = await productRepository.GetProductDetail(request.Id);
 

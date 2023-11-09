@@ -62,9 +62,7 @@ namespace Project.Product.ApplicationService.Products.Command
                 //update
                 await this.productRepository.UpdateProduct(product);
 
-                var oldProductColor = (await this.productRepository.GetProductColor(product.Id ));
-
-                
+                var oldProductColor = (await this.productRepository.GetProductColor(product.Id)).ToList();
 
                 await this.productRepository.HardDeleteProductColor(product.Id);
 
