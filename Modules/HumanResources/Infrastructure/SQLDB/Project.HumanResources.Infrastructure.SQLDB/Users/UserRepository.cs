@@ -98,7 +98,7 @@ public class UserRepository : IUserRepository
 		            ON ur.[role_id] = r.[id]
             WHERE
 	            u.[id] = @Id
-                u.[is_deleted] = 0";
+                AND u.[is_deleted] = 0";
 
         var result = await connect.QueryAsync<RoleInfo>(query,
             new
