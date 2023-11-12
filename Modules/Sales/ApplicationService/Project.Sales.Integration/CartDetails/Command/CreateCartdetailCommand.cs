@@ -2,17 +2,17 @@
 
 namespace Project.Sales.Integration.CartDetails.Command
 {
-    public class DeleteCartdetailCommand : ICommand<DeleteCartdetailCommandResult>
+    public class CreateCartdetailCommand : ICommand<CreateCartdetailCommandResult>
     {
         public int CartId { get; set; }
         public int ProductDetailId { get; set; }
-        public byte[]? DataVersion { get; set; }
+        public int Quantity { get; set; }
 
-        public DeleteCartdetailCommand(int cartId, int productDetailId, byte[]? dataVersion)
+        public CreateCartdetailCommand(int cartId ,int productDetailId, int quantity)
         {
             CartId = cartId;
             ProductDetailId = productDetailId;
-            DataVersion = dataVersion;
+            Quantity = quantity;
         }
     }
 }

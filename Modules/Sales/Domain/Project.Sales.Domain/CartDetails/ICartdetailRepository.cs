@@ -8,7 +8,11 @@ namespace Project.Sales.Domain.CartDetails
         Task CreateCartdetai(CartDetailInfo Cartdetai);
         Task UpdateCartdetai(CartDetailInfo Cartdetai);
         Task DeleteCartdetai(CartDetailInfo Cartdetai);
-        Task<CartDetailInfo> CheckCartdetailName(int cartid, int productdetailid);
+
+        Task CreateCartId();
+        Task<CartDetailInfo> CheckCartId(int cartid);
+
+        Task<CartDetailInfo> CheckProductDetailId(int cartid, int productdetailid);
         Task UpdateQuantityCartdetail(int cartid, int productdetailid);
 
 

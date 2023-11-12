@@ -18,9 +18,12 @@ namespace Project.Sales.ApplicationService.CartDetails.Query
 
         public async override Task<GetCartdetailQueryResult> Handle(GetCartdetailQuery request, CancellationToken cancellationToken)
         {
-            int cartId = 1;
+            CartDetailInfo get = new CartDetailInfo()
+            {
+                CartId = request.CartId
+            };
 
-            var cartDetails = await this.cartService.GetCartdetail(cartId);
+            var cartDetails = await this.cartService.GetCartdetail(get.CartId);
 
             var listProductId = cartDetails.Select(c => c.ProductId ?? 0).Distinct().Where(x => x != 0).ToList();
 

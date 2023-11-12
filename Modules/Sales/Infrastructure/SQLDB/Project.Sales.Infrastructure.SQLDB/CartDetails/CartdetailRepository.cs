@@ -13,7 +13,7 @@ namespace Project.Sales.Infrastructure.SQLDB.CartDetails
             this.connection = connection;
         }
 
-        public async Task<CartDetailInfo> CheckCartdetailName(int cartid, int productdetailid)
+        public async Task<CartDetailInfo> CheckProductDetailId(int cartid, int productdetailid)
         {
             await using var connect = await connection.Connect();
             const string sql = @"
@@ -35,7 +35,7 @@ namespace Project.Sales.Infrastructure.SQLDB.CartDetails
         {
             var connect = await connection.Connect();
             const string sql = @"
-                 SELECT 
+                 	SELECT 
 	                cd.cart_id AS CartId
 	                ,cd.product_detail_id AS ProductDetailId
 	                ,p.id AS ProductId
@@ -56,8 +56,10 @@ namespace Project.Sales.Infrastructure.SQLDB.CartDetails
 						ON pd.color_id = cl.id
 						LEFT JOIN sizes AS sz
 						ON pd.size_id = sz.id 
+						LEFT JOIN carts AS ct
+						ON ct.id = cd.cart_id
                 WHERE
-	                cd.cart_id = 1
+	                ct.id= @Cartid
             ";
 
             var result = await connect.QueryAsync<CartDetailInfo>(sql,
@@ -82,14 +84,12 @@ namespace Project.Sales.Infrastructure.SQLDB.CartDetails
                                 )
                                 VALUES 
                                 (
-                                   1, @Productdetailid, @Price, @Quantity
+                                   @Cartid, @Productdetailid, 1, @Quantity
                                 )";
             await connect.ExecuteAsync(sql, new
             {
-
                 Cartid = Cartdetai.CartId,
                 Productdetailid = Cartdetai.ProductDetailId,
-                Price = Cartdetai.Price,
                 Quantity = Cartdetai.Quantity
             });
         }
@@ -121,14 +121,12 @@ namespace Project.Sales.Infrastructure.SQLDB.CartDetails
             await using var connect = await connection.Connect();
             const string sql = @"
                                UPDATE  cart_details
-			                   SET  product_detail_id =@Productdetailid, quantity =@Quantity, price = @Price
-			                   WHERE cart_id =@Cartid AND data_version = @DataVersion AND product_detail_id = @Productdetailid
+			                   SET  product_detail_id =@Productdetailid, quantity =@Quantity, price = 1
+			                   WHERE cart_id =1 AND data_version = @DataVersion 
                                 ";
             await connect.ExecuteAsync(sql, new
             {
-                Cartid = Cartdetai.CartId,
                 Productdetailid = Cartdetai.ProductDetailId,
-                Price = Cartdetai.Price,
                 Quantity = Cartdetai.Quantity,
                 DataVersion = Cartdetai.DataVersion
             });
@@ -149,6 +147,33 @@ namespace Project.Sales.Infrastructure.SQLDB.CartDetails
             });
         }
 
-       
+        public async Task CreateCartId()
+        {
+            await using var connect = await connection.Connect();
+            const string sql = @"
+                                INSERT [dbo].[carts] 
+                                (
+	                                user_id
+                                )
+                                VALUES 
+                                (
+                                     1
+                                )";
+            await connect.ExecuteAsync(sql);
+        }
+
+        public async Task<CartDetailInfo> CheckCartId(int cartid)
+        {
+            await using var connect = await connection.Connect();
+            const string sql = @"
+                                SELECT id FROM carts 
+                                WHERE id = @Cartid
+                                ";
+            var result = await connect.QueryFirstOrDefaultAsync<CartDetailInfo>(sql, new
+            {
+                CartId = cartid
+            });
+            return result;
+        }
     }
 }

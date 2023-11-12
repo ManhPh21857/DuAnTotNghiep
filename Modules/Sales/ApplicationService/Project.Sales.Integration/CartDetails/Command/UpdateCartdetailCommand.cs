@@ -7,11 +7,14 @@ namespace Project.Sales.Integration.CartDetails.Command
 {
     public class UpdateCartdetailCommand : ICommand<UpdateCartdetailCommandResult>
     {
-        public IEnumerable<CartDetailInfo> Cartdetails { get; set; }
-
-        public UpdateCartdetailCommand(IEnumerable<CartDetailInfo> cartdetails)
+        public int ProductDetailId { get; set; }
+        public int Quantity { get; set; }
+        public byte[]? DataVersion { get; set; }
+        public UpdateCartdetailCommand(int productDetailId, int quantity, byte[]? dataVersion)
         {
-            Cartdetails = cartdetails;
+            ProductDetailId = productDetailId;
+            Quantity = quantity;
+            DataVersion = dataVersion;
         }
     }
 }
