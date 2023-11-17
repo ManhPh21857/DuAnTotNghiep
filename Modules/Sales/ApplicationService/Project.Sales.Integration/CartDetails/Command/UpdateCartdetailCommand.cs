@@ -10,11 +10,17 @@ namespace Project.Sales.Integration.CartDetails.Command
         public int ProductDetailId { get; set; }
         public int Quantity { get; set; }
         public byte[]? DataVersion { get; set; }
-        public UpdateCartdetailCommand(int productDetailId, int quantity, byte[]? dataVersion)
+        public int ProductId { get; set; }
+        public int ColorId { get; set; }
+        public int SizeId { get; set; }
+        public UpdateCartdetailCommand(int productDetailId, int quantity, byte[]? dataVersion, int productId, int colorId, int sizeId)
         {
             ProductDetailId = productDetailId;
             Quantity = quantity;
             DataVersion = dataVersion;
+            ProductId = productId;
+            ColorId = colorId;
+            SizeId = sizeId;
         }
     }
 }

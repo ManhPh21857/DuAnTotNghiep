@@ -15,13 +15,33 @@ namespace Project.Sales.ApplicationService.CartDetails.Command
         }
         public async override Task<UpdateCartdetailCommandResult> Handle(UpdateCartdetailCommand request, CancellationToken cancellationToken)
         {
-            CartDetailInfo update = new CartDetailInfo
+            var delete = new CartDetailInfo
             {
+                CartId = 1,
                 ProductDetailId = request.ProductDetailId,
-                Quantity = request.Quantity,
                 DataVersion = request.DataVersion
             };
-            await this.cartdetailRepository.UpdateCartdetai(update);
+            
+            var get = await this.cartdetailRepository.GetProductdetail(request.ProductId, request.ColorId, request.SizeId);
+            if(get != null)
+            {
+                
+                await this.cartdetailRepository.DeleteCartdetai(delete);
+
+                var create = new CartDetailInfo
+                {
+                    CartId = 1,
+                    ProductDetailId = get.Id,
+                    Quantity = request.Quantity
+                };
+
+                await this.cartdetailRepository.CreateCartdetai(create);
+            }
+            else
+            {
+                throw new Exception();
+            }
+            
             return new UpdateCartdetailCommandResult(true);
         }
     }

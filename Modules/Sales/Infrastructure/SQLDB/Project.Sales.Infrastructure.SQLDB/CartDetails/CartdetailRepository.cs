@@ -118,18 +118,22 @@ namespace Project.Sales.Infrastructure.SQLDB.CartDetails
 
         public async Task UpdateCartdetai(CartDetailInfo Cartdetai)
         {
-            await using var connect = await connection.Connect();
-            const string sql = @"
-                               UPDATE  cart_details
-			                   SET  product_detail_id =@Productdetailid, quantity =@Quantity, price = 1
-			                   WHERE cart_id =1 AND data_version = @DataVersion 
+            var connect = await connection.Connect();
+            const string sql = @"                            
+                               Delete FROM 
+	                                cart_details 
+                                
+                               WHERE 
+	                                cart_id = @Cartid AND product_detail_id = @Productdetailid AND data_version = @DataVersion
                                 ";
-            await connect.ExecuteAsync(sql, new
-            {
-                Productdetailid = Cartdetai.ProductDetailId,
-                Quantity = Cartdetai.Quantity,
-                DataVersion = Cartdetai.DataVersion
-            });
+            int result = await connect.ExecuteAsync(sql,
+                new
+                {
+                    Cartid = Cartdetai.CartId,
+                    Productdetailid = Cartdetai.ProductDetailId,
+                    DataVersion = Cartdetai.DataVersion
+                }
+            );
         }
 
         public async Task UpdateQuantityCartdetail(int cartid, int productdetailid)
@@ -175,5 +179,23 @@ namespace Project.Sales.Infrastructure.SQLDB.CartDetails
             });
             return result;
         }
+
+        public async Task<CartDetailInfo> GetProductdetail(int productid, int colorid, int sizeid)
+        {
+            
+                await using var connect = await connection.Connect();
+            const string sql = @"
+                                SELECT id FROM product_details
+                                WHERE product_id = @Productid AND size_id = @Sizeid AND color_id = @Colorid
+                                ";
+            var result = await connect.QueryFirstOrDefaultAsync<CartDetailInfo>(sql, new
+            {
+                Productid = productid,
+                Colorid = colorid,
+                Sizeid = sizeid
+            });
+            return result;
+        }
+
     }
 }

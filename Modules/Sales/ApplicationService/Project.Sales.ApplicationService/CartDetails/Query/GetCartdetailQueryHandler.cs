@@ -8,24 +8,18 @@ namespace Project.Sales.ApplicationService.CartDetails.Query
     public class GetCartdetailQueryHandler : QueryHandler<GetCartdetailQuery, GetCartdetailQueryResult>
     {
         private readonly ICartdetailRepository cartService;
-        private readonly IProductRepository productRepository;
 
-        public GetCartdetailQueryHandler(ICartdetailRepository cartService, IProductRepository productRepository)
+        public GetCartdetailQueryHandler(ICartdetailRepository cartService)
         {
             this.cartService = cartService;
-            this.productRepository = productRepository;
         }
 
         public async override Task<GetCartdetailQueryResult> Handle(GetCartdetailQuery request, CancellationToken cancellationToken)
         {
-            CartDetailInfo get = new CartDetailInfo()
-            {
-                CartId = request.CartId
-            };
+            int cartid = 1;
 
-            var cartDetails = await this.cartService.GetCartdetail(get.CartId);
+            var cartDetails = await this.cartService.GetCartdetail(cartid);
 
-            var listProductId = cartDetails.Select(c => c.ProductId ?? 0).Distinct().Where(x => x != 0).ToList();
 
             return new GetCartdetailQueryResult(cartDetails);
         }

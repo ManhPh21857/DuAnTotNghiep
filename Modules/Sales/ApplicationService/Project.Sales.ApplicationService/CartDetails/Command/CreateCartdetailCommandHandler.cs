@@ -18,7 +18,7 @@ namespace Project.Sales.ApplicationService.CartDetails.Command
         {
             var create = new CartDetailInfo
             {
-                CartId = request.CartId,
+                CartId = 1,
                 ProductDetailId = request.ProductDetailId,
                 Quantity = request.Quantity
             };
@@ -27,11 +27,8 @@ namespace Project.Sales.ApplicationService.CartDetails.Command
             {
                 //Tạo mới id cart
                 await this.cartdetailRepository.CreateCartId();
-               
-               
-                    await this.cartdetailRepository.CreateCartdetai(create);
-                
-                
+                //Thêm mới cart detail
+                await this.cartdetailRepository.CreateCartdetai(create);
             }
             else
             {

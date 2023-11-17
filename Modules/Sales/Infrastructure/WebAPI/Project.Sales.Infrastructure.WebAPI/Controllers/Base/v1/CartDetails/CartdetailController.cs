@@ -29,9 +29,9 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<ResponseBaseModel<CartdetailResponseModel>>> GetCartdetail(int id)
+        public async Task<ActionResult<ResponseBaseModel<CartdetailResponseModel>>> GetCartdetail()
         {
-            var result = await this.Mediator.Send(new GetCartdetailQuery(id));
+            var result = await this.Mediator.Send(new GetCartdetailQuery());
 
             return new ResponseBaseModel<CartdetailResponseModel>
             {
