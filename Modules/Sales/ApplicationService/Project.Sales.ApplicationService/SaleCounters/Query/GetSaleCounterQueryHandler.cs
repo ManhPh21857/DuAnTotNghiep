@@ -17,12 +17,11 @@ namespace Project.Sales.ApplicationService.SaleCounters.Query
         
         public async override Task<GetSaleCounterQueryResult> Handle(GetSaleCounterQuery request, CancellationToken cancellationToken)
         {
-            int skip = CommonConst.PageSize * (request.PageNo - 1);
-            int take = CommonConst.PageSize;
+           
 
-            var result = await this.saleCounterRepository.GetSaleCounterView(skip, take);
+            var result = await this.saleCounterRepository.GetSaleCounterView();
 
-            return new GetSaleCounterQueryResult(result.Salecounters, result.TotalProduct);
+            return new GetSaleCounterQueryResult(result);
         }
     }
 }

@@ -26,7 +26,8 @@ namespace Project.Sales.ApplicationService.CartDetails.Command
             if(checkcartid == null)
             {
                 //Tạo mới id cart
-                await this.cartdetailRepository.CreateCartId();
+                 var userid =request.UserId = 1;
+                await this.cartdetailRepository.CreateCartId(userid);
                 //Thêm mới cart detail
                 await this.cartdetailRepository.CreateCartdetai(create);
             }

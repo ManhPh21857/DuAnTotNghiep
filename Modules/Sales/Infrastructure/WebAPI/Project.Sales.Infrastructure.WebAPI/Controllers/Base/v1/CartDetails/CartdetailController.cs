@@ -67,7 +67,7 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails
 
         [AllowAnonymous]
         [HttpPut]
-        public async Task<ResponseBaseModel<CommandSalesBase>> UpdateCartdetail([FromBody] UpdateCartdetailRequestModel request)
+        public async Task<ResponseBaseModel<CommandSalesBase>> UpdateCartdetail([FromBody] UpdateCartdetailModel request)
         {
            
 

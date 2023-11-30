@@ -11,7 +11,7 @@ namespace Project.Sales.Domain.CartDetails
 
         Task<CartDetailInfo> GetProductdetail(int productid, int colorid, int sizeid);
 
-        Task CreateCartId();
+        Task CreateCartId(int userid);
         Task<CartDetailInfo> CheckCartId(int cartid);
 
         Task<CartDetailInfo> CheckProductDetailId(int cartid, int productdetailid);

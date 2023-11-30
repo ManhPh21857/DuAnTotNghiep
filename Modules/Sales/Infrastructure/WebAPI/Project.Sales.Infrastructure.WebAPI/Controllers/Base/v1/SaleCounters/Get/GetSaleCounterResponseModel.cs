@@ -2,12 +2,11 @@
 {
     public class GetSaleCounterResponseModel
     {
-        public IEnumerable<SaleCounterInfo> Salecounters { get; set; }
-        public int TotalProduct { get; set; }
+        public IEnumerable<GetSaleCounterModel> Salecounters { get; set; }
 
-        public GetSaleCounterResponseModel()
+        public GetSaleCounterResponseModel(IEnumerable<GetSaleCounterModel> salecounters)
         {
-            Salecounters = new List<SaleCounterInfo>();
+            Salecounters = salecounters;
         }
     }
 }
