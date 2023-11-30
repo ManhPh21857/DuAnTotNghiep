@@ -1,5 +1,4 @@
-﻿
-using Project.Core.ApplicationService.Commands;
+﻿using Project.Core.ApplicationService.Commands;
 
 namespace Project.Sales.Integration.CartDetails.Command
 {

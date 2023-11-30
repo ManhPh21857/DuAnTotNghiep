@@ -15,28 +15,33 @@ namespace Project.Sales.ApplicationService.CartDetails.Command
         }
         public async override Task<UpdateCartdetailCommandResult> Handle(UpdateCartdetailCommand request, CancellationToken cancellationToken)
         {
-            foreach (var item in request.Cartdetails)
+            var delete = new CartDetailInfo
             {
-                var check = await this.cartdetailRepository.CheckCartdetailName((int)item.CartId,(int)item.ProductDetailId);
-                if (item.DataVersion.IsNullOrEmpty())
-                {
-                    if (check != null)
-                    {
-                        await this.cartdetailRepository.UpdateQuantityCartdetail((int)item.CartId,(int)item.ProductDetailId);
-                    }
-                    else
-                    {
-                        await this.cartdetailRepository.CreateCartdetai(item);
-                    }
-                    //await this.cartdetailRepository.CreateCartdetai(item);
-                }
-                else
-                {
-                    await this.cartdetailRepository.UpdateCartdetai(item);
-                    
-                }
-            }
+                CartId = 1,
+                ProductDetailId = request.ProductDetailId,
+                DataVersion = request.DataVersion
+            };
+            
+            var get = await this.cartdetailRepository.GetProductdetail(request.ProductId, request.ColorId, request.SizeId);
+            if(get != null)
+            {
+                
+                await this.cartdetailRepository.DeleteCartdetai(delete);
 
+                var create = new CartDetailInfo
+                {
+                    CartId = 1,
+                    ProductDetailId = get.Id,
+                    Quantity = request.Quantity
+                };
+
+                await this.cartdetailRepository.CreateCartdetai(create);
+            }
+            else
+            {
+                throw new Exception();
+            }
+            
             return new UpdateCartdetailCommandResult(true);
         }
     }

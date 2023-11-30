@@ -5,6 +5,7 @@ using Project.Sales.ApplicationService;
 using Project.Sales.Domain;
 using Project.Sales.Infrastructure.SQLDB;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post;
+using Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails.Put;
 using System.Reflection;
 
 namespace Project.Sales.Infrastructure.WebAPI;
@@ -32,7 +33,6 @@ public static class ServiceCollectionExtensions
     private static void AddValidator(this IServiceCollection services)
     {
         //Cartdetail
-        services.AddScoped<IValidator<UpdateCartdetailModel>, UpdateCartdetailModelValidator>();
-        services.AddScoped<IValidator<UpdateCartdetailRequestModel>, UpdateCartdetailRequestModelValidator>();
+        services.AddScoped<IValidator<CreateCartdetailModel>, CreateCartdetailModelValidator>();
     }
 }
