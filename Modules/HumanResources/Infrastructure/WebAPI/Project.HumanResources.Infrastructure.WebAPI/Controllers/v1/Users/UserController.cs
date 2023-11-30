@@ -15,7 +15,7 @@ public class UserController : HumanResourcesController
     {
     }
 
-    [Authorize(Roles = nameof(Role.Customer))]
+    [Authorize(Roles = nameof(Role.ShopLogin))]
     [HttpGet("list")]
     public async Task<ActionResult<ResponseBaseModel<UsersModel>>> GetUsers()
     {
@@ -34,7 +34,6 @@ public class UserController : HumanResourcesController
         return response;
     }
 
-    [Authorize(Roles = nameof(Role.Admin))]
     [HttpGet]
     public async Task<ActionResult<ResponseBaseModel<UserModel>>> GetUser()
     {

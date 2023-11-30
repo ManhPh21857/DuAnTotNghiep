@@ -4,6 +4,7 @@ using Project.Core.ApplicationService.Commands;
 using Project.Product.Domain.Images;
 using Project.Product.Domain.Products;
 using Project.Product.Integration.Products.Command;
+using SixLabors.ImageSharp;
 
 namespace Project.Product.ApplicationService.Products.Command
 {
@@ -164,6 +165,15 @@ namespace Project.Product.ApplicationService.Products.Command
             scope.Complete();
 
             return new CreateProductCommandResult(true);
+        }
+
+        public bool Base64ToImage(string base64String)
+        {
+            var imageBytes = Convert.FromBase64String(base64String);
+            using var image = Image.Load(imageBytes);
+            image.Save("foo.png");
+
+            return true;
         }
     }
 }

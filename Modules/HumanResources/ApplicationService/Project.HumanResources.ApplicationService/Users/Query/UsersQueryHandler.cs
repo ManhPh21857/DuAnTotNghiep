@@ -15,8 +15,8 @@ public class UsersQueryHandler : QueryHandler<UsersQuery, UsersQueryResult>
 
     public async override Task<UsersQueryResult> Handle(UsersQuery request, CancellationToken cancellationToken)
     {
-        var result = await userRepository.GetUserInfo(null);
+        //var result = await userRepository.GetUserInfo(null);
 
-        return new UsersQueryResult(result);
+        return new UsersQueryResult(null);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using Microsoft.IdentityModel.Tokens;
+using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.HumanResources.Domain.Roles;
 using Project.HumanResources.Domain.Users;
@@ -17,7 +17,7 @@ public class UserRepository : IUserRepository
 
     public async Task<User> CheckUserExistence(string username)
     {
-        await using var connect = await provider.Connect();
+        await using var connect = await this.provider.Connect();
 
         const string query = @"
             SELECT
@@ -37,59 +37,73 @@ public class UserRepository : IUserRepository
         return result;
     }
 
-    public async Task<List<User>> GetUser(GetUserParam param)
+    public async Task<IEnumerable<User>> GetUserLogin(GetUserParam param)
     {
-        await using var connect = await provider.Connect();
-
-        var builder = new SqlBuilder();
+        await using var connect = await this.provider.Connect();
 
         const string query = @"
             SELECT
                 [id]            AS Id
-	           ,[UID]           AS UID
+               ,[user_name]     AS Username
+               ,[is_deleted]    AS IsDeleted
+            FROM
+	            [users]
+            WHERE
+	            (
+                    [user_name] = @Username
+                    OR [email] = @Username
+                )
+	            AND [password] = @Password
+                AND [is_deleted] = @IsDeleted
+            ";
+
+        var result = await connect.QueryAsync<User>(query,
+            new
+            {
+                Username = param.Username,
+                Password = param.Password,
+                IsDeleted = 0
+            }
+        );
+
+        return result;
+    }
+
+    public async Task<IEnumerable<User>> GetUserRegister(string? email, string? username)
+    {
+        await using var connect = await this.provider.Connect();
+
+        const string query = @"
+            SELECT
+                [id]            AS Id
                ,[user_name]     AS Username
                ,[is_deleted]    AS IsDeleted
             FROM
 	            [users]
             WHERE
 	            [user_name] = @Username
-	            AND [password] = @Password";
+	            OR [email] = @Email
+            ";
 
-        var selector = builder.AddTemplate(query);
-
-        if (!param.Username.IsNullOrEmpty())
-        {
-            builder.Where("[user_name] = @Username", new { Username = param.Username });
-        }
-
-        if (!param.Password.IsNullOrEmpty())
-        {
-            builder.Where("[password] = @Password", new { Password = param.Password });
-        }
-
-        if (!param.UID.IsNullOrEmpty())
-        {
-            builder.Where("[UID] = @UID", new { UID = param.UID });
-        }
-
-        if (param.IsDeleted.HasValue)
-        {
-            builder.Where("[is_deleted] = @IsDeleted", new { IsDeleted = param.IsDeleted });
-        }
-
-        var result = (await connect.QueryAsync<User>(selector.RawSql, selector.Parameters)).ToList();
+        var result = await connect.QueryAsync<User>(query,
+            new
+            {
+                Username = username,
+                Email = email
+            }
+        );
 
         return result;
     }
 
     public async Task<IEnumerable<RoleInfo>> GetUserRoles(int id)
     {
-        await using var connect = await provider.Connect();
+        await using var connect = await this.provider.Connect();
 
         const string query = @"
             SELECT
                 r.[id]          AS Id
-	           ,r.[role_name]   AS RoleName
+	           ,r.[role_name]   AS Name
             FROM
                 [users] AS u
                 LEFT JOIN [user_roles] AS ur
@@ -112,16 +126,16 @@ public class UserRepository : IUserRepository
 
     public async Task<int> RegisterUser(RegisterUserParam param)
     {
-        await using var connect = await provider.Connect();
+        await using var connect = await this.provider.Connect();
 
         const string command = @"
             INSERT [dbo].[users] (
-	            [UID]
+               [email]
                ,[user_name]
                ,[password]
             )
             VALUES (
-	            @UID
+               @Email
                ,@Username
                ,@Password
             )
@@ -130,7 +144,7 @@ public class UserRepository : IUserRepository
         var result = await connect.QuerySingleOrDefaultAsync<int>(command,
             new
             {
-                UID = param.UID,
+                Email = param.Email,
                 UserName = param.Username,
                 Password = param.Password
             });
@@ -138,40 +152,9 @@ public class UserRepository : IUserRepository
         return result;
     }
 
-    public async Task InsertUserInfo(InsertUserInfoParam param)
-    {
-        await using var connect = await provider.Connect();
-
-        const string command = @"
-            INSERT [dbo].[user_infos] (
-	            [user_id]
-               ,[email]
-               ,[first_name]
-               ,[last_name]
-               ,[phone_number]
-            )
-            VALUES (
-	            @UserId
-               ,@Email
-               ,@FirstName
-               ,@LastName
-               ,@PhoneNumber
-            )";
-
-        await connect.ExecuteAsync(command,
-            new
-            {
-                UserId = param.UserId,
-                Email = param.Email,
-                FirstName = param.FirstName,
-                LastName = param.LastName,
-                PhoneNumber = param.PhoneNumber
-            });
-    }
-
     public async Task InsertUserRole(InsertUserRoleParam param)
     {
-        await using var connect = await provider.Connect();
+        await using var connect = await this.provider.Connect();
 
         const string command = @"
             INSERT [dbo].[user_roles] (
@@ -191,34 +174,85 @@ public class UserRepository : IUserRepository
             });
     }
 
-    public async Task<List<UserInfo>> GetUserInfo(int? id)
+    public async Task<UserInfo> GetUserInfo(int id)
     {
-        await using var connect = await provider.Connect();
-        var builder = new SqlBuilder();
-
+        await using var connect = await this.provider.Connect();
         const string query = @"
             SELECT
-	            u.[user_id]		  AS UID
-               ,u.[user_name]	  AS Username
-               ,ui.[Email]		  AS Email
-               ,ui.[first_name]	  AS FirstName
-               ,ui.[last_name]	  AS LastName
-               ,ui.[phone_number] AS PhoneNumber
+	            u.[user_name]   AS Username
+               ,ui.[first_name] AS FirstName
+               ,ui.[last_name]  AS LastName
+               ,ui.[image]		AS Image
             FROM
 	            [users] AS u
 	            LEFT JOIN [user_infos] AS ui
-		            ON u.[user_id] = ui.[user_id]
-            /**where**/";
+		            ON u.[id] = ui.[user_id]
+            WHERE
+	            id = @Id";
 
-        var selector = builder.AddTemplate(query);
-
-        if (id.HasValue)
-        {
-            builder.Where("user_id = @Id", new { Id = id });
-        }
-
-        var result = (await connect.QueryAsync<UserInfo>(selector.RawSql, selector.Parameters)).ToList();
+        var result = await connect.QuerySingleOrDefaultAsync<UserInfo>(query,
+            new
+            {
+                Id = id
+            }
+        );
 
         return result;
+    }
+
+    public async Task<IEnumerable<User>> GetEmployeeLogin(string username, string password, int roleId)
+    {
+        await using var connect = await this.provider.Connect();
+
+        const string query = @"
+            SELECT
+	            u.[Id]		   AS Id
+               ,u.[user_name]  AS Username
+               ,u.[is_deleted] AS IsDeleted
+            FROM
+	            [users] AS u
+	            JOIN [dbo].[user_roles] AS ur
+		            ON u.[Id] = ur.[user_id]
+            WHERE
+	            u.[user_name] = @Username
+	            AND u.[password] = @Password
+	            AND u.[is_deleted] = 0
+	            AND ur.[role_id] = @Role
+            ";
+
+        var result = await connect.QueryAsync<User>(query,
+            new
+            {
+                Username = username,
+                Password = password,
+                Role = roleId
+            }
+        );
+
+        return result;
+    }
+
+    public async Task ForgotPassword(string email, string newPassword)
+    {
+        await using var connect = await this.provider.Connect();
+
+        const string query = @"
+            UPDATE [dbo].[users]
+            SET
+	            [password] = @NewPassword
+            WHERE
+	            [email] = @Email
+	            AND [is_deleted] = 0
+        ";
+
+        var result = await connect.ExecuteAsync(query,
+            new
+            {
+                Email = email,
+                NewPassword = newPassword
+            }
+        );
+
+        result.IsOptimisticLocked();
     }
 }
