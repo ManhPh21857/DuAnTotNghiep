@@ -28,10 +28,10 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees.
                 .NotEmpty();
 
             this.RuleFor(x => x.Username)
-                .MaximumLength(8);
+                .MinimumLength(8);
 
             this.RuleFor(x => x.Password)
-                .MaximumLength(8);
+                .MinimumLength(8);
 
             this.RuleFor(x => x.RePassword)
                 .NotEmpty();
