@@ -1,6 +1,5 @@
 ﻿using Project.Core.ApplicationService.Queries;
 using Project.Core.Domain;
-using Project.Core.Domain.Enums;
 using Project.HumanResources.Domain.Users;
 using Project.HumanResources.Integration.Users.Query;
 
@@ -21,8 +20,8 @@ public class UserQueryHandler : QueryHandler<UserQuery, UserQueryResult>
     {
         int id = sessionInfo.UserId.value;
 
-        var result = (await userRepository.GetUserInfo(id)).FirstOrDefault();
+        var result = await userRepository.GetUserInfo(id);
 
-        return new UserQueryResult(result!);
+        return new UserQueryResult(result);
     }
 }

@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Project.Core.Domain.Enums;
 using Project.Core.Domain.User;
 
 namespace Project.HumanResources.ApplicationService.Authentication;
@@ -34,7 +35,7 @@ public class LoginService : CommandHandler<LoginRequest, LoginResponse>
             Password = request.Password
         };
 
-        var user = (await userRepository.GetUser(getUserParam)).SingleOrDefault();
+        var user = (await this.userRepository.GetUserLogin(getUserParam)).SingleOrDefault();
         if (user is null)
         {
             var exception = new DomainException("", "username or password is incorrect");
@@ -49,25 +50,25 @@ public class LoginService : CommandHandler<LoginRequest, LoginResponse>
             throw exception;
         }
 
-        var roles = await userRepository.GetUserRoles(user.Id);
+        var roles = await this.userRepository.GetUserRoles(user.Id);
 
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, configuration["Jwt:Subject"]),
+            new(JwtRegisteredClaimNames.Sub, this.configuration["Jwt:Subject"]),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString(CultureInfo.CurrentCulture)),
             new($"{nameof(UserId).ToLower()}", user.Id.ToString()),
-            new("UID", user.UID),
             new("Username", user.Username),
         };
 
-        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role.RoleName.ToString())));
+        claims.AddRange(roles.Select(role => 
+            new Claim(ClaimTypes.Role, Enum.GetName(typeof(Role), role.Id) ?? "")));
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.configuration["Jwt:Key"]));
         var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var token = new JwtSecurityToken(
-            configuration["Jwt:Issuer"],
-            configuration["Jwt:Audience"],
+            this.configuration["Jwt:Issuer"],
+            this.configuration["Jwt:Audience"],
             claims,
             expires: DateTime.UtcNow.AddMinutes(10),
             signingCredentials: signIn);
