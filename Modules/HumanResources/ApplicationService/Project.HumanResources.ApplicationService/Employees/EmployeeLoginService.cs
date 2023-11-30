@@ -60,7 +60,8 @@ namespace Project.HumanResources.ApplicationService.Employees
                 new("Username", user.Username),
             };
 
-            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role.Name.ToString())));
+            claims.AddRange(roles.Select(role =>
+                new Claim(ClaimTypes.Role, Enum.GetName(typeof(Role), role.Id) ?? "")));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.configuration["Jwt:Key"]));
             var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

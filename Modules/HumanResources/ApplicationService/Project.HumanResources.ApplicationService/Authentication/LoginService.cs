@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Project.Core.Domain.Enums;
 using Project.Core.Domain.User;
 
 namespace Project.HumanResources.ApplicationService.Authentication;
@@ -60,7 +61,8 @@ public class LoginService : CommandHandler<LoginRequest, LoginResponse>
             new("Username", user.Username),
         };
 
-        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role.Name.ToString())));
+        claims.AddRange(roles.Select(role => 
+            new Claim(ClaimTypes.Role, Enum.GetName(typeof(Role), role.Id) ?? "")));
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.configuration["Jwt:Key"]));
         var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

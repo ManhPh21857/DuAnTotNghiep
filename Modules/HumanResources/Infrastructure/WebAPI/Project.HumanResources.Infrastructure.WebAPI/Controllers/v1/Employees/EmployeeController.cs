@@ -25,7 +25,7 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees
             this.validatorUpdateEmployeeRequestModel = validatorUpdateEmployeeRequestModel;
         }
 
-        [Authorize(Roles = nameof(Role.Admin))]
+        [Authorize(Roles = nameof(Role.UserView))]
         [HttpGet("{pageNumber}")]
         public async Task<ActionResult<ResponseBaseModel<GetEmployeeResponseModel>>> GetEmployee(int pageNumber)
         {
@@ -41,7 +41,7 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees
             return response;
         }
 
-        [Authorize(Roles = nameof(Role.Admin))]
+        [Authorize(Roles = nameof(Role.UserEdit))]
         [HttpPost]
         public async Task<ActionResult<ResponseBaseModel<UpdateEmployeeResponseModel>>> UpdateEmployee(
             UpdateEmployeeRequestModel request

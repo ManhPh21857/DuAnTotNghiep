@@ -26,30 +26,42 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees.
         {
             this.RuleFor(x => x.Email)
                 .NotEmpty();
+
             this.RuleFor(x => x.Username)
-                .Length(8);
+                .MaximumLength(8);
+
             this.RuleFor(x => x.Password)
-                .Length(8);
+                .MaximumLength(8);
+
             this.RuleFor(x => x.RePassword)
                 .NotEmpty();
+
             this.RuleFor(x => x)
                 .Must(x => x.RePassword == x.Password);
 
             this.RuleFor(x => x.Id);
+
             this.RuleFor(x => x.FirstName)
                 .NotEmpty();
+
             this.RuleFor(x => x.LastName)
                 .NotEmpty();
+
             this.RuleFor(x => x.Image)
                 .NotEmpty();
+
             this.RuleFor(x => x.Address);
+
             this.RuleFor(x => x.Birthday)
                 .NotNull()
                 .NotEmpty();
+
             this.RuleFor(x => x.Sex)
                 .NotNull();
+
             this.RuleFor(x => x.PhoneNumber)
                 .NotEmpty();
+
             this.RuleFor(x => x.Roles)
                 .NotEmpty();
         }
