@@ -18,8 +18,4 @@
 		<ProjectReference Include="..\..\..\Domain\Project.Sales.Domain\Project.Sales.Domain.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Controllers\v1\CartDetails\Put\" />
-	</ItemGroup>
-
 </Project>

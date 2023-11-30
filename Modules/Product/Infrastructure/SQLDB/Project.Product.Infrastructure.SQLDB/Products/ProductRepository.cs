@@ -504,6 +504,7 @@ public class ProductRepository : IProductRepository
         return result;
     }
 
+
     public async Task CreateProductDetail(ProductDetailInfo param)
     {
         await using var connect = await provider.Connect();

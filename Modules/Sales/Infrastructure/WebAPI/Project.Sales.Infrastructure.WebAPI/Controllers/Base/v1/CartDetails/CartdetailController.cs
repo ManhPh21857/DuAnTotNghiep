@@ -8,6 +8,7 @@ using Project.Sales.Infrastructure.WebAPI.Controllers.Base;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails.Delete;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails.Get;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post;
+using Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails.Put;
 using Project.Sales.Integration.CartDetails.Command;
 using Project.Sales.Integration.CartDetails.Query;
 
@@ -15,10 +16,15 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails
 {
     public class CartdetailController : SalesController
     {
-        private readonly IValidator<UpdateCartdetailRequestModel> cartdetailValidator;
-        public CartdetailController(ISender mediator, IValidator<UpdateCartdetailRequestModel> cartdetailValidator) : base(mediator)
+       
+        private readonly IValidator<CreateCartdetailModel> createCartdetailValidator;
+        public CartdetailController(ISender mediator, 
+            
+            IValidator<CreateCartdetailModel> createCartdetailValidator
+            ) : base(mediator)
         {
-            this.cartdetailValidator = cartdetailValidator;
+           
+            this.createCartdetailValidator = createCartdetailValidator;
         }
 
         [AllowAnonymous]
@@ -33,17 +39,37 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails
             };
         }
 
-
         [AllowAnonymous]
-        [HttpPost]
-        public async Task<ActionResult<ResponseBaseModel<CommandSalesBase>>> UpdateCartdetail(UpdateCartdetailRequestModel request)
+        [HttpPost("")]
+        public async Task<ActionResult<ResponseBaseModel<CreateCartdetailRequestModel>>> CreateCartdetail(
+       [FromBody] CreateCartdetailModel request)
         {
-            var validator = await this.cartdetailValidator.ValidateAsync(request);
+            var validator = await createCartdetailValidator.ValidateAsync(request);
             if (!validator.IsValid)
             {
                 validator.AddToModelState(ModelState);
                 return this.BadRequest(ModelState);
             }
+
+            var registerRequest = request.Adapt<CreateCartdetailCommand>();
+
+
+            var result = await Mediator.Send(registerRequest);
+
+            var response = new ResponseBaseModel<CreateCartdetailRequestModel>
+            {
+                Data = result.Adapt<CreateCartdetailRequestModel>()
+            };
+
+            return response;
+        }
+
+
+        [AllowAnonymous]
+        [HttpPut]
+        public async Task<ResponseBaseModel<CommandSalesBase>> UpdateCartdetail([FromBody] UpdateCartdetailModel request)
+        {
+           
 
             var command = request.Adapt<UpdateCartdetailCommand>();
 
