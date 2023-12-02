@@ -4,10 +4,6 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees.
 {
     public class UpdateEmployeeRequestModel
     {
-        public string? Email { get; set; }
-        public string? Username { get; set; }
-        public string? Password { get; set; }
-        public string? RePassword { get; set; }
         public int? Id { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
@@ -16,8 +12,13 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees.
         public DateTime? Birthday { get; set; }
         public int? Sex { get; set; }
         public string? PhoneNumber { get; set; }
+        public byte[]? EmployeeDataVersion { get; set; }
+        public int? UserId { get; set; }
+        public string? Email { get; set; }
+        public string? Username { get; set; }
+        public string? Password { get; set; }
+        public byte[]? UserDataVersion { get; set; }
         public IEnumerable<int>? Roles { get; set; }
-        public byte[]? DataVersion { get; set; }
     }
 
     public class UpdateEmployeeRequestModelValidator : AbstractValidator<UpdateEmployeeRequestModel>
@@ -32,12 +33,6 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees.
 
             this.RuleFor(x => x.Password)
                 .MinimumLength(8);
-
-            this.RuleFor(x => x.RePassword)
-                .NotEmpty();
-
-            this.RuleFor(x => x)
-                .Must(x => x.RePassword == x.Password);
 
             this.RuleFor(x => x.Id);
 
