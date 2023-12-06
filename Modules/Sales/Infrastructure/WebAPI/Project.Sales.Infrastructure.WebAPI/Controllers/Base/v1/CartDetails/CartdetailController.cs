@@ -27,17 +27,17 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails
             this.createCartdetailValidator = createCartdetailValidator;
         }
 
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<ActionResult<ResponseBaseModel<CartdetailResponseModel>>> GetCartdetail()
-        {
-            var result = await this.Mediator.Send(new GetCartdetailQuery());
+        //[AllowAnonymous]
+        //[HttpGet]
+        //public async Task<ActionResult<ResponseBaseModel<CartdetailResponseModel>>> GetCartdetail()
+        //{
+        //    var result = await this.Mediator.Send(new GetCartdetailQuery());
 
-            return new ResponseBaseModel<CartdetailResponseModel>
-            {
-                Data = result.Adapt<CartdetailResponseModel>()
-            };
-        }
+        //    return new ResponseBaseModel<CartdetailResponseModel>
+        //    {
+        //        Data = result.Adapt<CartdetailResponseModel>()
+        //    };
+        //}
 
         [AllowAnonymous]
         [HttpPost("")]

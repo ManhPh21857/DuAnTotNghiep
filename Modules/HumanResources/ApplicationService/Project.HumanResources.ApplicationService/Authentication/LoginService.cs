@@ -51,6 +51,12 @@ public class LoginService : CommandHandler<LoginRequest, LoginResponse>
         }
 
         var roles = await this.userRepository.GetUserRoles(user.Id);
+        if (roles.All(x => x.Id != Role.ShopLogin.GetHashCode()))
+        {
+            var exception = new DomainException("", "username or password is incorrect");
+
+            throw exception;
+        }
 
         var claims = new List<Claim>
         {

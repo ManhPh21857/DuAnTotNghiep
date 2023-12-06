@@ -1,5 +1,4 @@
 ﻿using Project.Core.ApplicationService.Queries;
-using Project.Product.Domain.Constants;
 using Project.Sales.Domain.SaleCounters;
 using Project.Sales.Integration.SaleCounters.Query;
 
