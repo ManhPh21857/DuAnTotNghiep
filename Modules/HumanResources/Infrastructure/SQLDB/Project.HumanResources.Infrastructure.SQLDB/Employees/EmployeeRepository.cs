@@ -1,9 +1,7 @@
 ﻿using Dapper;
+using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.HumanResources.Domain.Employees;
-using static System.Net.Mime.MediaTypeNames;
-using System.Net;
-using Project.Core.Infrastructure.SQLDB.Extensions;
 
 namespace Project.HumanResources.Infrastructure.SQLDB.Employees
 {
@@ -16,7 +14,7 @@ namespace Project.HumanResources.Infrastructure.SQLDB.Employees
             this.provider = provider;
         }
 
-        public async Task<IEnumerable<EmployeeInfo>> GetEmployees(int skip, int take)
+        public async Task<GetEmployeeModel> GetEmployees(int skip, int take)
         {
             await using var connect = await this.provider.Connect();
 
@@ -40,16 +38,29 @@ namespace Project.HumanResources.Infrastructure.SQLDB.Employees
                 ORDER BY
 	                id
                 OFFSET @Skip ROWS
-                FETCH NEXT @Take ROWS ONLY
+                FETCH NEXT @Take ROWS ONLY;
+
+                SELECT
+	                COUNT([id]) AS TotalProduct
+                FROM
+	                [dbo].[employees]
+                WHERE
+	                [is_deleted] = 0
             ";
 
-            var result = await connect.QueryAsync<EmployeeInfo>(query,
+            var response = await connect.QueryMultipleAsync(query,
                 new
                 {
                     Skip = skip,
                     Take = take
                 }
             );
+
+            var result = new GetEmployeeModel
+            {
+                Employees = response.Read<EmployeeInfo>(),
+                TotalEmployee = response.ReadFirstOrDefault<int>()
+            };
 
             return result;
         }

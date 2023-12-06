@@ -7,10 +7,10 @@ public interface IProductRepository
     Task<ProductViewResponse> GetProductView(int skip, int take);
     Task<ProductView> GetProductView(int id);
     Task<ProductInfo> GetProduct(int id);
-    Task<IEnumerable<ProductView>> GetProducts(int skip, int take);
+    Task<ProductViewResponse> GetProducts(int skip, int take);
     Task<int> CreateProduct(ProductInfo param);
     Task UpdateProduct(ProductInfo param);
-    Task DeleteProduct(int id);
+    Task DeleteProduct(DeleteProductParam param);
 
     #endregion
 

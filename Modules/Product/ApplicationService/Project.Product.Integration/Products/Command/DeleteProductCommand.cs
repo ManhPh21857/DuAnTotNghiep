@@ -1,14 +1,15 @@
 ﻿using Project.Core.ApplicationService.Commands;
+using Project.Product.Domain.Products;
 
 namespace Project.Product.Integration.Products.Command
 {
     public class DeleteProductCommand : ICommand<DeleteProductCommandResult>
     {
-        public int Id { get; set; }
+        public IEnumerable<DeleteProductParam> Products { get; set; }
 
-        public DeleteProductCommand(int id)
+        public DeleteProductCommand(IEnumerable<DeleteProductParam> products)
         {
-            Id = id;
+            this.Products = products;
         }
     }
 }
