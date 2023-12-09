@@ -32,17 +32,17 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.SaleCounters
 
         [AllowAnonymous]
         [HttpGet("productdetailid/{productId}/{colorId}/{sizeId}")]
-        public async Task<ActionResult<ResponseBaseModel<SaleCounterIdResponseModel>>> GetSaleCounterId(int productId, int colorId, int sizeId)
+        public async Task<ActionResult<ResponseBaseModel<ProductDetailIdResponseModel>>> GetSaleCounterId(int productId, int colorId, int sizeId)
         {
 
-            var query = new GetSaleCounterIdQuery(productId, colorId, sizeId);
+            var query = new GetProductDetailIdQuery(productId, colorId, sizeId);
 
             var result = await Mediator.Send(query);
 
 
-            return new ResponseBaseModel<SaleCounterIdResponseModel>
+            return new ResponseBaseModel<ProductDetailIdResponseModel>
             {
-                Data = result.Adapt<SaleCounterIdResponseModel>()
+                Data = result.Adapt<ProductDetailIdResponseModel>()
             };
 
         }
@@ -61,18 +61,6 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.SaleCounters
             };
         }
 
-        [AllowAnonymous]
-        [HttpPost("order")]
-        public async Task<ResponseBaseModel<CommandSalesBase>> CreateOrder([FromBody] CreateOrderModel request)
-        {
-            var command = request.Adapt<CreateOrderCommand>();
-
-            var result = await this.Mediator.Send(command);
-
-            return new ResponseBaseModel<CommandSalesBase>
-            {
-                Data = result.Adapt<CommandSalesBase>()
-            };
-        }
+      
     }
 }

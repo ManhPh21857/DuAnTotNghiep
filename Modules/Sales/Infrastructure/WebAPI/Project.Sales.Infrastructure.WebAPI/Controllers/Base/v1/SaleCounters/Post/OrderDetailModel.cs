@@ -1,8 +1,7 @@
-﻿namespace Project.Sales.Domain.SaleCounters
+﻿namespace Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.SaleCounters.Post
 {
-    public class OrderDetailInfo
+    public class OrderDetailModel
     {
-        public int OrderId { get; set; }
         public int ProductDetailId { get; set; }
         public int VoucherId { get; set; }
         public float Price { get; set; }

@@ -13,39 +13,43 @@ namespace Project.Sales.Infrastructure.SQLDB.SaleCounters
             this.provider = provider;
         }
 
-        public async Task<OrderDetailInfo> CheckOrderId(int orderId)
+        public async Task<OrderDetailInfo> CheckOrderId(int id)
         {
             await using var connect = await provider.Connect();
             const string sql = @"
-                                select order_id from order_details
-								where order_id = @OrderId
+                                select id from orders
+								where id = @Id
                                 ";
             var result = await connect.QueryFirstOrDefaultAsync<OrderDetailInfo>(sql, new
             {
-                OrderId = orderId
+                Id = id
             });
             return result;
         }
 
-        public async Task CreateOrder(OrderDetailInfo orderDetail)
+        public async Task<int> CreateOrder(OrderInfo order)
         {
             await using var connect = await provider.Connect();
             const string sql = @"
                                 INSERT [dbo].[orders] 
                                 (
-	                                 user_id, employee_id, address_id, total
+	                                 customer_id, employee_id, address_id, total
                                 )
+                                OUTPUT Inserted.ID
                                 VALUES 
                                 (
-                                   @UserId, @EmployeeId, @AddressId, @Total
+                                   @CustomerId, @EmployeeId, @AddressId, @Total
                                 )";
-            await connect.ExecuteAsync(sql, new
+            var result = await connect.QueryFirstOrDefaultAsync<int>(sql, new
             {
-                UserId = orderDetail.UserId,
-                EmployeeId = orderDetail.EmployeeId,
-                AddressId = orderDetail.AddressId,
-                Total = orderDetail.Total,
+
+                CustomerId = order.CustomerId,
+                EmployeeId = order.EmployeeId,
+                AddressId = order.AddressId,
+                Total = order.Total,
+
             });
+            return result;
         }
 
         public async Task CreateOrderDetail(OrderDetailInfo orderDetail)
@@ -105,31 +109,18 @@ namespace Project.Sales.Infrastructure.SQLDB.SaleCounters
             return result;
         }
 
-        public async Task<SaleCounterInfo> GetSaleCounterViewId(int productId, int colorId, int sizeId)
+        public async Task<SaleCounterInfo> GetProductDetailId(int productId, int colorId, int sizeId)
         {
             await using var connect = await provider.Connect();
 
             const string query = @"
             SELECT 
-					 pd.id AS ProductDetailId
-                    ,p.image AS Image
-	                ,p.[name] AS ProductName
-	                ,cl.color AS Color
-	                ,sz.size AS Size
-	                ,pd.price AS Price
-                    ,pd.data_version AS DataVersion
-	                ,pd.quantity AS Quantity
+					 id AS ProductDetailId
                 FROM 
-						product_details AS pd
-		                LEFT JOIN products AS p
-		                ON pd.product_id = p.id
-						LEFT JOIN colors AS cl
-						ON pd.color_id = cl.id
-						LEFT JOIN sizes AS sz
-						ON pd.size_id = sz.id 
+						product_details 
 						
                 WHERE
-	                pd.product_id = @ProductId AND pd.color_id = @ColorId AND pd.size_id = @SizeId
+	                product_id = @ProductId AND color_id = @ColorId AND size_id = @SizeId
         ";
 
             var result = await connect.QueryFirstOrDefaultAsync<SaleCounterInfo>(query, new

@@ -3,9 +3,9 @@
     public interface ISaleCounterRepository
     {
         Task<IEnumerable<SaleCounterInfo>> GetSaleCounterView();
-        Task<SaleCounterInfo> GetSaleCounterViewId(int productId,int colorId, int sizeId);
+        Task<SaleCounterInfo> GetProductDetailId(int productId,int colorId, int sizeId);
         Task CreateOrderDetail(OrderDetailInfo orderDetail);
-        Task CreateOrder(OrderDetailInfo orderDetail);
-        Task<OrderDetailInfo> CheckOrderId(int orderId);
+        Task<int> CreateOrder(OrderInfo order);
+        Task<OrderDetailInfo> CheckOrderId(int id);
     }
 }

@@ -2,11 +2,11 @@
 
 namespace Project.Sales.Integration.SaleCounters.Query
 {
-    public class GetSaleCounterIdQueryResult
+    public class GetProductDetailIdQueryResult
     {
         public SaleCounterInfo Salecounters { get; set; }
 
-        public GetSaleCounterIdQueryResult(SaleCounterInfo saleCounters)
+        public GetProductDetailIdQueryResult(SaleCounterInfo saleCounters)
         {
             Salecounters = saleCounters;
         }
