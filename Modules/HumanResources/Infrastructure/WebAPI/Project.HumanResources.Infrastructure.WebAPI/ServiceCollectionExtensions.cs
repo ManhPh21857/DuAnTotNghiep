@@ -10,6 +10,7 @@ using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Authentication
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Authentication.Accuracy;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Authentication.Forgot;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees.Post;
+using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees.Put;
 
 namespace Project.HumanResources.Infrastructure.WebAPI;
 
@@ -40,5 +41,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<EmailAuthenticationRequestModel>, EmailAuthenticationRequestModelValidator>();
         services.AddScoped<IValidator<ForgotRequestModel>, ForgotRequestModelValidator>();
         services.AddScoped<IValidator<UpdateEmployeeRequestModel>, UpdateEmployeeRequestModelValidator>();
+        services.AddScoped<IValidator<DeleteEmployeeModel>, DeleteEmployeeModelValidator>();
+        services.AddScoped<IValidator<DeleteEmployeeRequestModel>, DeleteEmployeeRequestModelValidator>();
     }
 }

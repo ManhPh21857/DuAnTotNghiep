@@ -2,12 +2,11 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Project.Common.Infrastructure.WebAPI.Controllers.v1.Products.Get;
 using Project.Core.Domain.Enums;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
-using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Get;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Post;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Put;
 using Project.Product.Integration.Products.Command;
 using Project.Product.Integration.Products.Query;
 
@@ -21,11 +20,14 @@ public class ProductController : CommonController
 
     [AllowAnonymous]
     [HttpPost("view/{pageNo}")]
-    public async Task<ActionResult<ResponseBaseModel<GetProductViewResponseModel>>> GetProductView(int pageNo, [FromBody] ProductFilter filter)
+    public async Task<ActionResult<ResponseBaseModel<GetProductViewResponseModel>>> GetProductView(
+        int pageNo,
+        [FromBody] ProductFilter filter
+    )
     {
         var query = new GetProductViewQuery(pageNo);
 
-        var result = await Mediator.Send(query);
+        var result = await this.Mediator.Send(query);
 
         var response = new ResponseBaseModel<GetProductViewResponseModel>
         {
@@ -41,7 +43,7 @@ public class ProductController : CommonController
     {
         var query = new GetProductItemQuery(id);
 
-        var result = await Mediator.Send(query);
+        var result = await this.Mediator.Send(query);
 
         var response = new ResponseBaseModel<GetProductItemResponseModel>
         {
@@ -51,14 +53,13 @@ public class ProductController : CommonController
         return response;
     }
 
-
     [Authorize(Roles = nameof(Role.ProductView))]
     [HttpGet("{pageNo}")]
     public async Task<ActionResult<ResponseBaseModel<GetProductResponseModel>>> GetProducts(int pageNo)
     {
         var query = new GetProductQuery(pageNo);
 
-        var result = await Mediator.Send(query);
+        var result = await this.Mediator.Send(query);
 
         var response = new ResponseBaseModel<GetProductResponseModel>
         {
@@ -74,7 +75,7 @@ public class ProductController : CommonController
     {
         var query = new GetProductDetailQuery(id);
 
-        var result = await Mediator.Send(query);
+        var result = await this.Mediator.Send(query);
 
         var response = new ResponseBaseModel<GetProductDetailResponseModel>
         {
@@ -84,34 +85,37 @@ public class ProductController : CommonController
         return response;
     }
 
-
     [Authorize(Roles = nameof(Role.ProductEdit))]
     [HttpPost]
-    public async Task<ActionResult<ResponseBaseModel<UpdateProductResponseModel>>> UpdateProduct([FromBody] UpdateProductRequestModel request)
+    public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateProduct(
+        [FromBody] UpdateProductRequestModel request
+    )
     {
         var command = request.Adapt<CreateProductCommand>();
 
-        var result = await Mediator.Send(command);
+        var result = await this.Mediator.Send(command);
 
-        var response = new ResponseBaseModel<UpdateProductResponseModel>
+        var response = new ResponseBaseModel<CommandProductBase>
         {
-            Data = result.Adapt<UpdateProductResponseModel>()
+            Data = result.Adapt<CommandProductBase>()
         };
 
         return response;
     }
 
     [Authorize(Roles = nameof(Role.ProductDelete))]
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<ResponseBaseModel<DeleteProductResponseModel>>> DeleteProduct(int id)
+    [HttpPut("delete")]
+    public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> DeleteProduct(
+        DeleteProductRequestModel request
+    )
     {
-        var command = new DeleteProductCommand(id);
+        var command = request.Adapt<DeleteProductCommand>();
 
-        var result = await Mediator.Send(command);
+        var result = await this.Mediator.Send(command);
 
-        var response = new ResponseBaseModel<DeleteProductResponseModel>
+        var response = new ResponseBaseModel<CommandProductBase>
         {
-            Data = result.Adapt<DeleteProductResponseModel>()
+            Data = result.Adapt<CommandProductBase>()
         };
 
         return response;

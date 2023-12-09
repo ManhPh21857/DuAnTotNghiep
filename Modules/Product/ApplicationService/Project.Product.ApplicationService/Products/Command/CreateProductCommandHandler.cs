@@ -1,7 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Project.Core.ApplicationService;
 using Project.Core.ApplicationService.Commands;
-using Project.Product.Domain.Images;
 using Project.Product.Domain.Products;
 using Project.Product.Integration.Products.Command;
 using SixLabors.ImageSharp;
@@ -11,12 +10,10 @@ namespace Project.Product.ApplicationService.Products.Command
     public class CreateProductCommandHandler : CommandHandler<CreateProductCommand, CreateProductCommandResult>
     {
         private readonly IProductRepository productRepository;
-        private readonly IImageRepository imageRepository;
 
-        public CreateProductCommandHandler(IProductRepository productRepository, IImageRepository imageRepository)
+        public CreateProductCommandHandler(IProductRepository productRepository)
         {
             this.productRepository = productRepository;
-            this.imageRepository = imageRepository;
         }
 
         public async override Task<CreateProductCommandResult> Handle(CreateProductCommand request,
@@ -24,10 +21,21 @@ namespace Project.Product.ApplicationService.Products.Command
         {
             using var scope = TransactionFactory.Create();
 
+            var imageDictionary = new Dictionary<string, string>();
+
             var product = request.Product;
             if (product is null)
             {
                 throw new ArgumentNullException();
+            }
+
+            if (this.IsBase64String(product.Image))
+            {
+                string imageProductName = $"{product.Code}_image.png";
+
+                imageDictionary.Add(imageProductName, product.Image);
+
+                product.Image = imageProductName;
             }
 
             if (product.DataVersion.IsNullOrEmpty())
@@ -39,6 +47,15 @@ namespace Project.Product.ApplicationService.Products.Command
                 foreach (var productColor in request.ProductColors)
                 {
                     productColor.ProductId = productId;
+
+                    if (this.IsBase64String(productColor.Image))
+                    {
+                        string imageColorName = $"{product.Code}_{productColor.ColorId}_image.png";
+
+                        imageDictionary.Add(imageColorName, productColor.Image);
+
+                        productColor.Image = imageColorName;
+                    }
 
                     await this.productRepository.CreateProductColor(productColor);
                 }
@@ -63,13 +80,21 @@ namespace Project.Product.ApplicationService.Products.Command
                 //update
                 await this.productRepository.UpdateProduct(product);
 
-                var oldProductColor = (await this.productRepository.GetProductColor(product.Id)).ToList();
-
                 await this.productRepository.HardDeleteProductColor(product.Id);
 
                 foreach (var item in request.ProductColors)
                 {
                     item.ProductId = product.Id;
+
+                    if (this.IsBase64String(item.Image))
+                    {
+                        string imageColorName = $"{product.Code}_{item.ColorId}_image.png";
+
+                        imageDictionary.Add(imageColorName, item.Image);
+
+                        item.Image = imageColorName;
+                    }
+
                     await this.productRepository.CreateProductColor(item);
                 }
 
@@ -100,10 +125,13 @@ namespace Project.Product.ApplicationService.Products.Command
                         await this.productRepository.UpdateProductDetail(item);
                     }
                 }
+            }
 
-
-
-
+            foreach (var item in imageDictionary)
+            {
+                var imageBytes = Convert.FromBase64String(item.Value);
+                using var image = Image.Load(imageBytes);
+                await image.SaveAsync(@$"D:\Final\Img\{item.Key}", CancellationToken.None);
             }
 
 
@@ -167,13 +195,10 @@ namespace Project.Product.ApplicationService.Products.Command
             return new CreateProductCommandResult(true);
         }
 
-        public bool Base64ToImage(string base64String)
+        public bool IsBase64String(string base64)
         {
-            var imageBytes = Convert.FromBase64String(base64String);
-            using var image = Image.Load(imageBytes);
-            image.Save("foo.png");
-
-            return true;
+            var buffer = new Span<byte>(new byte[base64.Length]);
+            return Convert.TryFromBase64String(base64, buffer, out int _);
         }
     }
 }

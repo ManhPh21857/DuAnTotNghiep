@@ -22,6 +22,7 @@
 	  <Folder Include="Controllers\v1\Colors\Put\" />
 	  <Folder Include="Controllers\v1\Materials\Put\" />
 	  <Folder Include="Controllers\v1\Origins\Put\" />
+	  <Folder Include="Controllers\v1\Products\Delete\" />
 	  <Folder Include="Controllers\v1\Suppliers\Put\" />
 	  <Folder Include="Controllers\v1\Trademarks\Put\" />
 	  <Folder Include="Controllers\v1\Sizes\Put\" />

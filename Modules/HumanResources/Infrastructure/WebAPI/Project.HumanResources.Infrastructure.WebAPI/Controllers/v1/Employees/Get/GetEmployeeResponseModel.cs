@@ -3,10 +3,11 @@
     public class GetEmployeeResponseModel
     {
         public IEnumerable<EmployeeModel> Employees { get; set; }
+        public int TotalPage { get; set; }
 
-        public GetEmployeeResponseModel(IEnumerable<EmployeeModel> employees)
+        public GetEmployeeResponseModel()
         {
-            this.Employees = employees;
+            this.Employees = new List<EmployeeModel>();
         }
     }
 }

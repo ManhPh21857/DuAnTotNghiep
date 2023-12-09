@@ -1,4 +1,5 @@
 ﻿using Project.Core.ApplicationService.Queries;
+using Project.Core.Domain.Constants;
 using Project.HumanResources.Domain.Employees;
 using Project.HumanResources.Integration.Employees.Query;
 
@@ -18,12 +19,17 @@ namespace Project.HumanResources.ApplicationService.Employees.Query
             CancellationToken cancellationToken
         )
         {
-            int skip = (request.PageNumber - 1) * 10;
-            int take = 10;
+            int skip = (request.PageNumber - 1) * CommonConst.EMPLOYEE_PAGE_SIZE;
+            int take = CommonConst.EMPLOYEE_PAGE_SIZE;
 
             var result = await this.employeeRepository.GetEmployees(skip, take);
+            int totalPage = result.TotalEmployee / CommonConst.EMPLOYEE_PAGE_SIZE;
+            if (result.TotalEmployee % CommonConst.EMPLOYEE_PAGE_SIZE > 0)
+            {
+                totalPage++;
+            }
 
-            return new EmployeeQueryResult(result);
+            return new EmployeeQueryResult(result.Employees, totalPage);
         }
     }
 }

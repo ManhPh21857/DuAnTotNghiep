@@ -124,6 +124,50 @@ public class UserRepository : IUserRepository
         return result;
     }
 
+    public async Task UpdateUser(UpdateUserParam param)
+    {
+        await using var connect = await this.provider.Connect();
+
+        const string command = @"
+            UPDATE users
+            SET
+	            password = @Password
+            WHERE
+	            id = @Id
+	            AND is_deleted = 0
+	            AND data_version = @DataVersion
+        ";
+
+        var result = await connect.ExecuteAsync(command,
+            new
+            {
+                Password = param.Password,
+                Id = param.Id,
+                DataVersion = param.DataVersion
+            }
+        );
+
+        result.IsOptimisticLocked();
+    }
+
+    public async Task DeleteUserRoles(int userId)
+    {
+        await using var connect = await this.provider.Connect();
+
+        const string command = @"
+            DELETE user_roles
+            WHERE
+	            [user_id] = @UserId
+        ";
+
+        await connect.ExecuteAsync(command,
+            new
+            {
+                UserId = userId
+            }
+        );
+    }
+
     public async Task<int> RegisterUser(RegisterUserParam param)
     {
         await using var connect = await this.provider.Connect();
@@ -250,6 +294,27 @@ public class UserRepository : IUserRepository
             {
                 Email = email,
                 NewPassword = newPassword
+            }
+        );
+
+        result.IsOptimisticLocked();
+    }
+
+    public async Task DeleteUser(int id)
+    {
+        await using var connect = await this.provider.Connect();
+        const string command = @"
+            UPDATE users
+            SET
+	            is_deleted = 1
+            WHERE
+	            id = @Id
+        ";
+
+        var result = await connect.ExecuteAsync(command,
+            new
+            {
+                Id = id
             }
         );
 
