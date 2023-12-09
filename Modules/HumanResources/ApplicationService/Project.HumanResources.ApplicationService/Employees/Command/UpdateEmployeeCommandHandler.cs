@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Project.Core.ApplicationService;
 using Project.Core.ApplicationService.Commands;
 using Project.Core.Domain;
@@ -13,14 +14,17 @@ namespace Project.HumanResources.ApplicationService.Employees.Command
     {
         private readonly IUserRepository userRepository;
         private readonly IEmployeeRepository employeeRepository;
+        private readonly IConfiguration configuration;
 
         public UpdateEmployeeCommandHandler(
             IUserRepository userRepository,
-            IEmployeeRepository employeeRepository
+            IEmployeeRepository employeeRepository,
+            IConfiguration configuration
         )
         {
             this.userRepository = userRepository;
             this.employeeRepository = employeeRepository;
+            this.configuration = configuration;
         }
 
         public async override Task<UpdateEmployeeCommandResult> Handle(
@@ -66,7 +70,7 @@ namespace Project.HumanResources.ApplicationService.Employees.Command
 
                 var imageBytes = Convert.FromBase64String(request.Image);
                 using var image = Image.Load(imageBytes);
-                await image.SaveAsync(@$"D:\Final\Img\{userImage}", CancellationToken.None);
+                await image.SaveAsync(@$"{this.configuration["ImagePath"]}{userImage}", CancellationToken.None);
 
                 await this.employeeRepository.CreateEmployee(new CreateEmployeeParam
                     {
@@ -91,7 +95,7 @@ namespace Project.HumanResources.ApplicationService.Employees.Command
                     userImage = $"{request.Username}_avatar.png";
                     var imageBytes = Convert.FromBase64String(request.Image);
                     using var image = Image.Load(imageBytes);
-                    await image.SaveAsync(@$"D:\Final\Img\{userImage}", CancellationToken.None);
+                    await image.SaveAsync(@$"{this.configuration["ImagePath"]}{userImage}", CancellationToken.None);
                 }
                 else
                 {
