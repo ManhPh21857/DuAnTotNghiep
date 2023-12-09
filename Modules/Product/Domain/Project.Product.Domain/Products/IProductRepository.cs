@@ -34,6 +34,7 @@ public interface IProductRepository
 
     #region Product Detail
 
+    Task<ProductDetailInfo> GetProductDetailById(int id);
     Task<IEnumerable<ProductDetailInfo>> GetProductDetail(int productId);
     Task CreateProductDetail(ProductDetailInfo param);
     Task UpdateProductDetail(ProductDetailInfo param);

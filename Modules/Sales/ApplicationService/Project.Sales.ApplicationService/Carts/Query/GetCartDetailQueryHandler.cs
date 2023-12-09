@@ -22,9 +22,15 @@ namespace Project.Sales.ApplicationService.Carts.Query
         )
         {
             int userId = this.sessionInfo.UserId.Value;
-            int cartId = await this.cartRepository.FindCartId(userId);
+            int? cartId = await this.cartRepository.FindCartId(userId);
+            if (!cartId.HasValue)
+            {
+                var ex = new DomainException("", "somethings went wrong!");
 
-            var cartDetails = await this.cartRepository.GetCartDetail(cartId);
+                throw ex;
+            }
+
+            var cartDetails = await this.cartRepository.GetCartDetail(cartId.Value);
 
             return new GetCartDetailQueryResult(cartDetails);
         }

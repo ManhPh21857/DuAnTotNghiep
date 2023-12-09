@@ -31,7 +31,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Carts
 	                AND cus.is_deleted = 0
             ";
 
-            int? result = await connect.QueryFirstOrDefaultAsync<int>(query,
+            int? result = await connect.QueryFirstOrDefaultAsync<int?>(query,
                 new
                 {
                     UserId = userId
@@ -41,7 +41,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Carts
             return result ?? 0;
         }
 
-        public async Task<int> FindCartId(int userId)
+        public async Task<int?> FindCartId(int userId)
         {
             await using var connect = await this.provider.Connect();
 
@@ -57,7 +57,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Carts
 	                AND cus.is_deleted = 0
             ";
 
-            int result = await connect.QueryFirstOrDefaultAsync<int>(query,
+            int? result = await connect.QueryFirstOrDefaultAsync<int?>(query,
                 new
                 {
                     UserId = userId
@@ -85,9 +85,9 @@ namespace Project.Sales.Infrastructure.SQLDB.Carts
                    ,cd.Quantity			 AS Quantity
                    ,cd.data_version		 AS DataVersion
                 FROM
-	                carts AS cart
-	                LEFT JOIN cart_details AS cd
-		                ON cart.id = cd.cart_id
+	                cart_details AS cd
+	                LEFT JOIN carts AS cart
+		                ON cd.cart_id = cart.id
 	                LEFT JOIN product_details AS pd
 		                ON cd.product_detail_id = pd.id
 	                LEFT JOIN products AS p

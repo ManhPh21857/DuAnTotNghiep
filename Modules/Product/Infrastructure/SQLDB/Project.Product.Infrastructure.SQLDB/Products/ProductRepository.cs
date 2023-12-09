@@ -475,6 +475,35 @@ public class ProductRepository : IProductRepository
 
     #region Product Detail
 
+    public async Task<ProductDetailInfo> GetProductDetailById(int id)
+    {
+        await using var connect = await this.provider.Connect();
+        const string query = @"
+            SELECT
+	            [Id]		   AS Id
+               ,[color_id]     AS ColorId
+               ,[size_id]      AS SizeId
+               ,[import_price] AS ImportPrice
+               ,[Price]		   AS Price
+               ,[Quantity]	   AS Quantity
+               ,[data_version] AS DataVersion
+            FROM
+	            [dbo].[product_details]
+            WHERE
+	            [id] = @Id
+	            AND [is_deleted] = 0
+        ";
+
+        var result = await connect.QueryFirstOrDefaultAsync<ProductDetailInfo>(query,
+            new
+            {
+                Id = id
+            }
+        );
+
+        return result;
+    }
+
     public async Task<IEnumerable<ProductDetailInfo>> GetProductDetail(int productId)
     {
         await using var connect = await this.provider.Connect();

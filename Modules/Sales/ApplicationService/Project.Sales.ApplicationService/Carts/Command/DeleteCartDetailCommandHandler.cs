@@ -24,11 +24,17 @@ namespace Project.Sales.ApplicationService.Carts.Command
             using var scope = TransactionFactory.Create();
 
             int userId = this.sessionInfo.UserId.value;
-            int cartId = await this.cartRepository.FindCartId(userId);
+            int? cartId = await this.cartRepository.FindCartId(userId);
+            if (!cartId.HasValue)
+            {
+                var ex = new DomainException("", "somethings went wrong!");
+
+                throw ex;
+            }
 
             foreach (var item in request.CartDetails)
             {
-                item.CartId = cartId;
+                item.CartId = cartId.Value;
                 await this.cartRepository.DeleteCartDetail(item);
             }
 

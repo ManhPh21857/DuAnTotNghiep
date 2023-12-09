@@ -3,7 +3,7 @@
     public interface ICartRepository
     {
         Task<int> GetCountItem(int userId);
-        Task<int> FindCartId(int userId);
+        Task<int?> FindCartId(int userId);
         Task<IEnumerable<CartDetailInfo>> GetCartDetail(int id);
         Task<int> GetCartId(int userId);
         Task<CartDetail> FindCartDetail(int cartId, int productDetailId);

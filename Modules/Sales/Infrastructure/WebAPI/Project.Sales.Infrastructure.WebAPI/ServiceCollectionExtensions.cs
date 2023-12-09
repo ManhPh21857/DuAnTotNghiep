@@ -40,5 +40,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<CartAdditionRequestModel>, CartAdditionRequestModelValidator>();
         services.AddScoped<IValidator<DeleteCartDetailModel>, DeleteCartDetailModelValidator>();
         services.AddScoped<IValidator<DeleteCartDetailRequestModel>, DeleteCartDetailRequestModelValidator>();
+        services.AddScoped<IValidator<UpdateCartDetailRequestModel>, UpdateCartDetailRequestModelValidator>();
     }
 }
