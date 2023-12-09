@@ -1,5 +1,5 @@
 ﻿using Project.Core.ApplicationService.Queries;
-using Project.Product.Domain.Constants;
+using Project.Core.Domain.Constants;
 using Project.Product.Domain.Products;
 using Project.Product.Integration.Products.Query;
 

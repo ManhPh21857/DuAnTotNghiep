@@ -1,5 +1,5 @@
-﻿using Project.Core.ApplicationService.Commands;
-using Project.Product.Domain.Images;
+﻿using Project.Core.ApplicationService;
+using Project.Core.ApplicationService.Commands;
 using Project.Product.Domain.Products;
 using Project.Product.Integration.Products.Command;
 
@@ -8,23 +8,32 @@ namespace Project.Product.ApplicationService.Products.Command
     public class DeleteProductCommandHandler : CommandHandler<DeleteProductCommand, DeleteProductCommandResult>
     {
         private readonly IProductRepository productRepository;
-        private readonly IImageRepository imageRepository;
 
-        public DeleteProductCommandHandler(IProductRepository productRepository, IImageRepository imageRepository)
+        public DeleteProductCommandHandler(IProductRepository productRepository)
         {
             this.productRepository = productRepository;
-            this.imageRepository = imageRepository;
         }
-        public async override Task<DeleteProductCommandResult> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
+
+        public async override Task<DeleteProductCommandResult> Handle(
+            DeleteProductCommand request,
+            CancellationToken cancellationToken
+        )
         {
-            int id = request.Id;
+            using var scope = TransactionFactory.Create();
 
-            await this.productRepository.DeleteProduct(id);
-            await this.productRepository.DeleteProductColor(id);
-            await this.productRepository.DeleteProductSize(id);
-            await this.productRepository.DeleteProductDetailByProductId(id);
+            foreach (var item in request.Products)
+            {
+                await this.productRepository.DeleteProduct(new DeleteProductParam
+                {
+                    Id = item.Id,
+                    DataVersion = item.DataVersion
+                });
+                await this.productRepository.DeleteProductColor(item.Id);
+                await this.productRepository.DeleteProductSize(item.Id);
+                await this.productRepository.DeleteProductDetailByProductId(item.Id);
+            }
 
-            await this.imageRepository.DeleteImage(id);
+            scope.Complete();
 
             return new DeleteProductCommandResult(true);
         }

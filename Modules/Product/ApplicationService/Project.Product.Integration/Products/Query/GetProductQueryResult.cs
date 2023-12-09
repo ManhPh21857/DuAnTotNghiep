@@ -4,11 +4,13 @@ namespace Project.Product.Integration.Products.Query
 {
     public class GetProductQueryResult
     {
-        public List<ProductView> Products { get; set; }
+        public IEnumerable<ProductView> Products { get; set; }
+        public int TotalPage { get; set; }
 
-        public GetProductQueryResult(List<ProductView> products)
+        public GetProductQueryResult(IEnumerable<ProductView> products, int totalPage)
         {
             this.Products = products;
+            this.TotalPage = totalPage;
         }
     }
 }

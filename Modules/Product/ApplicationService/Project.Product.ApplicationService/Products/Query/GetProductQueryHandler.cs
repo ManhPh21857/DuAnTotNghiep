@@ -1,5 +1,5 @@
 ﻿using Project.Core.ApplicationService.Queries;
-using Project.Product.Domain.Constants;
+using Project.Core.Domain.Constants;
 using Project.Product.Domain.Products;
 using Project.Product.Integration.Products.Query;
 
@@ -15,12 +15,18 @@ namespace Project.Product.ApplicationService.Products.Query
         }
         public async override Task<GetProductQueryResult> Handle(GetProductQuery request, CancellationToken cancellationToken)
         {
-            int skip = (request.PageNo - 1) * CommonConst.PageSize;
-            int take = CommonConst.PageSize;
+            int skip = (request.PageNo - 1) * CommonConst.PRODUCT_PAGE_SIZE;
+            int take = CommonConst.PRODUCT_PAGE_SIZE;
 
-            var result = (await this.productRepository.GetProducts(skip, take)).ToList();
+            var result = await this.productRepository.GetProducts(skip, take);
 
-            return new GetProductQueryResult(result);
+            int totalPage = result.TotalProduct / CommonConst.PRODUCT_PAGE_SIZE;
+            if (result.TotalProduct % CommonConst.PRODUCT_PAGE_SIZE > 0)
+            {
+                totalPage++;
+            }
+
+            return new GetProductQueryResult(result.Products, totalPage);
         }
     }
 }

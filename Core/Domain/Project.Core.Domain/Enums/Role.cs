@@ -48,7 +48,7 @@ public enum Role
     CartCreate = 44,
     CartEdit = 45,
     CartDelete = 46,
-    Customer = 47,
-    Employee = 48,
+    ShopLogin = 47,
+    ManagementLogin = 48,
     Admin = 49
 }

@@ -5,14 +5,16 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using Project.Core.Domain.Enums;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.Base;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Authentication.Accuracy;
+using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Authentication.Forgot;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Authentication.Login;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Authentication.Register;
+using Project.HumanResources.Integration.Authentication.Forgot;
 using Project.HumanResources.Integration.Authentication.Login;
 using Project.HumanResources.Integration.Authentication.Register;
 using Project.HumanResources.Integration.Authentication.VerifyEmail;
+using Project.HumanResources.Integration.Employees.Login;
 
 namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Authentication;
 
@@ -23,6 +25,7 @@ public class AuthenticationController : HumanResourcesController
     private readonly IValidator<LoginRequestModel> loginValidator;
     private readonly IValidator<RegisterRequestModel> registerValidator;
     private readonly IValidator<EmailAuthenticationRequestModel> emailValidator;
+    private readonly IValidator<ForgotRequestModel> forgotValidator;
     private readonly IMemoryCache memoryCache;
 
     public AuthenticationController(
@@ -30,29 +33,32 @@ public class AuthenticationController : HumanResourcesController
         IValidator<LoginRequestModel> loginValidator,
         IValidator<RegisterRequestModel> registerValidator,
         IValidator<EmailAuthenticationRequestModel> emailValidator,
+        IValidator<ForgotRequestModel> forgotValidator,
         IMemoryCache memoryCache
     ) : base(mediator)
     {
         this.loginValidator = loginValidator;
         this.registerValidator = registerValidator;
         this.emailValidator = emailValidator;
+        this.forgotValidator = forgotValidator;
         this.memoryCache = memoryCache;
     }
 
     [HttpPost("employee/login")]
     public async Task<ActionResult<ResponseBaseModel<LoginResponseModel>>> EmployeeLogin(
-        [FromBody] LoginRequestModel request)
+        [FromBody] LoginRequestModel request
+    )
     {
-        var validator = await loginValidator.ValidateAsync(request);
+        var validator = await this.loginValidator.ValidateAsync(request);
         if (!validator.IsValid)
         {
-            validator.AddToModelState(ModelState);
-            return this.BadRequest(ModelState);
+            validator.AddToModelState(this.ModelState);
+            return this.BadRequest(this.ModelState);
         }
 
-        var loginRequest = request.Adapt<LoginRequest>();
+        var loginRequest = request.Adapt<EmployeeLoginRequest>();
 
-        var result = await Mediator.Send(loginRequest);
+        var result = await this.Mediator.Send(loginRequest);
 
         var response = new ResponseBaseModel<LoginResponseModel>
         {
@@ -62,21 +68,21 @@ public class AuthenticationController : HumanResourcesController
         return response;
     }
 
-
     [HttpPost("login")]
     public async Task<ActionResult<ResponseBaseModel<LoginResponseModel>>> Login(
-        [FromBody] LoginRequestModel request)
+        [FromBody] LoginRequestModel request
+    )
     {
-        var validator = await loginValidator.ValidateAsync(request);
+        var validator = await this.loginValidator.ValidateAsync(request);
         if (!validator.IsValid)
         {
-            validator.AddToModelState(ModelState);
-            return this.BadRequest(ModelState);
+            validator.AddToModelState(this.ModelState);
+            return this.BadRequest(this.ModelState);
         }
 
         var loginRequest = request.Adapt<LoginRequest>();
 
-        var result = await Mediator.Send(loginRequest);
+        var result = await this.Mediator.Send(loginRequest);
 
         var response = new ResponseBaseModel<LoginResponseModel>
         {
@@ -88,19 +94,19 @@ public class AuthenticationController : HumanResourcesController
 
     [HttpPost("register")]
     public async Task<ActionResult<ResponseBaseModel<RegisterResponseModel>>> Register(
-        [FromBody] RegisterRequestModel request)
+        [FromBody] RegisterRequestModel request
+    )
     {
-        var validator = await registerValidator.ValidateAsync(request);
+        var validator = await this.registerValidator.ValidateAsync(request);
         if (!validator.IsValid)
         {
-            validator.AddToModelState(ModelState);
-            return this.BadRequest(ModelState);
+            validator.AddToModelState(this.ModelState);
+            return this.BadRequest(this.ModelState);
         }
 
         var registerRequest = request.Adapt<RegisterRequest>();
-        registerRequest.Roles = new List<Role> { Role.Customer };
 
-        var result = await Mediator.Send(registerRequest);
+        var result = await this.Mediator.Send(registerRequest);
 
         var response = new ResponseBaseModel<RegisterResponseModel>
         {
@@ -112,18 +118,19 @@ public class AuthenticationController : HumanResourcesController
 
     [HttpPost("send-email")]
     public async Task<ActionResult<ResponseBaseModel<EmailAuthenticationResponseModel>>> SendMail(
-        [FromBody] EmailAuthenticationRequestModel request)
+        [FromBody] EmailAuthenticationRequestModel request
+    )
     {
-        var validator = await emailValidator.ValidateAsync(request);
+        var validator = await this.emailValidator.ValidateAsync(request);
         if (!validator.IsValid)
         {
-            validator.AddToModelState(ModelState);
-            return this.BadRequest(ModelState);
+            validator.AddToModelState(this.ModelState);
+            return this.BadRequest(this.ModelState);
         }
 
         var sendMailRequest = request.Adapt<VerifyEmailRequest>();
 
-        var result = await Mediator.Send(sendMailRequest);
+        var result = await this.Mediator.Send(sendMailRequest);
 
         var response = new ResponseBaseModel<EmailAuthenticationResponseModel>
         {
@@ -133,17 +140,43 @@ public class AuthenticationController : HumanResourcesController
         return response;
     }
 
-    [HttpGet("verify-email/{code}")]
-    public async Task<ActionResult<ResponseBaseModel<VerifyEmailResponseModel>>> VerifyMail(string code)
+    [HttpPost("verify-email")]
+    public Task<ActionResult<ResponseBaseModel<VerifyEmailResponseModel>>> VerifyMail(
+        [FromBody] VerifyEmailRequestModel request
+    )
     {
-        memoryCache.TryGetValue(nameof(VerifyEmailResponse.VerificationCodes), out string value);
+        this.memoryCache.TryGetValue(request.Email, out string value);
 
         var response = new ResponseBaseModel<VerifyEmailResponseModel>
         {
             Data = new VerifyEmailResponseModel
             {
-                IsSuccess = code == value
+                IsSuccess = request.Code == value
             }
+        };
+
+        return Task.FromResult<ActionResult<ResponseBaseModel<VerifyEmailResponseModel>>>(response);
+    }
+
+    [HttpPost("forgot-password")]
+    public async Task<ActionResult<ResponseBaseModel<ForgotResponseModel>>> ForgotPassword(
+        [FromBody] ForgotRequestModel request
+    )
+    {
+        var validator = await this.forgotValidator.ValidateAsync(request);
+        if (!validator.IsValid)
+        {
+            validator.AddToModelState(this.ModelState);
+            return this.BadRequest(this.ModelState);
+        }
+
+        var sendMailRequest = request.Adapt<ForgotRequest>();
+
+        var result = await this.Mediator.Send(sendMailRequest);
+
+        var response = new ResponseBaseModel<ForgotResponseModel>
+        {
+            Data = result.Adapt<ForgotResponseModel>()
         };
 
         return response;

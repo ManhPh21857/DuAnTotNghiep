@@ -13,6 +13,7 @@ using Project.Product.Infrastructure.WebAPI.Controllers.v1.Sizes.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Post;
 using System.Reflection;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Put;
 
 namespace Project.Product.Infrastructure.WebAPI;
 
@@ -69,5 +70,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<UpdateProductSizeModel>, UpdateProductSizeModelValidator>();
         services.AddScoped<IValidator<UpdateProductDetailModel>, UpdateProductDetailModelValidator>();
         services.AddScoped<IValidator<UpdateProductRequestModel>, UpdateProductRequestModelValidator>();
+        services.AddScoped<IValidator<DeleteProductModel>, DeleteProductModelValidator>();
+        services.AddScoped<IValidator<DeleteProductRequestModel>, DeleteProductRequestModelValidator>();
     }
 }

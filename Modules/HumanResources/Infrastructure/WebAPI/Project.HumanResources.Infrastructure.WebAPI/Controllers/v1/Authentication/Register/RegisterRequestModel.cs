@@ -4,12 +4,11 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Authentica
 
 public class RegisterRequestModel
 {
+    public string? Email { get; set; }
+    public string? Code { get; set; }
     public string? UserName { get; set; }
     public string? Password { get; set; }
     public string? RePassword { get; set; }
-    public string? Email { get; set; }
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
 }
 
 public class RegisterRequestModelValidator : AbstractValidator<RegisterRequestModel>
@@ -40,17 +39,13 @@ public class RegisterRequestModelValidator : AbstractValidator<RegisterRequestMo
             .NotEmpty()
             .WithMessage($"{nameof(RegisterRequestModel.Email)} can not be empty");
 
+        RuleFor(v => v.Code)
+            .NotEmpty()
+            .WithMessage($"{nameof(RegisterRequestModel.Code)} can not be empty");
+
         RuleFor(v => v)
             .Must(m => m.RePassword == m.Password)
             .WithMessage(
                 $"{nameof(RegisterRequestModel.RePassword)} is not the same as {nameof(RegisterRequestModel.Password)}");
-
-        RuleFor(v => v.FirstName)
-            .NotEmpty()
-            .WithMessage($"{nameof(RegisterRequestModel.FirstName)} can not be empty");
-
-        RuleFor(v => v.LastName)
-            .NotEmpty()
-            .WithMessage($"{nameof(RegisterRequestModel.LastName)} can not be empty");
     }
 }
