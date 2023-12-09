@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Project.Core.ApplicationService;
 using Project.Core.ApplicationService.Commands;
 using Project.Product.Domain.Products;
@@ -10,10 +11,12 @@ namespace Project.Product.ApplicationService.Products.Command
     public class CreateProductCommandHandler : CommandHandler<CreateProductCommand, CreateProductCommandResult>
     {
         private readonly IProductRepository productRepository;
+        private readonly IConfiguration configuration;
 
-        public CreateProductCommandHandler(IProductRepository productRepository)
+        public CreateProductCommandHandler(IProductRepository productRepository, IConfiguration configuration)
         {
             this.productRepository = productRepository;
+            this.configuration = configuration;
         }
 
         public async override Task<CreateProductCommandResult> Handle(CreateProductCommand request,
@@ -131,7 +134,7 @@ namespace Project.Product.ApplicationService.Products.Command
             {
                 var imageBytes = Convert.FromBase64String(item.Value);
                 using var image = Image.Load(imageBytes);
-                await image.SaveAsync(@$"D:\Final\Img\{item.Key}", CancellationToken.None);
+                await image.SaveAsync(@$"{this.configuration["ImagePath"]}{item.Key}", CancellationToken.None);
             }
 
 
