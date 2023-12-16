@@ -8,6 +8,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Carts
     public class CartRepository : ICartRepository
     {
         private readonly ConnectionProvider provider;
+
         public CartRepository(ConnectionProvider provider)
         {
             this.provider = provider;
@@ -66,7 +67,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Carts
 
             return result;
         }
-        
+
         public async Task<IEnumerable<CartDetailInfo>> GetCartDetail(int id)
         {
             var connect = await this.provider.Connect();
@@ -258,9 +259,5 @@ namespace Project.Sales.Infrastructure.SQLDB.Carts
 
             result.IsOptimisticLocked();
         }
-
-
-
-
     }
 }
