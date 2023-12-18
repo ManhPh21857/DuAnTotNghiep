@@ -20,8 +20,4 @@
     <ProjectReference Include="..\Project.HumanResources.Intergration\Project.HumanResources.Integration.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Users\Command\" />
-  </ItemGroup>
-
 </Project>

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.IdentityModel.Tokens;
 using Project.Core.ApplicationService;
 using Project.Core.ApplicationService.Commands;
 using Project.Core.Domain;
@@ -103,13 +104,16 @@ namespace Project.Sales.ApplicationService.Orders.Command
                     }
                 );
 
-                await this.cartRepository.DeleteCartDetail(new DeleteCartDetailParam
-                    {
-                        CartId = item.CartId,
-                        ProductDetailId = item.ProductDetailId,
-                        DataVersion = item.DataVersion
-                    }
-                );
+                if (!item.DataVersion.IsNullOrEmpty())
+                {
+                    await this.cartRepository.DeleteCartDetail(new DeleteCartDetailParam
+                        {
+                            CartId = item.CartId.Value,
+                            ProductDetailId = item.ProductDetailId,
+                            DataVersion = item.DataVersion
+                        }
+                    );
+                }
             }
 
             var response = new CreateOrderCommandResult(true, null);

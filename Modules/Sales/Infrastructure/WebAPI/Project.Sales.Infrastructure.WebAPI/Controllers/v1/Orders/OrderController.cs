@@ -1,11 +1,10 @@
-﻿using Azure.Core;
-using Mapster;
+﻿using Mapster;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Sales.Infrastructure.WebAPI.Controllers.Base;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders.Get;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders.Post;
+using Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders.Put;
 using Project.Sales.Integration.Orders.Command;
 using Project.Sales.Integration.Orders.Query;
 
@@ -18,7 +17,9 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders
         }
 
         [HttpPost]
-        public async Task<ActionResult<ResponseBaseModel<CommandSalesBase>>> CreateOrder(CreateOrderRequestModel request)
+        public async Task<ActionResult<ResponseBaseModel<CommandSalesBase>>> CreateOrder(
+            CreateOrderRequestModel request
+        )
         {
             var command = request.Adapt<CreateOrderCommand>();
 
@@ -42,6 +43,21 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders
             var response = new ResponseBaseModel<GetOrderResponseModel>
             {
                 Data = result.Adapt<GetOrderResponseModel>()
+            };
+
+            return response;
+        }
+
+        [HttpPut("cancel/{id}")]
+        public async Task<ActionResult<ResponseBaseModel<CancelOrderResponseModel>>> CancelOrder(int id)
+        {
+            var command = new CancelOrderCommand(id);
+
+            var result = await this.Mediator.Send(command);
+
+            var response = new ResponseBaseModel<CancelOrderResponseModel>
+            {
+                Data = result.Adapt<CancelOrderResponseModel>()
             };
 
             return response;

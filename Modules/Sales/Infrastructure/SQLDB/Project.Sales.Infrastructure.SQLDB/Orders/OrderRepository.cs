@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Project.Core.Domain.Enums;
 using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.Sales.Domain.Orders;
 
@@ -150,9 +151,10 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
             );
         }
 
-        public async Task<IEnumerable<OrderInfo>> GetOrders(int customerId)
+        public async Task<IEnumerable<OrderInfo>> GetOrders(int customerId, int? orderId)
         {
             await using var connect = await this.provider.Connect();
+            var builder = new SqlBuilder();
 
             const string query = @"
                 SELECT
@@ -165,37 +167,50 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
                    ,[Status]			AS Status
                 FROM
 	                [dbo].[orders]
-                WHERE
-	                customer_id = @CustomerId
+                /**where**/
+                ORDER BY
+	                order_date DESC
             ";
 
-            var result = await connect.QueryAsync<OrderInfo>(query,
-                new
-                {
-                    CustomerId = customerId
-                }
-            );
+            var template = builder.AddTemplate(query);
+
+            builder.Where("customer_id = @CustomerId", new { CustomerId = customerId });
+            if (orderId.HasValue)
+            {
+                builder.Where("id = @Id", new { Id = orderId.Value });
+            }  
+
+            var result = await connect.QueryAsync<OrderInfo>(template.RawSql, template.Parameters);
 
             return result;
         }
-        
+
         public async Task<IEnumerable<OrderDetailInfo>> GetOrderDetails(int orderId)
         {
             await using var connect = await this.provider.Connect();
 
             const string query = @"
                 SELECT
-	                [order_id]	   AS OrderId
-                   ,[product_id]   AS ProductId
-                   ,[product_name] AS ProductName
-                   ,[color_id]	   AS ColorId
-                   ,[size_id]	   AS SizeId
-                   ,[Price]		   AS Price
-                   ,[Quantity]	   AS Quantity
+	                od.[order_id]	  AS OrderId
+                   ,od.[product_id]	  AS ProductId
+                   ,od.[product_name] AS ProductName
+                   ,p.[Image]		  AS Image
+                   ,od.[color_id]	  AS ColorId
+                   ,c.[Color]		  AS Color
+                   ,od.[size_id]	  AS SizeId
+                   ,s.[Size]		  AS Size
+                   ,od.[Price]		  AS Price
+                   ,od.[Quantity]	  AS Quantity
                 FROM
-	                [dbo].[order_details]
+	                [dbo].[order_details] AS od
+	                LEFT JOIN [dbo].[products] AS p
+		                ON od.product_id = p.id
+	                LEFT JOIN [dbo].[colors] AS c
+		                ON od.color_id = c.id
+	                LEFT JOIN [dbo].[sizes] AS s
+		                ON od.size_id = s.id
                 WHERE
-	                [order_id] = @OrderId
+	                od.[order_id] = @OrderId
             ";
 
             var result = await connect.QueryAsync<OrderDetailInfo>(query,
@@ -206,6 +221,29 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
             );
 
             return result;
+        }
+
+        public async Task CancelOrder(int id, int customerId)
+        {
+            await using var connect = await this.provider.Connect();
+
+            const string command = @"
+                UPDATE orders
+                SET
+	                status = @Status
+                WHERE
+	                id = @Id
+                    AND customer_id = @CustomerId
+            ";
+
+            await connect.ExecuteAsync(command,
+                new
+                {
+                    Id = id,
+                    CustomerId = customerId,
+                    Status = OrderStatus.Cancel
+                }
+            );
         }
     }
 }
