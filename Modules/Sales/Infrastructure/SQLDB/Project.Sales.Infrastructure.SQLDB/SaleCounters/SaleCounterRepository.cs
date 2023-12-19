@@ -92,7 +92,7 @@ namespace Project.Sales.Infrastructure.SQLDB.SaleCounters
 	            LEFT JOIN [dbo].[product_details] AS pd
 		            ON p.[Id] = pd.[product_id]
 		            AND pd.[is_deleted] = 0
-            
+            WHERE pd.is_deleted =0
             GROUP BY
 	            p.[Id]
                ,p.[Name]
