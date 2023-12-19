@@ -3,5 +3,6 @@
     public class CommandSalesBase
     {
         public bool IsSuccess { get; set; }
+        public string? PayUrl { get; set; }
     }
 }
