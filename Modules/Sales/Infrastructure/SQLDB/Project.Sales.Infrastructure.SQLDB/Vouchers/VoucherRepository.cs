@@ -34,6 +34,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Vouchers
 	                [dbo].[vouchers]
                 WHERE
 	                [is_deleted] = 0
+                    AND [voucher_type] = 1
 	                AND [apply_period_start] <= @DateNow
 	                AND [apply_period_end] >= @DateNow
                     AND [minimum_price] <= @TotalPrice
