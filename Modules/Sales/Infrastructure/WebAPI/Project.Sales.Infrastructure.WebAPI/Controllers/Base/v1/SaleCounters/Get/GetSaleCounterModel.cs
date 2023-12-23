@@ -9,7 +9,6 @@
         public float MaxPrice { get; set; }
         public int Quantity { get; set; }
         public string Description { get; set; }
-
     }
 }
 

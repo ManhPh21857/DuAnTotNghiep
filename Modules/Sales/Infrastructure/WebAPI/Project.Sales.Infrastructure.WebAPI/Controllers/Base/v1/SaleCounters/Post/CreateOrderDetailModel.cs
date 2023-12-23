@@ -2,7 +2,7 @@
 {
     public class CreateOrderDetailModel
     {
-        public OrderModel Order { get; set; }
+        public OrderModel1 Order { get; set; }
         public List<OrderDetailModel> Orderdetails { get; set; }
 
     }

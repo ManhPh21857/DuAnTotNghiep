@@ -15,12 +15,12 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.SaleCounters
         {
 
         }
-    
+
         [AllowAnonymous]
         [HttpGet("")]
         public async Task<ActionResult<ResponseBaseModel<GetSaleCounterResponseModel>>> GetSaleCounter()
         {
-            
+
             var result = await Mediator.Send(new GetSaleCounterQuery());
 
             return new ResponseBaseModel<GetSaleCounterResponseModel>
@@ -60,7 +60,6 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.SaleCounters
                 Data = result.Adapt<CommandSalesBase>()
             };
         }
-
-      
+       
     }
 }

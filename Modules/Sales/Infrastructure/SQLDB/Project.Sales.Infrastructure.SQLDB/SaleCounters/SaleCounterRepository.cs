@@ -27,50 +27,98 @@ namespace Project.Sales.Infrastructure.SQLDB.SaleCounters
             return result;
         }
 
-        public async Task<int> CreateOrder(OrderInfo order)
+        public async Task<int> CreateOrder(OrderInfo param)
         {
             await using var connect = await provider.Connect();
             const string sql = @"
-                                INSERT [dbo].[orders] 
-                                (
-	                                 customer_id, employee_id, address_id, total
-                                )
-                                OUTPUT Inserted.ID
-                                VALUES 
-                                (
-                                   @CustomerId, @EmployeeId, @AddressId, @Total
-                                )";
+                                INSERT INTO [dbo].[orders] (
+	                            [customer_id]
+                               ,[employee_id]
+                               ,[full_name]
+                               ,[phone_number]
+                               ,[address]
+                               ,[merchandise_subtotal]
+                               ,[shipping_fee]
+                               ,[shipping_discount_subtotal]
+                               ,[voucher_applied]
+                               ,[order_total]
+                               ,[payment_method_id]
+                               ,[order_date]
+                               ,[payment_date]
+                               ,[is_ordered]
+                               ,[is_paid]
+                               ,[status]
+                            )
+                            OUTPUT Inserted.Id
+                            VALUES (
+	                            @CustomerId
+                               ,@EmployeeId
+                               ,@FullName
+                               ,@PhoneNumer
+                               ,@Address
+                               ,0
+                               ,0
+                               ,0
+                               ,@VoucherApplied
+                               ,@OrderTotal
+                               ,@PaymentMethodId
+                               ,@OrderDate
+                               ,@PaymentDate
+                               ,@IsOrdered
+                               ,@IsPaid
+                               ,@Status
+                            )";
             var result = await connect.QueryFirstOrDefaultAsync<int>(sql, new
             {
-
-                CustomerId = order.CustomerId,
-                EmployeeId = order.EmployeeId,
-                AddressId = order.AddressId,
-                Total = order.Total,
+                CustomerId = param.CustomerId,
+                EmployeeId = param.EmployeeId,
+                FullName = param.FullName,
+                PhoneNumer = param.PhoneNumber,
+                Address = param.Address,
+                VoucherApplied = param.VoucherApplied,
+                OrderTotal = param.OrderTotal,
+                PaymentMethodId = param.PaymentMethodId,
+                OrderDate = param.OrderDate,
+                PaymentDate = param.PaymentDate,
+                IsOrdered = param.IsOrder,
+                IsPaid = param.IsPaid,
+                Status = param.Status,
 
             });
             return result;
         }
 
-        public async Task CreateOrderDetail(OrderDetailInfo orderDetail)
+        public async Task CreateOrderDetail(OrderDetailInfo param)
         {
             await using var connect = await provider.Connect();
             const string sql = @"
-                                INSERT [dbo].[order_details] 
-                                (
-	                                 order_id, product_detail_id, voucher_id, price, quantity
-                                )
-                                VALUES 
-                                (
-                                   @OrderId, @ProductDetailId, @VoucherId, @Price, @Quantity
-                                )";
+                                INSERT INTO [dbo].[order_details] (
+	                            [order_id]
+                               ,[product_id]
+                               ,[product_name]
+                               ,[color_id]
+                               ,[size_id]
+                               ,[price]
+                               ,[quantity]
+                            )
+                            VALUES (
+	                            @OrderId
+                               ,@ProductId
+                               ,@ProductName
+                               ,@ColorId
+                               ,@SizeId
+                               ,@Price
+                               ,@Quantity
+                            )";
             await connect.ExecuteAsync(sql, new
             {
-                OrderId = orderDetail.OrderId,
-                ProductDetailId = orderDetail.ProductDetailId,
-                VoucherId = orderDetail.VoucherId,
-                Price = orderDetail.Price,
-                Quantity = orderDetail.Quantity
+                OrderId = param.OrderId,
+                ProductId = param.ProductId,
+                ProductName = param.ProductName,
+                ColorId = param.ColorId,
+                SizeId = param.SizeId,
+                Price = param.Price,
+                Quantity = param.Quantity
             });
         }
 
@@ -132,6 +180,49 @@ namespace Project.Sales.Infrastructure.SQLDB.SaleCounters
             );
 
             return result;
+        }
+
+        public async Task<int> GetQuantity(int productId, int colorId, int sizeId)
+        {
+            await using var connect = await provider.Connect();
+
+            const string query = @"
+            SELECT 
+					 quantity
+                FROM 
+						product_details 
+						
+                WHERE
+	                product_id = @ProductId AND color_id = @ColorId AND size_id = @SizeId
+        ";
+
+            var result = await connect.QueryFirstOrDefaultAsync<int>(query, new
+            {
+                ProductId = productId,
+                ColorId = colorId,
+                SizeId = sizeId
+            }
+            );
+            return result;
+        }
+        public async Task UpdateQuantity(UpdateQuantityInfo sale)
+        {
+            await using var connect = await provider.Connect();
+            const string sql = @"
+                              UPDATE [dbo].[product_details]
+                                SET
+	                                [quantity] = @Quantity
+                   
+                                WHERE
+	                                product_id = @ProductId AND color_id = @ColorId AND size_id = @SizeID
+                                    ";
+            await connect.ExecuteAsync(sql, new
+            {
+                ProductId = sale.ProductId,
+                ColorId = sale.ColorId,
+                SizeId = sale.SizeId,
+                Quantity = sale.Quantity
+            }); ;
         }
     }
 }

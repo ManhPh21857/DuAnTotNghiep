@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.Base;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Customers.Get;
@@ -27,7 +28,7 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Customers
 
             return response;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<ResponseBaseModel<GetCustomerResponseModel>>> GetCustomer()
         {

@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Sales.Infrastructure.WebAPI.Controllers.Base;
@@ -9,16 +10,23 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Customers
 {
     public class CustomerController : SalesController
     {
+        public CustomerController(ISender mediator) : base(mediator)
+        {
+        }
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<ResponseBaseModel<CustomerResponseModel>>> GetCustomerl()
+        public async Task<ActionResult<ResponseBaseModel<CustomerResponseModel>>> GetOrders()
         {
-            var result = await this.Mediator.Send(new GetCustomerQuery());
+            var query = new GetCustomerQuery();
 
-            return new ResponseBaseModel<CustomerResponseModel>
+            var result = await this.Mediator.Send(query);
+
+            var response = new ResponseBaseModel<CustomerResponseModel>
             {
                 Data = result.Adapt<CustomerResponseModel>()
             };
+
+            return response;
         }
     }
 }

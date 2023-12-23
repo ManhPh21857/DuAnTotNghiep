@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Project.Core.Domain.User;
 using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.HumanResources.Domain.Customers;
 
