@@ -2,6 +2,7 @@
 {
     public enum OrderStatus
     {
+        Pending = -1,
         NeedToConfirm = 0,
         Preparing = 1,
         Deliver = 2,

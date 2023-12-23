@@ -1,6 +1,8 @@
-﻿namespace Project.Sales.Domain.Vouchers
+﻿using Project.Core.ApplicationService.Commands;
+
+namespace Project.Sales.Integration.Vouchers.Command
 {
-    public class Voucher
+    public class UpdateVoucherCommand : ICommand<UpdateVoucherCommandResult>
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -12,9 +14,6 @@
         public DateTime ApplyPeriodStart { get; set; }
         public DateTime ApplyPeriodEnd { get; set; }
         public int Quantity { get; set; }
-        public string CreatedBy { get; set; }
-        public string LastUpdateBy { get; set; }
-        public int IsDeleted { get; set; }
         public byte[]? DataVersion { get; set; }
     }
 }

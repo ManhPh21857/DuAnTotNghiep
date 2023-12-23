@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.IdentityModel.Tokens;
 using Project.Core.Domain.Enums;
 using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.Sales.Domain.Orders;
@@ -20,7 +21,8 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
 
             const string command = @"
                 INSERT INTO [dbo].[orders] (
-	                [customer_id]
+                    [order_code]
+	               ,[customer_id]
                    ,[employee_id]
                    ,[full_name]
                    ,[phone_number]
@@ -39,7 +41,8 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
                 )
                 OUTPUT Inserted.Id
                 VALUES (
-	                @CustomerId
+                    @OrderCode
+	               ,@CustomerId
                    ,@EmployeeId
                    ,@FullName
                    ,@PhoneNumer
@@ -61,6 +64,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
             var orderId = await connect.QueryFirstOrDefaultAsync<int>(command,
                 new
                 {
+                    OrderCode = param.OrderCode,
                     CustomerId = param.CustomerId,
                     EmployeeId = param.EmployeeId,
                     FullName = param.FullName,
@@ -244,6 +248,81 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
                     Status = OrderStatus.Cancel
                 }
             );
+        }
+
+        public async Task<(IEnumerable<OrderInfo>, int)> GetShopOrder(int skip, int take, GetOrderFilter? param)
+        {
+            await using var connect = await this.provider.Connect();
+
+            var builder = new SqlBuilder();
+
+            const string query = @"
+                SELECT
+                    id                   AS Id
+	               ,order_code			 AS OrderCode
+                   ,full_name			 AS FullName
+                   ,phone_number		 AS PhoneNumber
+                   ,[Address]			 AS Address
+                   ,merchandise_subtotal AS MerchandiseSubtotal
+                   ,order_total			 AS OrderTotal
+                   ,payment_method_id	 AS PaymentMethodId
+                   ,is_ordered			 AS IsOrdered
+                   ,is_paid				 AS IsPaid
+                   ,Status				 AS Status
+                   ,data_version		 AS DataVersion
+                FROM
+	                orders
+                /**where**/
+                ORDER BY
+	                created_at DESC
+                OFFSET @Skip ROWS
+                FETCH NEXT @Take ROWS ONLY
+                ;
+                SELECT
+	                COUNT(id) AS Total
+                FROM
+	                orders
+            ";
+
+            var template = builder.AddTemplate(query);
+            builder.AddParameters(new
+                {
+                    Skip = skip,
+                    Take = take
+                }
+            );
+
+            if (param is not null)
+            {
+                if (!param.Name.IsNullOrEmpty())
+                {
+                    builder.Where("full_name like @Name", new { Name = $"%{param.Name}%" });
+                }
+
+                if (param.From.HasValue)
+                {
+                    builder.Where("order_date >= @From", new { From =param.From.Value.ToString("MM-dd-yyyy") });
+                }
+
+                if (param.To.HasValue)
+                {
+                    builder.Where("order_date <= @To", new { To = param.To.Value.ToString("MM-dd-yyyy") });
+                }
+
+                if (!param.ListStatus.IsNullOrEmpty())
+                {
+                    builder.Where("status IN @ListStatus", new { ListStatus = param.ListStatus });
+                }
+            }
+
+            var result = await connect.QueryMultipleAsync(template.RawSql, template.Parameters);
+
+            var orders = result.Read<OrderInfo>();
+            int total = result.ReadFirstOrDefault<int>();
+
+            //var result = await connect.QueryAsync<OrderInfo>(template.RawSql, template.Parameters);
+
+            return (orders, total);
         }
     }
 }

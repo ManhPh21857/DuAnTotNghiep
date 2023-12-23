@@ -74,7 +74,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
                 createOrderParam.IsPaid = PayType.NotYet.GetHashCode();
                 createOrderParam.OrderDate = null;
                 createOrderParam.PaymentDate = null;
-                createOrderParam.Status = OrderStatus.NeedToConfirm.GetHashCode();
+                createOrderParam.Status = OrderStatus.Pending.GetHashCode();
             }
             else
             {

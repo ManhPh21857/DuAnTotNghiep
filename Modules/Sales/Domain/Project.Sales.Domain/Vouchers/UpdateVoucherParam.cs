@@ -1,6 +1,6 @@
 ﻿namespace Project.Sales.Domain.Vouchers
 {
-    public class Voucher
+    public class UpdateVoucherParam
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -12,9 +12,7 @@
         public DateTime ApplyPeriodStart { get; set; }
         public DateTime ApplyPeriodEnd { get; set; }
         public int Quantity { get; set; }
-        public string CreatedBy { get; set; }
-        public string LastUpdateBy { get; set; }
-        public int IsDeleted { get; set; }
+        public int LastUpdatedBy { get; set; }
         public byte[]? DataVersion { get; set; }
     }
 }

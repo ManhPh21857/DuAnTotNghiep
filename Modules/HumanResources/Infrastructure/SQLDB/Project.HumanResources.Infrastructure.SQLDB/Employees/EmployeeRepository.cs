@@ -211,5 +211,29 @@ namespace Project.HumanResources.Infrastructure.SQLDB.Employees
 
             result.IsOptimisticLocked();
         }
+
+        public async Task<int?> GetEmployeeId(int userId)
+        {
+            await using var connect = await this.provider.Connect();
+
+            const string query = @"
+                SELECT
+	                [Id] AS Id
+                FROM
+	                [dbo].[employees]
+                WHERE
+	                [user_id] = @UserId
+	                AND is_deleted = 0
+            ";
+
+            var result = await connect.QueryFirstOrDefaultAsync<int?>(query,
+                new
+                {
+                    UserId = userId
+                }
+            );
+
+            return result;
+        }
     }
 }
