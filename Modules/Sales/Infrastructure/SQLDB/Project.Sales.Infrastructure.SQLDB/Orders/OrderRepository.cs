@@ -84,7 +84,6 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
                     Status = param.Status,
                 }
             );
-
             return orderId;
         }
 

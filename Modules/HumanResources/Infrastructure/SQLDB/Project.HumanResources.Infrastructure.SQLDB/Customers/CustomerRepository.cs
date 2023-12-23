@@ -13,7 +13,7 @@ namespace Project.HumanResources.Infrastructure.SQLDB.Customers
         {
             this.provider = provider;
         }
-
+        
         public async Task InsertCustomer(InsertCustomerParam param)
         {
             await using var connect = await this.provider.Connect();

@@ -15,12 +15,12 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.SaleCounters
         {
 
         }
-    
+
         [AllowAnonymous]
         [HttpGet("")]
         public async Task<ActionResult<ResponseBaseModel<GetSaleCounterResponseModel>>> GetSaleCounter()
         {
-            
+
             var result = await Mediator.Send(new GetSaleCounterQuery());
 
             return new ResponseBaseModel<GetSaleCounterResponseModel>
@@ -32,24 +32,24 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.SaleCounters
 
         [AllowAnonymous]
         [HttpGet("productdetailid/{productId}/{colorId}/{sizeId}")]
-        public async Task<ActionResult<ResponseBaseModel<SaleCounterIdResponseModel>>> GetSaleCounterId(int productId, int colorId, int sizeId)
+        public async Task<ActionResult<ResponseBaseModel<ProductDetailIdResponseModel>>> GetSaleCounterId(int productId, int colorId, int sizeId)
         {
 
-            var query = new GetSaleCounterIdQuery(productId, colorId, sizeId);
+            var query = new GetProductDetailIdQuery(productId, colorId, sizeId);
 
             var result = await Mediator.Send(query);
 
 
-            return new ResponseBaseModel<SaleCounterIdResponseModel>
+            return new ResponseBaseModel<ProductDetailIdResponseModel>
             {
-                Data = result.Adapt<SaleCounterIdResponseModel>()
+                Data = result.Adapt<ProductDetailIdResponseModel>()
             };
 
         }
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ResponseBaseModel<CommandSalesBase>> CreateOrderDetail([FromBody] CreateOrderDetailModel request)
+        public async Task<ResponseBaseModel<CommandSalesBase>> CreateSaleOrderDetail([FromBody] CreateSaleOrderDetailModel request)
         {
             var command = request.Adapt<CreateOrderDetailCommand>();
 
@@ -60,19 +60,6 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.SaleCounters
                 Data = result.Adapt<CommandSalesBase>()
             };
         }
-
-        [AllowAnonymous]
-        [HttpPost("order")]
-        public async Task<ResponseBaseModel<CommandSalesBase>> CreateOrder([FromBody] CreateOrderModel request)
-        {
-            var command = request.Adapt<CreateOrderCommand>();
-
-            var result = await this.Mediator.Send(command);
-
-            return new ResponseBaseModel<CommandSalesBase>
-            {
-                Data = result.Adapt<CommandSalesBase>()
-            };
-        }
+       
     }
 }

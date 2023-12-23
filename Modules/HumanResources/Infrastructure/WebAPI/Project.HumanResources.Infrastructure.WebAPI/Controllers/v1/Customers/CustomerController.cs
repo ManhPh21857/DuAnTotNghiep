@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Core.Domain;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.Base;
