@@ -5,7 +5,7 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders.Post
     public class OrderModel
     {
         public string? FullName { get; set; }
-        public string? PhoneNUmber { get; set; }
+        public string? PhoneNumber { get; set; }
         public string? Address { get; set; }
         public float? MerchandiseSubtotal { get; set; }
         public float? ShippingFee { get; set; }
@@ -19,6 +19,8 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders.Post
     {
         public OrderModelValidator()
         {
+            this.RuleFor(x => x.FullName).NotEmpty();
+            this.RuleFor(x => x.PhoneNumber).NotEmpty();
             this.RuleFor(x => x.Address).NotEmpty();
             this.RuleFor(x => x.MerchandiseSubtotal).NotNull();
             this.RuleFor(x => x.ShippingFee).NotNull();

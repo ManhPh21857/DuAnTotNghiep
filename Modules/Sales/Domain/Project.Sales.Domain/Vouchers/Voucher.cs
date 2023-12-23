@@ -11,6 +11,10 @@
         public float MaximumDiscount { get; set; }
         public DateTime ApplyPeriodStart { get; set; }
         public DateTime ApplyPeriodEnd { get; set; }
+        public int Quantity { get; set; }
+        public string CreatedBy { get; set; }
+        public string LastUpdateBy { get; set; }
+        public int IsDeleted { get; set; }
         public byte[]? DataVersion { get; set; }
     }
 }

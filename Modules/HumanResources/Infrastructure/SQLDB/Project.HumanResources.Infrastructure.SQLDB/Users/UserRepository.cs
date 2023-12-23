@@ -15,24 +15,27 @@ public class UserRepository : IUserRepository
         this.provider = provider;
     }
 
-    public async Task<User> CheckUserExistence(string username)
+    public async Task<User> CheckUserExistence(int id)
     {
         await using var connect = await this.provider.Connect();
 
         const string query = @"
             SELECT
-                [user_name]     AS Username
-               ,[is_deleted]    AS IsDeleted
+	            [user_name] AS Username
+               ,[Password]  AS Password
             FROM
 	            [users]
             WHERE
-	            [user_name] = @Username";
+	            [id] = @Id
+	            AND [is_deleted] = 0
+            ";
 
         var result = await connect.QueryFirstOrDefaultAsync<User>(query,
             new
             {
-                UserName = username,
-            });
+                Id = id
+            }
+        );
 
         return result;
     }
@@ -315,6 +318,32 @@ public class UserRepository : IUserRepository
             new
             {
                 Id = id
+            }
+        );
+
+        result.IsOptimisticLocked();
+    }
+
+    public async Task ChangePassword(int id, string oldPassword, string newPassword)
+    {
+        await using var connect = await this.provider.Connect();
+
+        const string command = @"
+            UPDATE [users]
+            SET
+	            [password] = @NewPassword
+            WHERE
+	            [id] = @Id
+	            AND is_deleted = 0
+	            AND [password] = @OldPassword
+        ";
+
+        var result = await connect.ExecuteAsync(command,
+            new
+            {
+                Id = id,
+                OldPassword = oldPassword,
+                NewPassword = newPassword
             }
         );
 

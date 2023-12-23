@@ -2,8 +2,8 @@
 {
     public class CartDetailInfo
     {
-        public int CartId { get; set; }
-        public int Id { get; set; }
+        public int? CartId { get; set; }
+        public int? Id { get; set; }
         public int ProductDetailId { get; set; }
         public int ProductId { get; set; }
         public int ColorId { get; set; }

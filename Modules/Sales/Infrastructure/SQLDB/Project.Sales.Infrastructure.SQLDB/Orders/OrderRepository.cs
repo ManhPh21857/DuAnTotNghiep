@@ -1,4 +1,7 @@
 ﻿using Dapper;
+using Microsoft.IdentityModel.Tokens;
+using Project.Core.Domain.Enums;
+using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.Sales.Domain.Orders;
 
@@ -19,7 +22,8 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
 
             const string command = @"
                 INSERT INTO [dbo].[orders] (
-	                [customer_id]
+                    [order_code]
+	               ,[customer_id]
                    ,[employee_id]
                    ,[full_name]
                    ,[phone_number]
@@ -38,7 +42,8 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
                 )
                 OUTPUT Inserted.Id
                 VALUES (
-	                @CustomerId
+                    @OrderCode
+	               ,@CustomerId
                    ,@EmployeeId
                    ,@FullName
                    ,@PhoneNumer
@@ -60,6 +65,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
             var orderId = await connect.QueryFirstOrDefaultAsync<int>(command,
                 new
                 {
+                    OrderCode = param.OrderCode,
                     CustomerId = param.CustomerId,
                     EmployeeId = param.EmployeeId,
                     FullName = param.FullName,
@@ -150,9 +156,10 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
             );
         }
 
-        public async Task<IEnumerable<OrderInfo>> GetOrders(int customerId)
+        public async Task<IEnumerable<OrderInfo>> GetOrders(int customerId, int? orderId)
         {
             await using var connect = await this.provider.Connect();
+            var builder = new SqlBuilder();
 
             const string query = @"
                 SELECT
@@ -165,37 +172,93 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
                    ,[Status]			AS Status
                 FROM
 	                [dbo].[orders]
-                WHERE
-	                customer_id = @CustomerId
+                /**where**/
+                ORDER BY
+	                order_date DESC
             ";
 
-            var result = await connect.QueryAsync<OrderInfo>(query,
+            var template = builder.AddTemplate(query);
+
+            builder.Where("customer_id = @CustomerId", new { CustomerId = customerId });
+            if (orderId.HasValue)
+            {
+                builder.Where("id = @Id", new { Id = orderId.Value });
+            }
+
+            var result = await connect.QueryAsync<OrderInfo>(template.RawSql, template.Parameters);
+
+            return result;
+        }
+
+        public async Task<OrderInfo> GetOrder(int id)
+        {
+            await using var connect = await this.provider.Connect();
+            var builder = new SqlBuilder();
+
+            const string query = @"
+                SELECT
+	                [Id]		   AS Id
+                   ,[data_version] AS DataVersion
+                FROM
+	                [dbo].[orders]
+                WHERE
+                    id = @Id
+            ";
+
+            var result = await connect.QueryFirstOrDefaultAsync<OrderInfo>(query,
                 new
                 {
-                    CustomerId = customerId
+                    Id = id
                 }
             );
 
             return result;
         }
-        
+
+        public async Task<int?> GetOrderAssign(int? id)
+        {
+            await using var connect = await this.provider.Connect();
+
+            const string query = @"
+                SELECT
+	                employee_id
+                FROM
+	                orders
+                WHERE
+	                id = @Id
+            ";
+
+            int? result = await connect.QueryFirstOrDefaultAsync<int>(query, new { Id = id });
+
+            return result;
+        }
+
         public async Task<IEnumerable<OrderDetailInfo>> GetOrderDetails(int orderId)
         {
             await using var connect = await this.provider.Connect();
 
             const string query = @"
                 SELECT
-	                [order_id]	   AS OrderId
-                   ,[product_id]   AS ProductId
-                   ,[product_name] AS ProductName
-                   ,[color_id]	   AS ColorId
-                   ,[size_id]	   AS SizeId
-                   ,[Price]		   AS Price
-                   ,[Quantity]	   AS Quantity
+	                od.[order_id]	  AS OrderId
+                   ,od.[product_id]	  AS ProductId
+                   ,od.[product_name] AS ProductName
+                   ,p.[Image]		  AS Image
+                   ,od.[color_id]	  AS ColorId
+                   ,c.[Color]		  AS Color
+                   ,od.[size_id]	  AS SizeId
+                   ,s.[Size]		  AS Size
+                   ,od.[Price]		  AS Price
+                   ,od.[Quantity]	  AS Quantity
                 FROM
-	                [dbo].[order_details]
+	                [dbo].[order_details] AS od
+	                LEFT JOIN [dbo].[products] AS p
+		                ON od.product_id = p.id
+	                LEFT JOIN [dbo].[colors] AS c
+		                ON od.color_id = c.id
+	                LEFT JOIN [dbo].[sizes] AS s
+		                ON od.size_id = s.id
                 WHERE
-	                [order_id] = @OrderId
+	                od.[order_id] = @OrderId
             ";
 
             var result = await connect.QueryAsync<OrderDetailInfo>(query,
@@ -206,6 +269,164 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
             );
 
             return result;
+        }
+
+        public async Task CancelOrder(int id, int customerId)
+        {
+            await using var connect = await this.provider.Connect();
+
+            const string command = @"
+                UPDATE orders
+                SET
+	                status = @Status
+                WHERE
+	                id = @Id
+                    AND customer_id = @CustomerId
+            ";
+
+            await connect.ExecuteAsync(command,
+                new
+                {
+                    Id = id,
+                    CustomerId = customerId,
+                    Status = OrderStatus.Cancel
+                }
+            );
+        }
+
+        public async Task<(IEnumerable<OrderInfo>, int)> GetShopOrder(int skip, int take, GetOrderFilter? param)
+        {
+            await using var connect = await this.provider.Connect();
+
+            var builder = new SqlBuilder();
+
+            const string query = @"
+                SELECT
+	                o.Id								   AS Id
+                   ,o.order_code						   AS OrderCode
+                   ,o.customer_id						   AS CustomerId
+                   ,CONCAT(c.last_name, ' ', c.first_name) AS CustomerName
+                   ,o.full_name							   AS FullName
+                   ,o.phone_number						   AS PhoneNumber
+                   ,o.[Address]							   AS Address
+                   ,o.merchandise_subtotal				   AS MerchandiseSubtotal
+                   ,o.order_total						   AS OrderTotal
+                   ,o.payment_method_id					   AS PaymentMethodId
+                   ,o.is_ordered						   AS IsOrdered
+                   ,o.is_paid							   AS IsPaid
+                   ,o.Status							   AS Status
+                   ,o.employee_id						   AS EmployeeId
+                   ,CONCAT(e.last_name, ' ', e.first_name) AS EmployeeName
+                   ,o.data_version						   AS DataVersion
+                FROM
+	                orders AS o
+	                LEFT JOIN customers AS c
+		                ON o.[customer_id] = c.[Id]
+	                LEFT JOIN employees AS e
+		                ON o.[employee_id] = e.[Id]
+                /**where**/
+                ORDER BY
+	                o.created_at DESC
+                OFFSET @Skip ROWS
+                FETCH NEXT @Take ROWS ONLY
+                ;
+                SELECT
+	                COUNT(id) AS Total
+                FROM
+	                orders
+            ";
+
+            var template = builder.AddTemplate(query);
+            builder.AddParameters(new
+                {
+                    Skip = skip,
+                    Take = take
+                }
+            );
+
+            if (param is not null)
+            {
+                if (!param.Name.IsNullOrEmpty())
+                {
+                    builder.Where("full_name like @Name", new { Name = $"%{param.Name}%" });
+                }
+
+                if (param.From.HasValue)
+                {
+                    builder.Where("order_date >= @From", new { From = param.From.Value.ToString("MM-dd-yyyy") });
+                }
+
+                if (param.To.HasValue)
+                {
+                    builder.Where("order_date <= @To", new { To = param.To.Value.ToString("MM-dd-yyyy") });
+                }
+
+                if (!param.ListStatus.IsNullOrEmpty())
+                {
+                    builder.Where("status IN @ListStatus", new { ListStatus = param.ListStatus });
+                }
+            }
+
+            var result = await connect.QueryMultipleAsync(template.RawSql, template.Parameters);
+
+            var orders = result.Read<OrderInfo>();
+            int total = result.ReadFirstOrDefault<int>();
+
+            //var result = await connect.QueryAsync<OrderInfo>(template.RawSql, template.Parameters);
+
+            return (orders, total);
+        }
+
+        public async Task AssignEmployee(int id, int employeeId, byte[]? dateVersion)
+        {
+            await using var connect = await this.provider.Connect();
+
+            const string command = @"
+                UPDATE orders
+                SET
+	                employee_id = @EmployeeId
+                   ,status = @Status
+                WHERE
+	                id = @Id
+                AND data_version = @DataVersion
+            ";
+
+            var result = await connect.ExecuteAsync(command,
+                new
+                {
+                    EmployeeId = employeeId,
+                    Id = id,
+                    Status = OrderStatus.Preparing,
+                    DataVersion = dateVersion
+                }
+            );
+
+            result.IsOptimisticLocked();
+        }
+
+        public async Task UpdateOrderStatus(int id, int status, byte[]? dateVersion)
+        {
+            await using var connect = await this.provider.Connect();
+
+            const string command = @"
+                UPDATE orders
+                SET
+	                [status] = @Status
+                WHERE
+	                id = @Id
+	                AND data_version = @DataVersion
+            ";
+
+            var result = await connect.ExecuteAsync(command,
+                new
+                {
+                    Id = id,
+                    Status = status,
+                    DataVersion = dateVersion
+                }
+            );
+
+            result.IsOptimisticLocked();
         }
     }
 }
