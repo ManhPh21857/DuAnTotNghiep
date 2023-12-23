@@ -115,5 +115,21 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees
 
             return response;
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<ActionResult<ResponseBaseModel<GetEmployeeOrderResponseModelModel>>> GetEmployees()
+        {
+            var query = new GetEmployeeOrderQuery();
+
+            var result = await this.Mediator.Send(query);
+
+            var response = new ResponseBaseModel<GetEmployeeOrderResponseModelModel>
+            {
+                Data = result.Adapt<GetEmployeeOrderResponseModelModel>()
+            };
+
+            return response;
+        }
     }
 }

@@ -50,5 +50,6 @@ public enum Role
     CartDelete = 46,
     ShopLogin = 47,
     ManagementLogin = 48,
-    Admin = 49
+    Admin = 49,
+    OrderManager = 50,
 }

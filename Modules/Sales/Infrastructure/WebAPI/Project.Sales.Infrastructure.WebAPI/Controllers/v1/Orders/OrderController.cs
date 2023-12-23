@@ -17,13 +17,19 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders
     public class OrderController : SalesController
     {
         private readonly IValidator<CreateOrderRequestModel> validatorCreateOrderRequestModel;
+        private readonly IValidator<AssignOrderRequestModel> validatorAssignOrderRequestModel;
+        private readonly IValidator<FinishPrepareRequestModel> validatorFinishPrepareRequestModel;
 
         public OrderController(
             ISender mediator,
-            IValidator<CreateOrderRequestModel> validatorCreateOrderRequestModel
+            IValidator<CreateOrderRequestModel> validatorCreateOrderRequestModel,
+            IValidator<AssignOrderRequestModel> validatorAssignOrderRequestModel,
+            IValidator<FinishPrepareRequestModel> validatorFinishPrepareRequestModel
         ) : base(mediator)
         {
             this.validatorCreateOrderRequestModel = validatorCreateOrderRequestModel;
+            this.validatorAssignOrderRequestModel = validatorAssignOrderRequestModel;
+            this.validatorFinishPrepareRequestModel = validatorFinishPrepareRequestModel;
         }
 
         [HttpPost]
@@ -89,7 +95,7 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders
         )
         {
             var query = new GetShopOrderQuery(page, request?.Adapt<GetOrderFilter>());
-                
+
             var result = await this.Mediator.Send(query);
 
             var response = new ResponseBaseModel<GetShopOrderResponseModel>
@@ -111,6 +117,58 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders
             var response = new ResponseBaseModel<GetOrderDetailResponseModel>
             {
                 Data = result.Adapt<GetOrderDetailResponseModel>()
+            };
+
+            return response;
+        }
+
+        [HttpPut("assignment")]
+        public async Task<ActionResult<ResponseBaseModel<CommandSalesBase>>> AssignOrder(
+            AssignOrderRequestModel request
+        )
+        {
+            var validator = await this.validatorAssignOrderRequestModel.ValidateAsync(request);
+            if (!validator.IsValid)
+            {
+                foreach (var error in validator.Errors)
+                {
+                    throw new DomainException(error.PropertyName, error.ErrorMessage);
+                }
+            }
+
+            var command = request.Adapt<AssignOrderCommand>();
+
+            var result = await this.Mediator.Send(command);
+
+            var response = new ResponseBaseModel<CommandSalesBase>
+            {
+                Data = result.Adapt<CommandSalesBase>()
+            };
+
+            return response;
+        }
+
+        [HttpPut("prepare-completion")]
+        public async Task<ActionResult<ResponseBaseModel<CommandSalesBase>>> FinishPrepare(
+            FinishPrepareRequestModel request
+        )
+        {
+            var validator = await this.validatorFinishPrepareRequestModel.ValidateAsync(request);
+            if (!validator.IsValid)
+            {
+                foreach (var error in validator.Errors)
+                {
+                    throw new DomainException(error.PropertyName, error.ErrorMessage);
+                }
+            }
+
+            var command = request.Adapt<FinishPrepareCommand>();
+
+            var result = await this.Mediator.Send(command);
+
+            var response = new ResponseBaseModel<CommandSalesBase>
+            {
+                Data = result.Adapt<CommandSalesBase>()
             };
 
             return response;

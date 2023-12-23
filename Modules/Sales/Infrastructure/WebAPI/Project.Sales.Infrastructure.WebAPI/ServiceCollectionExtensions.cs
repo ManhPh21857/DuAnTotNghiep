@@ -8,6 +8,7 @@ using Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.Carts.Post;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.Carts.Put;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders.Post;
+using Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders.Put;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.Payments.Post;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.Vouchers.Post;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.Vouchers.Put;
@@ -52,5 +53,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<FinishOrderRequestModel>, FinishOrderRequestModelValidator>();
         services.AddScoped<IValidator<UpdateVoucherRequestModel>, UpdateVoucherRequestModelValidator>();
         services.AddScoped<IValidator<DeleteVoucherRequestModel>, DeleteVoucherRequestModelValidator>();
+        services.AddScoped<IValidator<AssignOrderRequestModel>, AssignOrderRequestModelValidator>();
+        services.AddScoped<IValidator<FinishPrepareRequestModel>, FinishPrepareRequestModelValidator>();
     }
 }

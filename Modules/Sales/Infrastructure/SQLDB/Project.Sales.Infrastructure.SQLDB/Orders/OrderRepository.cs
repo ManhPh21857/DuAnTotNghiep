@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.IdentityModel.Tokens;
 using Project.Core.Domain.Enums;
+using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.Sales.Domain.Orders;
 
@@ -182,9 +183,52 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
             if (orderId.HasValue)
             {
                 builder.Where("id = @Id", new { Id = orderId.Value });
-            }  
+            }
 
             var result = await connect.QueryAsync<OrderInfo>(template.RawSql, template.Parameters);
+
+            return result;
+        }
+
+        public async Task<OrderInfo> GetOrder(int id)
+        {
+            await using var connect = await this.provider.Connect();
+            var builder = new SqlBuilder();
+
+            const string query = @"
+                SELECT
+	                [Id]		   AS Id
+                   ,[data_version] AS DataVersion
+                FROM
+	                [dbo].[orders]
+                WHERE
+                    id = @Id
+            ";
+
+            var result = await connect.QueryFirstOrDefaultAsync<OrderInfo>(query,
+                new
+                {
+                    Id = id
+                }
+            );
+
+            return result;
+        }
+
+        public async Task<int?> GetOrderAssign(int? id)
+        {
+            await using var connect = await this.provider.Connect();
+
+            const string query = @"
+                SELECT
+	                employee_id
+                FROM
+	                orders
+                WHERE
+	                id = @Id
+            ";
+
+            int? result = await connect.QueryFirstOrDefaultAsync<int>(query, new { Id = id });
 
             return result;
         }
@@ -258,23 +302,31 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
 
             const string query = @"
                 SELECT
-                    id                   AS Id
-	               ,order_code			 AS OrderCode
-                   ,full_name			 AS FullName
-                   ,phone_number		 AS PhoneNumber
-                   ,[Address]			 AS Address
-                   ,merchandise_subtotal AS MerchandiseSubtotal
-                   ,order_total			 AS OrderTotal
-                   ,payment_method_id	 AS PaymentMethodId
-                   ,is_ordered			 AS IsOrdered
-                   ,is_paid				 AS IsPaid
-                   ,Status				 AS Status
-                   ,data_version		 AS DataVersion
+	                o.Id								   AS Id
+                   ,o.order_code						   AS OrderCode
+                   ,o.customer_id						   AS CustomerId
+                   ,CONCAT(c.last_name, ' ', c.first_name) AS CustomerName
+                   ,o.full_name							   AS FullName
+                   ,o.phone_number						   AS PhoneNumber
+                   ,o.[Address]							   AS Address
+                   ,o.merchandise_subtotal				   AS MerchandiseSubtotal
+                   ,o.order_total						   AS OrderTotal
+                   ,o.payment_method_id					   AS PaymentMethodId
+                   ,o.is_ordered						   AS IsOrdered
+                   ,o.is_paid							   AS IsPaid
+                   ,o.Status							   AS Status
+                   ,o.employee_id						   AS EmployeeId
+                   ,CONCAT(e.last_name, ' ', e.first_name) AS EmployeeName
+                   ,o.data_version						   AS DataVersion
                 FROM
-	                orders
+	                orders AS o
+	                LEFT JOIN customers AS c
+		                ON o.[customer_id] = c.[Id]
+	                LEFT JOIN employees AS e
+		                ON o.[employee_id] = e.[Id]
                 /**where**/
                 ORDER BY
-	                created_at DESC
+	                o.created_at DESC
                 OFFSET @Skip ROWS
                 FETCH NEXT @Take ROWS ONLY
                 ;
@@ -301,7 +353,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
 
                 if (param.From.HasValue)
                 {
-                    builder.Where("order_date >= @From", new { From =param.From.Value.ToString("MM-dd-yyyy") });
+                    builder.Where("order_date >= @From", new { From = param.From.Value.ToString("MM-dd-yyyy") });
                 }
 
                 if (param.To.HasValue)
@@ -323,6 +375,58 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
             //var result = await connect.QueryAsync<OrderInfo>(template.RawSql, template.Parameters);
 
             return (orders, total);
+        }
+
+        public async Task AssignEmployee(int id, int employeeId, byte[]? dateVersion)
+        {
+            await using var connect = await this.provider.Connect();
+
+            const string command = @"
+                UPDATE orders
+                SET
+	                employee_id = @EmployeeId
+                   ,status = @Status
+                WHERE
+	                id = @Id
+                AND data_version = @DataVersion
+            ";
+
+            var result = await connect.ExecuteAsync(command,
+                new
+                {
+                    EmployeeId = employeeId,
+                    Id = id,
+                    Status = OrderStatus.Preparing,
+                    DataVersion = dateVersion
+                }
+            );
+
+            result.IsOptimisticLocked();
+        }
+
+        public async Task UpdateOrderStatus(int id, int status, byte[]? dateVersion)
+        {
+            await using var connect = await this.provider.Connect();
+
+            const string command = @"
+                UPDATE orders
+                SET
+	                [status] = @Status
+                WHERE
+	                id = @Id
+	                AND data_version = @DataVersion
+            ";
+
+            var result = await connect.ExecuteAsync(command,
+                new
+                {
+                    Id = id,
+                    Status = status,
+                    DataVersion = dateVersion
+                }
+            );
+
+            result.IsOptimisticLocked();
         }
     }
 }

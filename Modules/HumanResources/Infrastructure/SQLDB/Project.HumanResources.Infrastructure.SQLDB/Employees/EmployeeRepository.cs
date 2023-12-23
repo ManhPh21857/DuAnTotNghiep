@@ -235,5 +235,26 @@ namespace Project.HumanResources.Infrastructure.SQLDB.Employees
 
             return result;
         }
+
+        public async Task<IEnumerable<EmployeeOrder>> GetEmployeeOrder()
+        {
+            await using var connect = await this.provider.Connect();
+
+            const string query = @"
+               SELECT
+	                [Id]								   AS Id
+                   ,CONCAT([last_name], ' ', [first_name]) AS FullName
+                FROM
+	                [dbo].[employees]
+                WHERE
+	                [is_deleted] = 0
+                ORDER BY
+	                FullName
+            ";
+
+            var result = await connect.QueryAsync<EmployeeOrder>(query);
+
+            return result;
+        }
     }
 }
