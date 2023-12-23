@@ -11,8 +11,4 @@
     <ProjectReference Include="..\..\Domain\Project.HumanResources.Domain\Project.HumanResources.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Users\Command\" />
-  </ItemGroup>
-
 </Project>

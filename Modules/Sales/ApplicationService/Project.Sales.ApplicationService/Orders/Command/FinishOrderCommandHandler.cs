@@ -50,7 +50,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
                     PaymentDate = DateTime.Now,
                     IsOrdered = OrderType.Ordered.GetHashCode(),
                     IsPaid = PayType.Paid.GetHashCode(),
-                    Status = OrderStatus.Preparing.GetHashCode()
+                    Status = OrderStatus.NeedToConfirm.GetHashCode()
                 }
             );
 

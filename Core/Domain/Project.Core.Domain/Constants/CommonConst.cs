@@ -7,5 +7,7 @@
 
         public const int PRODUCT_PAGE_SIZE = 8;
         public const int EMPLOYEE_PAGE_SIZE = 8;
+        public const int VOUCHER_PAGE_SIZE = 8;
+        public const int ORDER_PAGE_SIZE = 10;
     }
 }

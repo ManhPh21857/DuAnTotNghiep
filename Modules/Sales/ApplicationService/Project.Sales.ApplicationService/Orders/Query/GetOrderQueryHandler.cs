@@ -35,7 +35,7 @@ namespace Project.Sales.ApplicationService.Orders.Query
                 throw new DomainException("", "Khách hàng không tồn tại");
             }
 
-            var orders = await this.orderRepository.GetOrders(customerId.Value);
+            var orders = await this.orderRepository.GetOrders(customerId.Value, null);
             foreach (var order in orders)
             {
                 order.OrderDetails = await this.orderRepository.GetOrderDetails(order.Id);
