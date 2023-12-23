@@ -49,7 +49,7 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.SaleCounters
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ResponseBaseModel<CommandSalesBase>> CreateOrderDetail([FromBody] CreateOrderDetailModel request)
+        public async Task<ResponseBaseModel<CommandSalesBase>> CreateSaleOrderDetail([FromBody] CreateSaleOrderDetailModel request)
         {
             var command = request.Adapt<CreateOrderDetailCommand>();
 

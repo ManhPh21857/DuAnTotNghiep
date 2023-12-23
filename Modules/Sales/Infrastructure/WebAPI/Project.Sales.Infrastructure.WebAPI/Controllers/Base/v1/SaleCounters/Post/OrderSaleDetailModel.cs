@@ -1,6 +1,6 @@
 ﻿namespace Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.SaleCounters.Post
 {
-    public class OrderDetailModel
+    public class OrderSaleDetailModel
     {
         public int ProductId { get; set; }
         public string ProductName { get; set; }
