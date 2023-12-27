@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Core.Domain;
+using Project.Core.Domain.Enums;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.Base;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees.Get;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees.Post;
@@ -28,8 +29,7 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees
             this.validatorDeleteEmployeeRequestModel = validatorDeleteEmployeeRequestModel;
         }
 
-        //[Authorize(Roles = nameof(Role.UserView))]
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.UserView))]
         [HttpGet("{pageNumber}")]
         public async Task<ActionResult<ResponseBaseModel<GetEmployeeResponseModel>>> GetEmployees(int pageNumber)
         {
@@ -45,8 +45,7 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees
             return response;
         }
 
-        //[Authorize(Roles = nameof(Role.UserEdit))]
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.UserEdit))]
         [HttpPost]
         public async Task<ActionResult<ResponseBaseModel<CommandHumanResourcesBase>>> UpdateEmployee(
             UpdateEmployeeRequestModel request
@@ -73,8 +72,7 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees
             return response;
         }
 
-        //[Authorize(Roles = nameof(Role.UserView))]
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.UserView))]
         [HttpGet("user/{id}")]
         public async Task<ActionResult<ResponseBaseModel<EmployeeResponseModel>>> GetEmployee(int id)
         {
@@ -116,7 +114,7 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees
             return response;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.UserView))]
         [HttpGet]
         public async Task<ActionResult<ResponseBaseModel<GetEmployeeOrderResponseModelModel>>> GetEmployees()
         {
