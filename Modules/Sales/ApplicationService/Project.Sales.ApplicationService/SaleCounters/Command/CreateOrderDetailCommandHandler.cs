@@ -22,7 +22,7 @@ namespace Project.Sales.ApplicationService.SaleCounters.Command
             createOder.EmployeeId = sessionInfo.UserId.Value;
             var ordercode = new Guid();
             createOder.OrderCode = ordercode;
-            createOder.Address = "Tai Quay";
+            createOder.Address = "Tại Quầy";
             createOder.MerchandiseSubtotal = request.Order.MerchandiseSubtotal;
             createOder.PaymentMethodId = 2;
             createOder.IsOrder = 1;
