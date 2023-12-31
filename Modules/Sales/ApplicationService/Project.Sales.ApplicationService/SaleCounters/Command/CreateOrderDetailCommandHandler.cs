@@ -23,22 +23,13 @@ namespace Project.Sales.ApplicationService.SaleCounters.Command
             var ordercode = new Guid();
             createOder.OrderCode = ordercode;
             createOder.Address = "Tai Quay";
-            if (request.Order.PaymentMethodId == PaymentMethod.MoMoPayment.GetHashCode())
-            {
-                createOder.IsOrder = OrderType.NotYet.GetHashCode();
-                createOder.IsPaid = PayType.NotYet.GetHashCode();
-                createOder.OrderDate = DateTime.Now;
-                createOder.PaymentDate = DateTime.Now;
-                createOder.Status = OrderStatus.NeedToConfirm.GetHashCode();
-            }
-            else
-            {
-                createOder.IsOrder = OrderType.Ordered.GetHashCode();
-                createOder.IsPaid = PayType.NotYet.GetHashCode();
-                createOder.OrderDate = DateTime.Now;
-                createOder.PaymentDate = DateTime.Now;
-                createOder.Status = OrderStatus.NeedToConfirm.GetHashCode();
-            }
+            createOder.MerchandiseSubtotal = request.Order.MerchandiseSubtotal;
+            createOder.PaymentMethodId = 2;
+            createOder.IsOrder = 1;
+            createOder.IsPaid = 1;
+            createOder.OrderDate = DateTime.Now;
+            createOder.PaymentDate = DateTime.Now;
+            createOder.Status = 3;
             var id = await this.saleCounterRepository.CreateOrder(createOder);
             foreach (var item in request.Orderdetails)
             {
