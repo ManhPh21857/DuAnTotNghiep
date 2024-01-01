@@ -4,11 +4,11 @@ namespace Project.Product.Integration.Classifications.Query
 {
     public class GetClassificationQueryResult
     {
-        public IList<ClassificationInfo> Classifications { get; set; }
+        public IEnumerable<ClassificationInfo> Classifications { get; set; }
 
-        public GetClassificationQueryResult(IList<ClassificationInfo> classifications)
+        public GetClassificationQueryResult(IEnumerable<ClassificationInfo> classifications)
         {
-            Classifications = classifications;
+            this.Classifications = classifications;
         }
     }
 }

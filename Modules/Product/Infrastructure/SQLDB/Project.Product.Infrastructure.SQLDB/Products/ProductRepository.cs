@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.IdentityModel.Tokens;
 using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.Product.Domain.Enums;
@@ -58,50 +59,155 @@ public class ProductRepository : IProductRepository
         return result;
     }
 
-    public async Task<ProductViewResponse> GetProductView(int skip, int take)
+    public async Task<ProductViewResponse> GetProductView(int skip, int take, GetProductFilterParam filterParam)
     {
         await using var connect = await this.provider.Connect();
+
+        var builder = new SqlBuilder();
 
         const string query = @"
             SELECT
 	            p.[Id]			 AS Id
                ,p.[Name]		 AS Name
                ,p.[Image]		 AS Image
-               ,MIN(pd.[price])	 AS MinPrice
-               ,MAX(pd.[price])	 AS MaxPrice
-               ,SUM(pd.Quantity) AS Quantity
+               ,(
+		            SELECT
+			            MIN(price)
+		            FROM
+			            product_details
+		            WHERE
+			            product_id = p.Id
+	            )				 
+	            AS MinPrice
+               ,(
+		            SELECT
+			            MAX(price)
+		            FROM
+			            product_details
+		            WHERE
+			            product_id = p.Id
+	            )				 
+	            AS MaxPrice
+               ,(
+		            SELECT
+			            SUM(Quantity)
+		            FROM
+			            product_details
+		            WHERE
+			            product_id = p.Id
+	            )				 
+	            AS Quantity
             FROM
 	            [dbo].[products] AS p
 	            LEFT JOIN [dbo].[product_details] AS pd
 		            ON p.[Id] = pd.[product_id]
 		            AND pd.[is_deleted] = 0
-            WHERE
-	            p.[is_deleted] = 0
+            /**where**/
             GROUP BY
 	            p.[Id]
                ,p.[Name]
                ,p.[Image]
                ,p.[Code]
+               ,p.[created_at]
+            /**having**/
             ORDER BY
-	            p.[Code]
+	            p.[created_at] DESC
             OFFSET @Skip ROWS
             FETCH NEXT @Take ROWS ONLY;
 
             SELECT
-	            COUNT([id]) AS TotalProduct
+	            COUNT(a.Id) AS TotalProduct
             FROM
-	            [dbo].[products]
-            WHERE
-	            [is_deleted] = 0
+	            (
+		            SELECT
+			            p.[Id] AS Id
+		            FROM
+			            [dbo].[products] AS p
+			            LEFT JOIN [dbo].[product_details] AS pd
+				            ON p.[Id] = pd.[product_id]
+				            AND pd.[is_deleted] = 0
+		            /**where**/
+		            GROUP BY
+			            p.[Id]
+		               ,p.[Name]
+		               ,p.[Image]
+		               ,p.[Code]
+		            /**having**/
+	            ) AS a
         ";
 
-        var response = await connect.QueryMultipleAsync(query,
+        var template = builder.AddTemplate(query);
+
+        builder.Where("p.[is_deleted] = 0",
             new
             {
                 Skip = skip,
                 Take = take
             }
         );
+
+        if (!filterParam.ColorIds.IsNullOrEmpty())
+        {
+            builder.Where("pd.[color_id] IN @ColorIds", new { ColorIds = filterParam.ColorIds });
+        }
+
+        if (!filterParam.SizeIds.IsNullOrEmpty())
+        {
+            builder.Where("pd.[size_id] IN @SizeIds", new { SizeIds = filterParam.SizeIds });
+        }
+
+        if (!filterParam.SupplierIds.IsNullOrEmpty())
+        {
+            builder.Where("p.[supplier_id] IN @SupplierIds", new { SupplierIds = filterParam.SupplierIds });
+        }
+
+        if (!filterParam.MaterialIds.IsNullOrEmpty())
+        {
+            builder.Where("p.[material_id] IN @MaterialIds", new { MaterialIds = filterParam.MaterialIds });
+        }
+
+        if (!filterParam.ClassificationIds.IsNullOrEmpty())
+        {
+            builder.Where("p.[classification_id] IN @ClassificationIds",
+                new { ClassificationIds = filterParam.ClassificationIds });
+        }
+
+        if (!filterParam.OriginIds.IsNullOrEmpty())
+        {
+            builder.Where("p.[origin_id] IN OriginIds", new { OriginIds = filterParam.OriginIds });
+        }
+
+        if (!filterParam.TrademarkIds.IsNullOrEmpty())
+        {
+            builder.Where("p.[trademark_id] IN TrademarkIds", new { TrademarkIds = filterParam.TrademarkIds });
+        }
+
+        if (!filterParam.Name.IsNullOrEmpty())
+        {
+            builder.Where("p.[name] LIKE @Name", new { Name = $"%{filterParam.Name}%" });
+        }
+
+        builder.Having("SUM(pd.Quantity) > 0");
+
+        var priceConditions = new List<string>();
+        if (filterParam.MinPrice.HasValue)
+        {
+            priceConditions.Add("MAX(pd.[price]) >= @MinPrice");
+            builder.AddParameters(new { MinPrice = filterParam.MinPrice });
+        }
+
+        if (filterParam.MaxPrice.HasValue)
+        {
+            priceConditions.Add("MIN(pd.[price]) <= @MaxPrice");
+            builder.AddParameters(new { MaxPrice = filterParam.MaxPrice });
+        }
+
+        if (priceConditions.Any())
+        {
+            builder.Having($"({string.Join(" OR ", priceConditions)})");
+        }
+
+        var response = await connect.QueryMultipleAsync(template.RawSql, template.Parameters);
 
         var result = new ProductViewResponse
         {

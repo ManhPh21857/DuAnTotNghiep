@@ -9,5 +9,6 @@
         Task DeleteEmployee(DeleteEmployeeParam param);
         Task<int?> GetEmployeeId(int userId);
         Task<IEnumerable<EmployeeOrder>> GetEmployeeOrder();
+        Task<EmployeeInfo> GetEmployeeInfo(int userId);
     }
 }

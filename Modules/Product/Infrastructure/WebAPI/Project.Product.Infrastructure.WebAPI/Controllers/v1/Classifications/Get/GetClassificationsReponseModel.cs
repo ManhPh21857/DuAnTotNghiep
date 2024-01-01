@@ -4,10 +4,10 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications.G
 {
     public class GetClassificationsReponseModel
     {
-        public IEnumerable<ClassificationInfo> Classifications { get; set; }
+        public IEnumerable<GetClassificationsModel> Classifications { get; set; }
         public GetClassificationsReponseModel()
         {
-            Classifications = new List<ClassificationInfo>();
+            Classifications = new List<GetClassificationsModel>();
         }
     }
 }

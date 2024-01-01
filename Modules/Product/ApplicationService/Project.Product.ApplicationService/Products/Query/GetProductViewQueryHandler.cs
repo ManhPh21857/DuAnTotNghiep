@@ -19,7 +19,7 @@ namespace Project.Product.ApplicationService.Products.Query
             int skip = CommonConst.PageSize * (request.PageNo - 1);
             int take = CommonConst.PageSize;
 
-            var result = await this.productRepository.GetProductView(skip, take);
+            var result = await this.productRepository.GetProductView(skip, take, request.Filter);
 
             return new GetProductViewQueryResult(result.Products, result.TotalProduct);
         }

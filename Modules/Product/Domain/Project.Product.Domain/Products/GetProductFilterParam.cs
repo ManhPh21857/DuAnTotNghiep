@@ -1,8 +1,6 @@
-﻿using FluentValidation;
-
-namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Get
+﻿namespace Project.Product.Domain.Products
 {
-    public class ProductFilter
+    public class GetProductFilterParam
     {
         public string? Name { get; set; }
         public float? MinPrice { get; set; }
@@ -14,13 +12,5 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Get
         public List<int>? ClassificationIds { get; set; }
         public List<int>? OriginIds { get; set; }
         public List<int>? TrademarkIds { get; set; }
-    }
-
-    public class ProductFilterValidator : AbstractValidator<ProductFilter>
-    {
-        public ProductFilterValidator()
-        {
-            
-        }
     }
 }

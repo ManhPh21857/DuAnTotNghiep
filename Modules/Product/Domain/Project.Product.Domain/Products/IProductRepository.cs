@@ -4,7 +4,7 @@ public interface IProductRepository
 {
     #region Product
 
-    Task<ProductViewResponse> GetProductView(int skip, int take);
+    Task<ProductViewResponse> GetProductView(int skip, int take, GetProductFilterParam filterParam);
     Task<ProductView> GetProductView(int id);
     Task<ProductInfo> GetProduct(int id);
     Task<ProductViewResponse> GetProducts(int skip, int take);

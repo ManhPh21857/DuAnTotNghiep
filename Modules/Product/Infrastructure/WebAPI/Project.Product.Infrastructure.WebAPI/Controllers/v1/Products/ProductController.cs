@@ -1,8 +1,10 @@
-﻿using Mapster;
+﻿using FluentValidation;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Core.Domain.Enums;
+using Project.Product.Domain.Products;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Get;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Post;
@@ -14,8 +16,14 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Products;
 
 public class ProductController : CommonController
 {
-    public ProductController(ISender mediator) : base(mediator)
+    private readonly IValidator<ProductFilter> validatorProductFilter;
+
+    public ProductController(
+        ISender mediator,
+        IValidator<ProductFilter> validatorProductFilter
+    ) : base(mediator)
     {
+        this.validatorProductFilter = validatorProductFilter;
     }
 
     [AllowAnonymous]
@@ -25,7 +33,7 @@ public class ProductController : CommonController
         [FromBody] ProductFilter filter
     )
     {
-        var query = new GetProductViewQuery(pageNo);
+        var query = new GetProductViewQuery(pageNo, filter.Adapt<GetProductFilterParam>());
 
         var result = await this.Mediator.Send(query);
 

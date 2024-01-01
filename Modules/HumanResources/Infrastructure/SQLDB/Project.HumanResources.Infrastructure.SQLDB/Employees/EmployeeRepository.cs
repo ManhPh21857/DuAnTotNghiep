@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Project.Core.Domain.User;
 using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.HumanResources.Domain.Employees;
@@ -253,6 +254,32 @@ namespace Project.HumanResources.Infrastructure.SQLDB.Employees
             ";
 
             var result = await connect.QueryAsync<EmployeeOrder>(query);
+
+            return result;
+        }
+
+        public async Task<EmployeeInfo> GetEmployeeInfo(int userId)
+        {
+            await using var connect = await this.provider.Connect();
+
+            const string query = @"
+                SELECT
+	                [Uid]	   AS UID
+                   ,first_name AS FirstName
+                   ,last_name  AS LastName
+                   ,[Image]	   AS Image
+                FROM
+	                employees
+                WHERE
+	                user_id = @UserId
+            ";
+
+            var result = await connect.QueryFirstOrDefaultAsync<EmployeeInfo>(query,
+                new
+                {
+                    UserId = userId
+                }
+            );
 
             return result;
         }

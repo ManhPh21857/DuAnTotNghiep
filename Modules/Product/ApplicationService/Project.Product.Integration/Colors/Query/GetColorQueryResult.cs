@@ -4,11 +4,11 @@ namespace Project.Product.Integration.Colors.Query
 {
     public class GetColorQueryResult
     {
-        public IList<ColorInfo> Colors { get; set; }
+        public IEnumerable<ColorInfo> Colors { get; set; }
 
-        public GetColorQueryResult(IList<ColorInfo> colors)
+        public GetColorQueryResult(IEnumerable<ColorInfo> colors)
         {
-            Colors = colors;
+            this.Colors = colors;
         }
     }
 }

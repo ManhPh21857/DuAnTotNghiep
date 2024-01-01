@@ -1,6 +1,4 @@
-﻿
-
-namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Get
+﻿namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Get
 {
     public class TrademarkResponseModel
     {
