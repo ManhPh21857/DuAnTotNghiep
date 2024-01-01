@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Project.Core.Domain.Enums;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.Base;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Roles.Get;
 using Project.HumanResources.Integration.Roles;
@@ -15,8 +16,7 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Roles
         {
         }
 
-        //[Authorize(Roles = nameof(Role.Admin))]
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.Admin))]
         [HttpGet]
         public async Task<ResponseBaseModel<GetRolesResponseModel>> GetRoles()
         {
@@ -32,8 +32,7 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Roles
             return response;
         }
 
-        //[Authorize(Roles = nameof(Role.Admin))]
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.Admin))]
         [HttpGet("group")]
         public async Task<ResponseBaseModel<GetGroupsResponseModel>> GetGroups()
         {
