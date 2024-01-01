@@ -1,15 +1,14 @@
-﻿
-using Project.Product.Domain.Suppliers;
+﻿using Project.Product.Domain.Suppliers;
 
 namespace Project.Product.Integration.Suppliers.Query
 {
     public class GetSupplierQueryResult
     {
-        public IList<SupplierInfo> Suppliers { get; set; }
-        public GetSupplierQueryResult(IList<SupplierInfo> supplier)
+        public IEnumerable<SupplierInfo> Suppliers { get; set; }
+
+        public GetSupplierQueryResult(IEnumerable<SupplierInfo> supplier)
         {
-            Suppliers = supplier;
+            this.Suppliers = supplier;
         }
-       
     }
 }

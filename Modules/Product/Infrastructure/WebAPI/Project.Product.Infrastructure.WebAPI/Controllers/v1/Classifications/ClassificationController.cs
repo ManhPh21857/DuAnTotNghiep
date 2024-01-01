@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Core.Domain.Enums;
+using Project.Product.Domain.Enums;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications.Get;
@@ -12,17 +13,20 @@ using Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications.Post;
 using Project.Product.Integration.Classifications.Command;
 using Project.Product.Integration.Classifications.Query;
 
-
-
 namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications
 {
     public class ClassificationController : CommonController
     {
         private readonly IValidator<UpdateClassificationsRequestModel> classificationValidator;
-        public ClassificationController(ISender mediator, IValidator<UpdateClassificationsRequestModel> classificationValidator) : base(mediator)
+
+        public ClassificationController(
+            ISender mediator,
+            IValidator<UpdateClassificationsRequestModel> classificationValidator
+        ) : base(mediator)
         {
             this.classificationValidator = classificationValidator;
         }
+
         [Authorize(Roles = nameof(Role.ClassificationView))]
         [HttpGet]
         public async Task<ActionResult<ResponseBaseModel<GetClassificationsReponseModel>>> GetClassifications()
@@ -37,7 +41,9 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications
 
         [Authorize(Roles = nameof(Role.ClassificationEdit))]
         [HttpPost]
-        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateClassification(UpdateClassificationsRequestModel request)
+        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateClassification(
+            UpdateClassificationsRequestModel request
+        )
         {
             var validator = await this.classificationValidator.ValidateAsync(request);
             if (!validator.IsValid)
@@ -55,11 +61,13 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications
                 Data = result.Adapt<CommandProductBase>()
             };
         }
+
         [Authorize(Roles = nameof(Role.ClassificationDelete))]
         [HttpPut("delete")]
-        public async Task<ResponseBaseModel<CommandProductBase>> DeleteClassification(DeleteClassificationsRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> DeleteClassification(
+            DeleteClassificationsRequestModel request
+        )
         {
-
             var command = request.Adapt<DeleteClassificationCommand>();
 
             var result = await Mediator.Send(command);
@@ -72,9 +80,10 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications
 
         [Authorize(Roles = nameof(Role.ClassificationEdit))]
         [HttpPut("reactive")]
-        public async Task<ResponseBaseModel<CommandProductBase>> ReactiveColors(DeleteClassificationsRequestModel request)
+        public async Task<ResponseBaseModel<CommandProductBase>> ReactiveColors(
+            DeleteClassificationsRequestModel request
+        )
         {
-
             var command = request.Adapt<ReactiveClassificationCommand>();
 
             var result = await Mediator.Send(command);
@@ -82,6 +91,20 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications
             return new ResponseBaseModel<CommandProductBase>
             {
                 Data = result.Adapt<CommandProductBase>()
+            };
+        }
+
+        [AllowAnonymous]
+        [HttpGet("view")]
+        public async Task<ActionResult<ResponseBaseModel<GetClassificationViewResponseModel>>> GetClassificationsView()
+        {
+            var result = await this.Mediator.Send(new GetClassificationQuery());
+
+            result.Classifications = result.Classifications.Where(x => x.IsDeleted == IsDeleted.No.GetHashCode());
+
+            return new ResponseBaseModel<GetClassificationViewResponseModel>
+            {
+                Data = result.Adapt<GetClassificationViewResponseModel>()
             };
         }
     }

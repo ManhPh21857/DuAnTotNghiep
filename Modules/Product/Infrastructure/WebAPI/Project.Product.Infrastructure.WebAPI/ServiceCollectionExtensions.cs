@@ -14,6 +14,7 @@ using Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Post;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Post;
 using System.Reflection;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Put;
+using Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Get;
 
 namespace Project.Product.Infrastructure.WebAPI;
 
@@ -72,5 +73,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<UpdateProductRequestModel>, UpdateProductRequestModelValidator>();
         services.AddScoped<IValidator<DeleteProductModel>, DeleteProductModelValidator>();
         services.AddScoped<IValidator<DeleteProductRequestModel>, DeleteProductRequestModelValidator>();
+        services.AddScoped<IValidator<ProductFilter>, ProductFilterValidator>();
     }
 }

@@ -1,10 +1,8 @@
 ﻿namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors.Get
 {
-    public class ColorModel
+    public class ColorViewModel
     {
         public int? Id { get; set; }
         public string? Color { get; set; }
-        public int? IsDeleted { get; set; }
-        public byte[]? DataVersion { get; set; }
     }
 }

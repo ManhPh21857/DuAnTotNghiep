@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Core.Domain.Enums;
+using Project.Product.Domain.Enums;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Sizes.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Sizes.Get;
@@ -82,6 +83,20 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Sizes
             return new ResponseBaseModel<CommandProductBase>
             {
                 Data = result.Adapt<CommandProductBase>()
+            };
+        }
+
+        [AllowAnonymous]
+        [HttpGet("view")]
+        public async Task<ActionResult<ResponseBaseModel<SizeViewResponseModel>>> GetSizeView()
+        {
+            var result = await this.Mediator.Send(new GetSizeQuery());
+
+            result.Sizes = result.Sizes.Where(x => x.IsDeleted == IsDeleted.No.GetHashCode());
+
+            return new ResponseBaseModel<SizeViewResponseModel>
+            {
+                Data = result.Adapt<SizeViewResponseModel>()
             };
         }
     }

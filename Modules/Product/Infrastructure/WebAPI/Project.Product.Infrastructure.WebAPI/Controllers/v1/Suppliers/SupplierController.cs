@@ -11,13 +11,18 @@ using Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers.Post;
 using Project.Product.Integration.Suppliers.Query;
 using Project.Product.Integration.Suppliers.Command;
 using Project.Core.Domain.Enums;
+using Project.Product.Domain.Enums;
 
 namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers
 {
     public class SupplierController : CommonController
     {
         private readonly IValidator<UpdateSupplierRequestModel> supplierValidator;
-        public SupplierController(ISender mediator, IValidator<UpdateSupplierRequestModel> supplierValidator) : base(mediator)
+
+        public SupplierController(
+            ISender mediator,
+            IValidator<UpdateSupplierRequestModel> supplierValidator
+        ) : base(mediator)
         {
             this.supplierValidator = supplierValidator;
         }
@@ -36,7 +41,9 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers
 
         [Authorize(Roles = nameof(Role.SupplierEdit))]
         [HttpPost]
-        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateSupplier(UpdateSupplierRequestModel request)
+        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateSupplier(
+            UpdateSupplierRequestModel request
+        )
         {
             var validator = await this.supplierValidator.ValidateAsync(request);
             if (!validator.IsValid)
@@ -59,7 +66,6 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers
         [HttpPut("delete")]
         public async Task<ResponseBaseModel<CommandProductBase>> DeleteSupplier(DeleteSupplierRequestModel request)
         {
-
             var command = request.Adapt<DeleteSupplierCommand>();
 
             var result = await Mediator.Send(command);
@@ -74,7 +80,6 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers
         [HttpPut("reactive")]
         public async Task<ResponseBaseModel<CommandProductBase>> ReactiveSupplier(DeleteSupplierRequestModel request)
         {
-
             var command = request.Adapt<ReactiveSupplierCommand>();
 
             var result = await Mediator.Send(command);
@@ -82,6 +87,20 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Suppliers
             return new ResponseBaseModel<CommandProductBase>
             {
                 Data = result.Adapt<CommandProductBase>()
+            };
+        }
+
+        [AllowAnonymous]
+        [HttpGet("view")]
+        public async Task<ActionResult<ResponseBaseModel<SupplierViewResponseModel>>> GetSupplierView()
+        {
+            var result = await this.Mediator.Send(new GetSupplierQuery());
+
+            result.Suppliers = result.Suppliers.Where(x => x.IsDeleted == IsDeleted.No.GetHashCode());
+
+            return new ResponseBaseModel<SupplierViewResponseModel>
+            {
+                Data = result.Adapt<SupplierViewResponseModel>()
             };
         }
     }

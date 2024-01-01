@@ -1,15 +1,14 @@
 ﻿using Project.Product.Domain.Sizes;
 
-
 namespace Project.Product.Integration.Sizes.Query
 {
     public class GetSizeQueryResult
     {
-        public IList<SizeInfo> Sizes { get; set; }
+        public IEnumerable<SizeInfo> Sizes { get; set; }
 
-        public GetSizeQueryResult(IList<SizeInfo> sizes)
+        public GetSizeQueryResult(IEnumerable<SizeInfo> sizes)
         {
-            Sizes = sizes;
+            this.Sizes = sizes;
         }
     }
 }

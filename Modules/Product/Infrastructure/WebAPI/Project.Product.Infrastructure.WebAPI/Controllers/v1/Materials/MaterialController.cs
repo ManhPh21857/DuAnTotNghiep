@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Core.Domain.Enums;
+using Project.Product.Domain.Enums;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Get;
@@ -12,13 +13,16 @@ using Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Post;
 using Project.Product.Integration.Materials.Command;
 using Project.Product.Integration.Materials.Query;
 
-
 namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
 {
     public class MaterialController : CommonController
     {
         private readonly IValidator<UpdateMaterialRequestModel> materialValidator;
-        public MaterialController(ISender mediator, IValidator<UpdateMaterialRequestModel> materialValidator) : base(mediator)
+
+        public MaterialController(
+            ISender mediator,
+            IValidator<UpdateMaterialRequestModel> materialValidator
+        ) : base(mediator)
         {
             this.materialValidator = materialValidator;
         }
@@ -37,7 +41,9 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
 
         [Authorize(Roles = nameof(Role.MaterialEdit))]
         [HttpPost]
-        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateMaterial(UpdateMaterialRequestModel request)
+        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateMaterial(
+            UpdateMaterialRequestModel request
+        )
         {
             var validator = await this.materialValidator.ValidateAsync(request);
             if (!validator.IsValid)
@@ -60,7 +66,6 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
         [HttpPut("delete")]
         public async Task<ResponseBaseModel<CommandProductBase>> DeleteMaterial(DeleteMaterialRequestModel request)
         {
-
             var command = request.Adapt<DeleteMaterialCommand>();
 
             var result = await Mediator.Send(command);
@@ -75,7 +80,6 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
         [HttpPut("reactive")]
         public async Task<ResponseBaseModel<CommandProductBase>> ReactiveMaterial(DeleteMaterialRequestModel request)
         {
-
             var command = request.Adapt<ReactiveMaterialCommand>();
 
             var result = await Mediator.Send(command);
@@ -83,6 +87,20 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials
             return new ResponseBaseModel<CommandProductBase>
             {
                 Data = result.Adapt<CommandProductBase>()
+            };
+        }
+
+        [AllowAnonymous]
+        [HttpGet("view")]
+        public async Task<ActionResult<ResponseBaseModel<MaterialViewResponseModel>>> GetMaterialView()
+        {
+            var result = await this.Mediator.Send(new GetMaterialQuery());
+
+            result.Materials = result.Materials.Where(x => x.IsDeleted == IsDeleted.No.GetHashCode());
+
+            return new ResponseBaseModel<MaterialViewResponseModel>
+            {
+                Data = result.Adapt<MaterialViewResponseModel>()
             };
         }
     }

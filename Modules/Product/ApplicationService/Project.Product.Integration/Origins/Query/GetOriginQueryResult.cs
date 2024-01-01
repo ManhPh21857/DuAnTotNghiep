@@ -4,10 +4,10 @@ namespace Project.Product.Integration.Origins.Query
 {
     public class GetOriginQueryResult
     {
-        public IList<OriginInfo> Origins { get; set; }
-        public GetOriginQueryResult(IList<OriginInfo> origins)
+        public IEnumerable<OriginInfo> Origins { get; set; }
+        public GetOriginQueryResult(IEnumerable<OriginInfo> origins)
         {
-            Origins = origins;
+            this.Origins = origins;
         }
     }
 }

@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Core.Domain.Enums;
+using Project.Product.Domain.Enums;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Delete;
 using Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Get;
@@ -17,7 +18,11 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
     public class TrademarkController : CommonController
     {
         private readonly IValidator<UpdateTrademarkRequestModel> trademarkValidator;
-        public TrademarkController(ISender mediator, IValidator<UpdateTrademarkRequestModel> trademarkValidator) : base(mediator)
+
+        public TrademarkController(
+            ISender mediator,
+            IValidator<UpdateTrademarkRequestModel> trademarkValidator
+        ) : base(mediator)
         {
             this.trademarkValidator = trademarkValidator;
         }
@@ -36,7 +41,9 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
 
         [Authorize(Roles = nameof(Role.TrademarkEdit))]
         [HttpPost]
-        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateTrademark(UpdateTrademarkRequestModel request)
+        public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateTrademark(
+            UpdateTrademarkRequestModel request
+        )
         {
             var validator = await this.trademarkValidator.ValidateAsync(request);
             if (!validator.IsValid)
@@ -59,7 +66,6 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
         [HttpPut("delete")]
         public async Task<ResponseBaseModel<CommandProductBase>> DeleteTrademark(DeleteTrademarkRequestModel request)
         {
-
             var command = request.Adapt<DeleteTrademarkCommand>();
 
             var result = await Mediator.Send(command);
@@ -74,7 +80,6 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
         [HttpPut("reactive")]
         public async Task<ResponseBaseModel<CommandProductBase>> ReactiveTrademark(DeleteTrademarkRequestModel request)
         {
-
             var command = request.Adapt<ReactiveTrademarkCommand>();
 
             var result = await Mediator.Send(command);
@@ -82,6 +87,20 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks
             return new ResponseBaseModel<CommandProductBase>
             {
                 Data = result.Adapt<CommandProductBase>()
+            };
+        }
+
+        [AllowAnonymous]
+        [HttpGet("view")]
+        public async Task<ActionResult<ResponseBaseModel<TrademarkViewResponseModel>>> GetTrademarkView()
+        {
+            var result = await this.Mediator.Send(new GetTrademarkQuery());
+
+            result.Trademarks = result.Trademarks.Where(x => x.IsDeleted == IsDeleted.No.GetHashCode());
+
+            return new ResponseBaseModel<TrademarkViewResponseModel>
+            {
+                Data = result.Adapt<TrademarkViewResponseModel>()
             };
         }
     }
