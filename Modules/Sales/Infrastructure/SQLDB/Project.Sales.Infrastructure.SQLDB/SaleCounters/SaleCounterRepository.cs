@@ -56,7 +56,7 @@ namespace Project.Sales.Infrastructure.SQLDB.SaleCounters
                                ,@FullName
                                ,@PhoneNumer
                                ,@Address
-                               ,0
+                               ,@MerchandiseSubtotal
                                ,0
                                ,0
                                ,@VoucherApplied
@@ -75,6 +75,7 @@ namespace Project.Sales.Infrastructure.SQLDB.SaleCounters
                 FullName = param.FullName,
                 PhoneNumer = param.PhoneNumber,
                 Address = param.Address,
+                MerchandiseSubtotal = param.MerchandiseSubtotal,
                 VoucherApplied = param.VoucherApplied,
                 OrderTotal = param.OrderTotal,
                 PaymentMethodId = param.PaymentMethodId,
