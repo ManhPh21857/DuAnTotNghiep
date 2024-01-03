@@ -13,7 +13,7 @@ public static class TransactionFactory
     {
         return new TransactionScope(
             TransactionScopeOption.Required,
-            new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = timeout },
+            new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted, Timeout = timeout },
             TransactionScopeAsyncFlowOption.Enabled
         );
     }

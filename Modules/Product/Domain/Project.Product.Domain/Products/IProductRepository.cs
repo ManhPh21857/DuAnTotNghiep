@@ -35,11 +35,16 @@ public interface IProductRepository
     #region Product Detail
 
     Task<ProductDetailInfo> GetProductDetailById(int id);
+    Task<ProductDetailInfo> GetProductDetails(int productId, int colorId, int sizeId);
     Task<IEnumerable<ProductDetailInfo>> GetProductDetail(int productId);
     Task CreateProductDetail(ProductDetailInfo param);
     Task UpdateProductDetail(ProductDetailInfo param);
     Task DeleteProductDetailByProductId(int productId);
     Task DeleteProductDetail(int id);
+
+    Task UpdateProductDetailQuantity(int id, int quantity);
+    Task UpdateProductDetailActualQuantity(int id, int actualQuantity);
+    Task UpdateProductDetailBothQuantity(int id, int quantity, int actualQuantity);
 
     #endregion
 }

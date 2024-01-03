@@ -5,6 +5,7 @@ using Project.Core.ApplicationService.Commands;
 using Project.Core.Domain;
 using Project.Core.Domain.Enums;
 using Project.HumanResources.Domain.Customers;
+using Project.Product.Domain.Products;
 using Project.Sales.Domain.Carts;
 using Project.Sales.Domain.Orders;
 using Project.Sales.Integration.Orders.Command;
@@ -14,24 +15,27 @@ namespace Project.Sales.ApplicationService.Orders.Command
 {
     public class CreateOrderCommandHandler : CommandHandler<CreateOrderCommand, CreateOrderCommandResult>
     {
-        private readonly IOrderRepository orderRepository;
         private readonly ICustomerRepository customerRepository;
+        private readonly IProductRepository productRepository;
+        private readonly IOrderRepository orderRepository;
         private readonly ICartRepository cartRepository;
         private readonly ISessionInfo sessionInfo;
         private readonly ISender mediator;
 
         public CreateOrderCommandHandler(
-            IOrderRepository orderRepository,
             ICustomerRepository customerRepository,
-            ISessionInfo sessionInfo,
+            IProductRepository productRepository,
+            IOrderRepository orderRepository,
             ICartRepository cartRepository,
+            ISessionInfo sessionInfo,
             ISender mediator
         )
         {
-            this.orderRepository = orderRepository;
             this.customerRepository = customerRepository;
-            this.sessionInfo = sessionInfo;
+            this.productRepository = productRepository;
+            this.orderRepository = orderRepository;
             this.cartRepository = cartRepository;
+            this.sessionInfo = sessionInfo;
             this.mediator = mediator;
         }
 
@@ -92,6 +96,22 @@ namespace Project.Sales.ApplicationService.Orders.Command
             //create order detail
             foreach (var item in request.CartDetails)
             {
+                var productDetail = await this.productRepository.GetProductDetailById(item.ProductDetailId);
+                if (productDetail is null)
+                {
+                    throw new DomainException("", "Sản phẩm không tồn tại");
+                }
+
+                if (productDetail.Quantity < item.Quantity)
+                {
+                    throw new DomainException("", "Số lượng không đủ");
+                }
+
+                await this.productRepository.UpdateProductDetailQuantity(
+                    productDetail.Id,
+                    productDetail.Quantity - item.Quantity
+                );
+
                 await this.orderRepository.CreateOrderDetail(new CreateOrderDetailParam
                     {
                         OrderId = orderId,

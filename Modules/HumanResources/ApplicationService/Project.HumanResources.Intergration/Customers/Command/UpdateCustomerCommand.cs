@@ -5,6 +5,7 @@ namespace Project.HumanResources.Integration.Customers.Command
     public class UpdateCustomerCommand : ICommand<UpdateCustomerCommandResult>
     {
         public int Id { get; set; }
+        public string Username { get; set; }
         public string LastName { get; set; }
         public string FirstName { get; set; }
         public string PhoneNumber { get; set; }
@@ -21,7 +22,8 @@ namespace Project.HumanResources.Integration.Customers.Command
             DateTime birthday,
             string image,
             int sex,
-            byte[]? dataVersion
+            byte[]? dataVersion,
+            string username
         )
         {
             this.Id = id;
@@ -32,6 +34,7 @@ namespace Project.HumanResources.Integration.Customers.Command
             this.Image = image;
             this.Sex = sex;
             this.DataVersion = dataVersion;
+            this.Username = username;
         }
     }
 }

@@ -5,6 +5,7 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Customers.
     public class UpdateCustomerModel
     {
         public int? Id { get; set; }
+        public string? Username { get; set; }
         public string? LastName { get; set; }
         public string? FirstName { get; set; }
         public string? PhoneNumber { get; set; }
@@ -19,12 +20,13 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Customers.
         public UpdateCustomerModelValidator()
         {
             this.RuleFor(x => x.Id).NotNull();
+            this.RuleFor(x => x.Username).NotEmpty();
             this.RuleFor(x => x.LastName).NotEmpty();
             this.RuleFor(x => x.FirstName).NotEmpty();
             this.RuleFor(x => x.PhoneNumber).NotEmpty();
             this.RuleFor(x => x.Birthday).NotNull();
             this.RuleFor(x => x.Image).NotEmpty();
-            this.RuleFor(x => x.Sex).NotNull().ExclusiveBetween(0, 1);
+            this.RuleFor(x => x.Sex).NotNull().InclusiveBetween(0, 1);
         }
     }
 }
