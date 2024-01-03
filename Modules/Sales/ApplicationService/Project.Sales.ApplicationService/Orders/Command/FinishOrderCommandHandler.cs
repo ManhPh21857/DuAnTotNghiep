@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Project.Core.ApplicationService.Commands;
 using Project.Core.Domain;
 using Project.Core.Domain.Enums;
+using Project.Product.Domain.Products;
 using Project.Sales.Domain.Orders;
 using Project.Sales.Integration.Payments.Command;
 
@@ -11,16 +12,19 @@ namespace Project.Sales.ApplicationService.Orders.Command
 {
     public class FinishOrderCommandHandler : CommandHandler<FinishOrderCommand, FinishOrderCommandResult>
     {
+        private readonly IProductRepository productRepository;
         private readonly IOrderRepository orderRepository;
         private readonly IMemoryCache memoryCache;
         private readonly IConfiguration configuration;
 
         public FinishOrderCommandHandler(
+            IProductRepository productRepository,
             IOrderRepository orderRepository,
             IMemoryCache memoryCache,
             IConfiguration configuration
         )
         {
+            this.productRepository = productRepository;
             this.orderRepository = orderRepository;
             this.memoryCache = memoryCache;
             this.configuration = configuration;
@@ -40,6 +44,17 @@ namespace Project.Sales.ApplicationService.Orders.Command
                 throw new DomainException(
                     HttpStatusCode.BadRequest.GetHashCode().ToString(),
                     nameof(HttpStatusCode.BadRequest)
+                );
+            }
+
+            var orderDetails = await this.orderRepository.GetOrderDetails(request.Id);
+            foreach (var item in orderDetails)
+            {
+                var productDetail = await this.productRepository.GetProductDetails(item.ProductId, item.ColorId, item.SizeId);
+
+                await this.productRepository.UpdateProductDetailActualQuantity(
+                    productDetail.Id,
+                    productDetail.ActualQuantity - item.Quantity
                 );
             }
 

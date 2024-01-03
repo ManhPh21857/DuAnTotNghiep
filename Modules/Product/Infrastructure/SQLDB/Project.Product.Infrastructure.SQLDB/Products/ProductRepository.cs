@@ -4,6 +4,7 @@ using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.Product.Domain.Enums;
 using Project.Product.Domain.Products;
+using System.Drawing;
 
 namespace Project.Product.Infrastructure.SQLDB.Products;
 
@@ -610,6 +611,40 @@ public class ProductRepository : IProductRepository
         return result;
     }
 
+    public async Task<ProductDetailInfo> GetProductDetails(int productId, int colorId, int sizeId)
+    {
+        await using var connect = await this.provider.Connect();
+        const string query = @"
+            SELECT
+	            [Id]		      AS Id
+               ,[color_id]	      AS ColorId
+               ,[size_id]	      AS SizeId
+               ,[import_price]    AS ImportPrice
+               ,[Price]		      AS Price
+               ,[Quantity]	      AS Quantity
+               ,[actual_quantity] As ActualQuantity
+               ,[data_version]    AS DataVersion
+            FROM
+	            [dbo].[product_details]
+            WHERE
+	            [product_id] = @ProductId
+	            AND [color_id] = @ColorId
+	            AND [size_id] = @SizeId
+	            AND [is_deleted] = 0
+        ";
+
+        var result = await connect.QueryFirstOrDefaultAsync<ProductDetailInfo>(query,
+            new
+            {
+                ProductId = productId,
+                ColorId = colorId,
+                SizeId = sizeId
+            }
+        );
+
+        return result;
+    }
+
     public async Task<IEnumerable<ProductDetailInfo>> GetProductDetail(int productId)
     {
         await using var connect = await this.provider.Connect();
@@ -748,6 +783,77 @@ public class ProductRepository : IProductRepository
                 Id = id
             }
         );
+    }
+
+    public async Task UpdateProductDetailQuantity(int id, int quantity)
+    {
+        await using var connect = await this.provider.Connect();
+        const string command = @"
+            UPDATE [dbo].[product_details]
+            SET
+	            [quantity] = @Quantity
+            WHERE
+	            [id] = @Id
+	            AND is_deleted = 0
+        ";
+
+        int result = await connect.ExecuteAsync(command,
+            new
+            {
+                Quantity = quantity,
+                Id = id,
+            }
+        );
+
+        result.IsOptimisticLocked();
+    }
+
+    public async Task UpdateProductDetailActualQuantity(int id, int actualQuantity)
+    {
+        await using var connect = await this.provider.Connect();
+        const string command = @"
+            UPDATE [dbo].[product_details]
+            SET
+	            [actual_quantity] = @ActualQuantity
+            WHERE
+	            [id] = @Id
+	            AND is_deleted = 0
+        ";
+
+        int result = await connect.ExecuteAsync(command,
+            new
+            {
+                ActualQuantity = actualQuantity,
+                Id = id,
+            }
+        );
+
+        result.IsOptimisticLocked();
+    }
+
+    public async Task UpdateProductDetailBothQuantity(int id, int quantity, int actualQuantity)
+    {
+        await using var connect = await this.provider.Connect();
+        const string command = @"
+            UPDATE [dbo].[product_details]
+            SET
+                [quantity] = @Quantity
+	           ,[actual_quantity] = @ActualQuantity
+            WHERE
+	            [id] = @Id
+	            AND is_deleted = 0
+        ";
+
+        int result = await connect.ExecuteAsync(command,
+            new
+            {
+                Quantity = quantity,
+                ActualQuantity = actualQuantity,
+                Id = id,
+            }
+        );
+
+        result.IsOptimisticLocked();
     }
 
     #endregion
