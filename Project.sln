@@ -87,15 +87,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQLDB", "SQLDB", "{F0D8EA25
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebAPI", "WebAPI", "{755628FA-5D6D-4FFC-91D3-D75721EED258}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Sales.ApplicationService", "Modules\Sales\ApplicationService\Project.Sales.ApplicationService\Project.Sales.ApplicationService.csproj", "{82AB0CFA-4906-4C4F-95D0-E06BABD78CF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Sales.ApplicationService", "Modules\Sales\ApplicationService\Project.Sales.ApplicationService\Project.Sales.ApplicationService.csproj", "{82AB0CFA-4906-4C4F-95D0-E06BABD78CF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Sales.Integration", "Modules\Sales\ApplicationService\Project.Sales.Integration\Project.Sales.Integration.csproj", "{4E6CEB70-89F3-4C5F-85BB-0B194E3B90E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Sales.Integration", "Modules\Sales\ApplicationService\Project.Sales.Integration\Project.Sales.Integration.csproj", "{4E6CEB70-89F3-4C5F-85BB-0B194E3B90E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Sales.Infrastructure.SQLDB", "Modules\Sales\Infrastructure\SQLDB\Project.Sales.Infrastructure.SQLDB\Project.Sales.Infrastructure.SQLDB.csproj", "{408EEDD3-22C9-404E-9421-3C51A59315F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Sales.Infrastructure.SQLDB", "Modules\Sales\Infrastructure\SQLDB\Project.Sales.Infrastructure.SQLDB\Project.Sales.Infrastructure.SQLDB.csproj", "{408EEDD3-22C9-404E-9421-3C51A59315F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Sales.Domain", "Modules\Sales\Domain\Project.Sales.Domain\Project.Sales.Domain.csproj", "{56CA54F9-489B-4D26-B94A-CC1C8C51BCA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Sales.Domain", "Modules\Sales\Domain\Project.Sales.Domain\Project.Sales.Domain.csproj", "{56CA54F9-489B-4D26-B94A-CC1C8C51BCA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Sales.Infrastructure.WebAPI", "Modules\Sales\Infrastructure\WebAPI\Project.Sales.Infrastructure.WebAPI\Project.Sales.Infrastructure.WebAPI.csproj", "{E926D899-8CD3-4338-B656-9F36F5DBB564}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Sales.Infrastructure.WebAPI", "Modules\Sales\Infrastructure\WebAPI\Project.Sales.Infrastructure.WebAPI\Project.Sales.Infrastructure.WebAPI.csproj", "{E926D899-8CD3-4338-B656-9F36F5DBB564}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Product", "Product", "{01D6A6CB-3874-4DB0-B217-2F5F3EDBC1DD}"
 EndProject
@@ -105,19 +105,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{C7F0F0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{FC4A8B0A-6321-4B7B-83E0-84DD374CC584}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Product.ApplicationService", "Modules\Product\ApplicationService\Project.Product.ApplicationService\Project.Product.ApplicationService.csproj", "{EA7AEF28-C5F5-4F25-9A37-6047703C8B64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Product.ApplicationService", "Modules\Product\ApplicationService\Project.Product.ApplicationService\Project.Product.ApplicationService.csproj", "{EA7AEF28-C5F5-4F25-9A37-6047703C8B64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Product.Integration", "Modules\Product\ApplicationService\Project.Product.Integration\Project.Product.Integration.csproj", "{42B43304-7C9E-46CB-9146-7AE61EA404BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Product.Integration", "Modules\Product\ApplicationService\Project.Product.Integration\Project.Product.Integration.csproj", "{42B43304-7C9E-46CB-9146-7AE61EA404BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Product.Domain", "Modules\Product\Domain\Project.Product.Domain\Project.Product.Domain.csproj", "{1D225237-11CC-4120-AEFA-EADB12C0F6EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Product.Domain", "Modules\Product\Domain\Project.Product.Domain\Project.Product.Domain.csproj", "{1D225237-11CC-4120-AEFA-EADB12C0F6EF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQLDB", "SQLDB", "{73D57984-9AEB-4183-B8DE-31F1F2F4BC2E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebAPI", "WebAPI", "{529FFFA8-9BC9-462B-8798-C396B2B45981}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Product.Infrastructure.SQLDB", "Modules\Product\Infrastructure\SQLDB\Project.Product.Infrastructure.SQLDB\Project.Product.Infrastructure.SQLDB.csproj", "{3E120D88-AF71-4D5A-8682-B62CD3D294B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Product.Infrastructure.SQLDB", "Modules\Product\Infrastructure\SQLDB\Project.Product.Infrastructure.SQLDB\Project.Product.Infrastructure.SQLDB.csproj", "{3E120D88-AF71-4D5A-8682-B62CD3D294B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Product.Infrastructure.WebAPI", "Modules\Product\Infrastructure\WebAPI\Project.Product.Infrastructure.WebAPI\Project.Product.Infrastructure.WebAPI.csproj", "{63FF6496-A12A-4E81-8E05-C3AA621077F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Product.Infrastructure.WebAPI", "Modules\Product\Infrastructure\WebAPI\Project.Product.Infrastructure.WebAPI\Project.Product.Infrastructure.WebAPI.csproj", "{63FF6496-A12A-4E81-8E05-C3AA621077F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.HumanResources.ApplicationService.Test", "Modules\HumanResources\ApplicationService\Project.HumanResources.ApplicationService.Test\Project.HumanResources.ApplicationService.Test.csproj", "{50A913BD-4230-45CD-9F5B-830013FE4D7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Product.ApplicationService.Test", "Modules\Product\ApplicationService\Project.Product.ApplicationService.Test\Project.Product.ApplicationService.Test.csproj", "{45C94D99-252C-4ED0-BDE1-5CD2436F1366}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Sales.ApplicationService.Test", "Modules\Sales\ApplicationService\Project.Sales.ApplicationService.Test\Project.Sales.ApplicationService.Test.csproj", "{39B2FFA2-ECFD-4ABF-BD1B-47B521ABF41A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -225,6 +231,18 @@ Global
 		{63FF6496-A12A-4E81-8E05-C3AA621077F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63FF6496-A12A-4E81-8E05-C3AA621077F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63FF6496-A12A-4E81-8E05-C3AA621077F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50A913BD-4230-45CD-9F5B-830013FE4D7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50A913BD-4230-45CD-9F5B-830013FE4D7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50A913BD-4230-45CD-9F5B-830013FE4D7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50A913BD-4230-45CD-9F5B-830013FE4D7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45C94D99-252C-4ED0-BDE1-5CD2436F1366}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45C94D99-252C-4ED0-BDE1-5CD2436F1366}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45C94D99-252C-4ED0-BDE1-5CD2436F1366}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45C94D99-252C-4ED0-BDE1-5CD2436F1366}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39B2FFA2-ECFD-4ABF-BD1B-47B521ABF41A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39B2FFA2-ECFD-4ABF-BD1B-47B521ABF41A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39B2FFA2-ECFD-4ABF-BD1B-47B521ABF41A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39B2FFA2-ECFD-4ABF-BD1B-47B521ABF41A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -285,6 +303,9 @@ Global
 		{529FFFA8-9BC9-462B-8798-C396B2B45981} = {FC4A8B0A-6321-4B7B-83E0-84DD374CC584}
 		{3E120D88-AF71-4D5A-8682-B62CD3D294B1} = {73D57984-9AEB-4183-B8DE-31F1F2F4BC2E}
 		{63FF6496-A12A-4E81-8E05-C3AA621077F8} = {529FFFA8-9BC9-462B-8798-C396B2B45981}
+		{50A913BD-4230-45CD-9F5B-830013FE4D7E} = {1A15B10B-BD1B-45D3-AA23-5AD96DFF24A5}
+		{45C94D99-252C-4ED0-BDE1-5CD2436F1366} = {86B4C874-F1F5-4B52-AEF8-2A0C647155F8}
+		{39B2FFA2-ECFD-4ABF-BD1B-47B521ABF41A} = {07634ED5-AFD6-4264-8AA2-AD461149AA0C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8253690D-9643-49CB-B24D-674963D290A7}
