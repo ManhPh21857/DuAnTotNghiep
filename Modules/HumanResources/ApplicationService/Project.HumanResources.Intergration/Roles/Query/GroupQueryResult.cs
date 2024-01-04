@@ -1,6 +1,6 @@
 ﻿using Project.HumanResources.Domain.Roles;
 
-namespace Project.HumanResources.Integration.Roles
+namespace Project.HumanResources.Integration.Roles.Query
 {
     public class GroupQueryResult
     {
@@ -9,8 +9,8 @@ namespace Project.HumanResources.Integration.Roles
 
         public GroupQueryResult(IEnumerable<GroupInfo> groups, IEnumerable<GroupRoleInfo> groupRoles)
         {
-            this.Groups = groups;
-            this.GroupRoles = groupRoles;
+            Groups = groups;
+            GroupRoles = groupRoles;
         }
     }
 }

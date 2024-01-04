@@ -1,6 +1,6 @@
 ﻿using Project.HumanResources.Domain.Roles;
 
-namespace Project.HumanResources.Integration.Roles
+namespace Project.HumanResources.Integration.Roles.Query
 {
     public class RoleQueryResult
     {
@@ -8,7 +8,7 @@ namespace Project.HumanResources.Integration.Roles
 
         public RoleQueryResult(IEnumerable<RoleInfo> roles)
         {
-            this.Roles = roles;
+            Roles = roles;
         }
     }
 }

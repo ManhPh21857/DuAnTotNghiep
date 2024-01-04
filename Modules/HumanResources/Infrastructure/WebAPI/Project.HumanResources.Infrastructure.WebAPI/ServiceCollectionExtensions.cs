@@ -14,6 +14,8 @@ using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees.Put;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Customers.Put;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Customers.Post;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Users.Put;
+using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Roles.Post;
+using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Roles.Delete;
 
 namespace Project.HumanResources.Infrastructure.WebAPI;
 
@@ -50,5 +52,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<UpdateAddressRequestModel>, UpdateAddressRequestModelValidator>();
         services.AddScoped<IValidator<UpdateDefaultAddressRequest>, UpdateDefaultAddressRequestValidator>();
         services.AddScoped<IValidator<ChangePasswordRequestModel>, ChangePasswordRequestModelValidator>();
+        services.AddScoped<IValidator<UpdateGroupRoleRequestModel>, UpdateGroupRoleRequestModelValidator>();
+        services.AddScoped<IValidator<DeleteGroupModel>, DeleteGroupModelValidator>();
+        services.AddScoped<IValidator<DeleteGroupRequestModel>, DeleteGroupRequestModelValidator>();
     }
 }
