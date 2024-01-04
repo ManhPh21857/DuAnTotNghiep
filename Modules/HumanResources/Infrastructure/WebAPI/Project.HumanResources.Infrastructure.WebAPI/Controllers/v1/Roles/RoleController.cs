@@ -1,19 +1,30 @@
-﻿using Mapster;
+﻿using FluentValidation;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Project.Core.Domain;
 using Project.Core.Domain.Enums;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.Base;
+using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Roles.Delete;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Roles.Get;
-using Project.HumanResources.Integration.Roles;
-using SixLabors.ImageSharp;
+using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Roles.Post;
+using Project.HumanResources.Integration.Roles.Command;
+using Project.HumanResources.Integration.Roles.Query;
+using System.Text.RegularExpressions;
 
 namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Roles
 {
     public class RoleController : HumanResourcesController
     {
-        public RoleController(ISender mediator) : base(mediator)
+        private readonly IValidator<UpdateGroupRoleRequestModel> validatorUpdateGroupRoleRequestModel;
+
+        public RoleController(
+            ISender mediator,
+            IValidator<UpdateGroupRoleRequestModel> validatorUpdateGroupRoleRequestModel
+        ) : base(mediator)
         {
+            this.validatorUpdateGroupRoleRequestModel = validatorUpdateGroupRoleRequestModel;
         }
 
         [Authorize(Roles = nameof(Role.Admin))]
@@ -44,29 +55,83 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Roles
             {
                 Data = result.Adapt<GetGroupsResponseModel>()
             };
-            
+
             return response;
         }
 
-        [AllowAnonymous]
-        [HttpPost("image")]
-        public async Task<ResponseBaseModel<int>> UploadImage(UploadImageRequest request)
+        [Authorize(Roles = nameof(Role.Admin))]
+        [HttpPost("group")]
+        public async Task<ActionResult<ResponseBaseModel<CommandHumanResourcesBase>>> UpdateGroupRole(
+            UpdateGroupRoleRequestModel request
+        )
         {
-            var imageBytes = Convert.FromBase64String(request.Image);
-            using var image = Image.Load(imageBytes);
-            await image.SaveAsync(@"D:\Final\Img\foo.jpg");
-
-
-
-            return new ResponseBaseModel<int>()
+            var validator = await this.validatorUpdateGroupRoleRequestModel.ValidateAsync(request);
+            if (!validator.IsValid)
             {
-                Data = 1
-            };
-        }
-    }
+                foreach (var error in validator.Errors)
+                {
+                    throw new DomainException(error.PropertyName, error.ErrorMessage);
+                }
+            }
 
-    public class UploadImageRequest
-    {
-        public string Image { get; set; }
+            var command = request.Adapt<UpdateGroupRoleQuery>();
+
+            var result = await this.Mediator.Send(command);
+
+            var response = new ResponseBaseModel<CommandHumanResourcesBase>
+            {
+                Data = result.Adapt<CommandHumanResourcesBase>()
+            };
+
+            return response;
+        }
+
+        [Authorize(Roles = nameof(Role.Admin))]
+        [HttpGet("group/{pageNo}")]
+        public async Task<ResponseBaseModel<GetGroupListResponseModel>> GetGroups(int pageNo)
+        {
+            var query = new GetGroupQuery(pageNo);
+
+            var result = await this.Mediator.Send(query);
+            
+            var response = new ResponseBaseModel<GetGroupListResponseModel>
+            {
+                Data = result.Adapt<GetGroupListResponseModel>()
+            };
+
+            return response;
+        }
+
+        [Authorize(Roles = nameof(Role.Admin))]
+        [HttpGet("group-role/{groupId}")]
+        public async Task<ResponseBaseModel<GetGroupRoleResponseModel>> GetGroupRoles(int groupId)
+        {
+            var query = new GetGroupRoleQuery(groupId);
+
+            var result = await this.Mediator.Send(query);
+            
+            var response = new ResponseBaseModel<GetGroupRoleResponseModel>
+            {
+                Data = result.Adapt<GetGroupRoleResponseModel>()
+            };
+
+            return response;
+        }
+
+        [Authorize(Roles = nameof(Role.Admin))]
+        [HttpPut("group/delete")]
+        public async Task<ResponseBaseModel<CommandHumanResourcesBase>> DeleteRole(DeleteGroupRequestModel request)
+        {
+            var command = request.Adapt<DeleteGroupCommand>();
+
+            var result = await this.Mediator.Send(command);
+            
+            var response = new ResponseBaseModel<CommandHumanResourcesBase>
+            {
+                Data = result.Adapt<CommandHumanResourcesBase>()
+            };
+
+            return response;
+        }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using Project.Core.ApplicationService.Queries;
 using Project.Core.Domain;
 using Project.HumanResources.Domain.Roles;
-using Project.HumanResources.Integration.Roles;
+using Project.HumanResources.Integration.Roles.Query;
 
-namespace Project.HumanResources.ApplicationService.Roles
+namespace Project.HumanResources.ApplicationService.Roles.Query
 {
     public class RoleQueryHandler : QueryHandler<RoleQuery, RoleQueryResult>
     {
@@ -16,7 +16,7 @@ namespace Project.HumanResources.ApplicationService.Roles
 
         public async override Task<RoleQueryResult> Handle(RoleQuery request, CancellationToken cancellationToken)
         {
-            var result = await this.roleRepository.GetRoles();
+            var result = await roleRepository.GetRoles();
 
             return new RoleQueryResult(result);
         }
