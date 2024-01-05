@@ -19,11 +19,12 @@ namespace Project.Sales.ApplicationService.SaleCounters.Command
         public async override Task<CreateOrderDetailCommandResult> Handle(CreateOrderDetailCommand request, CancellationToken cancellationToken)
         {
             var createOder = request.Order;
+            var code = Guid.NewGuid();
             createOder.EmployeeId = sessionInfo.UserId.Value;
-            var ordercode = new Guid();
-            createOder.OrderCode = ordercode;
+            createOder.OrderCode = code;
             createOder.Address = "Tại Quầy";
             createOder.MerchandiseSubtotal = request.Order.MerchandiseSubtotal;
+            createOder.PhoneNumber = request.Order.PhoneNumber;
             createOder.PaymentMethodId = 2;
             createOder.IsOrder = 1;
             createOder.IsPaid = 1;
