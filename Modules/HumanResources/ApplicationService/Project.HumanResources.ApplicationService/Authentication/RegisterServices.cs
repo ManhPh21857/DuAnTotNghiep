@@ -1,14 +1,13 @@
-﻿using System.Net;
-using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using Project.Core.ApplicationService;
 using Project.Core.ApplicationService.Commands;
 using Project.Core.Domain;
 using Project.Core.Domain.Enums;
 using Project.HumanResources.Domain.Customers;
-using Project.HumanResources.Domain.Roles;
 using Project.HumanResources.Domain.Users;
 using Project.HumanResources.Integration.Authentication.Register;
+using System.Net;
 
 namespace Project.HumanResources.ApplicationService.Authentication;
 
@@ -17,19 +16,16 @@ public class RegisterServices : CommandHandler<RegisterRequest, RegisterResponse
     private readonly IUserRepository userRepository;
     private readonly ICustomerRepository customerRepository;
     private readonly IMemoryCache memoryCache;
-    private readonly IRoleRepository roleRepository;
 
     public RegisterServices(
         IUserRepository userRepository,
         ICustomerRepository customerRepository,
-        IMemoryCache memoryCache,
-        IRoleRepository roleRepository
+        IMemoryCache memoryCache
     )
     {
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
         this.memoryCache = memoryCache;
-        this.roleRepository = roleRepository;
     }
 
     public async override Task<RegisterResponse> Handle(RegisterRequest request, CancellationToken cancellationToken)
@@ -67,12 +63,8 @@ public class RegisterServices : CommandHandler<RegisterRequest, RegisterResponse
 
         int userId = await this.userRepository.RegisterUser(registerUserParam);
 
-        var roles = await this.roleRepository.GetGroupRole(GroupRole.Customer.GetHashCode());
-
-        foreach (int role in roles)
-        {
-            await this.userRepository.InsertUserRole(new InsertUserRoleParam { UserId = userId, Role = role });
-        }
+        await this.userRepository.InsertUserRole(new InsertUserRoleParam
+            { UserId = userId, Role = Role.ShopLogin.GetHashCode() });
 
         await this.customerRepository.InsertCustomer(new InsertCustomerParam
             {
