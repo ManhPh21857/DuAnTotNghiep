@@ -23,6 +23,8 @@ namespace Project.Sales.ApplicationService.SaleCounters.Command
             createOder.EmployeeId = sessionInfo.UserId.Value;
             createOder.OrderCode = code;
             createOder.Address = "Tại Quầy";
+            createOder.FullName = request.Order.FullName;
+            createOder.CustomerId = request.Order.CustomerId;
             createOder.MerchandiseSubtotal = request.Order.MerchandiseSubtotal;
             createOder.PhoneNumber = request.Order.PhoneNumber;
             createOder.PaymentMethodId = 2;
