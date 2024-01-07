@@ -278,7 +278,7 @@ public class ProductRepository : IProductRepository
 	            LEFT JOIN (
 		            SELECT
 			            [product_id]
-		               ,SUM([price]) AS Quantity
+		               ,SUM([quantity]) AS Quantity
 		               ,AVG([price]) AS AvgPrice
 		            FROM
 			            [dbo].[product_details]
@@ -289,7 +289,7 @@ public class ProductRepository : IProductRepository
             WHERE
 	            p.is_deleted = 0
             ORDER BY
-	            p.[Code]
+	            p.[created_at] DESC
             OFFSET @Skip ROWS
             FETCH NEXT @Take ROWS ONLY;
 

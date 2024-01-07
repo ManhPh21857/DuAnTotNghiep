@@ -3,6 +3,7 @@ using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Project.Core.Domain;
 using Project.Core.Domain.Enums;
 using Project.Product.Domain.Products;
 using Project.Product.Infrastructure.WebAPI.Controllers.Base;
@@ -17,13 +18,16 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Products;
 public class ProductController : CommonController
 {
     private readonly IValidator<ProductFilter> validatorProductFilter;
+    private readonly IValidator<UpdateProductRequestModel> validatorUpdateProductRequestModel;
 
     public ProductController(
         ISender mediator,
-        IValidator<ProductFilter> validatorProductFilter
+        IValidator<ProductFilter> validatorProductFilter,
+        IValidator<UpdateProductRequestModel> validatorUpdateProductRequestModel
     ) : base(mediator)
     {
         this.validatorProductFilter = validatorProductFilter;
+        this.validatorUpdateProductRequestModel = validatorUpdateProductRequestModel;
     }
 
     [AllowAnonymous]
@@ -99,6 +103,15 @@ public class ProductController : CommonController
         [FromBody] UpdateProductRequestModel request
     )
     {
+        var validator = await this.validatorUpdateProductRequestModel.ValidateAsync(request);
+        if (!validator.IsValid)
+        {
+            foreach (var error in validator.Errors)
+            {
+                throw new DomainException(error.PropertyName, error.ErrorMessage);
+            }
+        }
+
         var command = request.Adapt<CreateProductCommand>();
 
         var result = await this.Mediator.Send(command);
