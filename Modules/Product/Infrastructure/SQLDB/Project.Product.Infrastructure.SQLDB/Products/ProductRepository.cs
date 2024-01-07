@@ -175,12 +175,12 @@ public class ProductRepository : IProductRepository
 
         if (!filterParam.OriginIds.IsNullOrEmpty())
         {
-            builder.Where("p.[origin_id] IN OriginIds", new { OriginIds = filterParam.OriginIds });
+            builder.Where("p.[origin_id] IN @OriginIds", new { OriginIds = filterParam.OriginIds });
         }
 
         if (!filterParam.TrademarkIds.IsNullOrEmpty())
         {
-            builder.Where("p.[trademark_id] IN TrademarkIds", new { TrademarkIds = filterParam.TrademarkIds });
+            builder.Where("p.[trademark_id] IN @TrademarkIds", new { TrademarkIds = filterParam.TrademarkIds });
         }
 
         if (!filterParam.Name.IsNullOrEmpty())
