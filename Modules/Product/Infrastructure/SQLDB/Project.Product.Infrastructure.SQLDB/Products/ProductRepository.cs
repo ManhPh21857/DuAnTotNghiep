@@ -175,12 +175,12 @@ public class ProductRepository : IProductRepository
 
         if (!filterParam.OriginIds.IsNullOrEmpty())
         {
-            builder.Where("p.[origin_id] IN OriginIds", new { OriginIds = filterParam.OriginIds });
+            builder.Where("p.[origin_id] IN @OriginIds", new { OriginIds = filterParam.OriginIds });
         }
 
         if (!filterParam.TrademarkIds.IsNullOrEmpty())
         {
-            builder.Where("p.[trademark_id] IN TrademarkIds", new { TrademarkIds = filterParam.TrademarkIds });
+            builder.Where("p.[trademark_id] IN @TrademarkIds", new { TrademarkIds = filterParam.TrademarkIds });
         }
 
         if (!filterParam.Name.IsNullOrEmpty())
@@ -278,7 +278,7 @@ public class ProductRepository : IProductRepository
 	            LEFT JOIN (
 		            SELECT
 			            [product_id]
-		               ,SUM([price]) AS Quantity
+		               ,SUM([quantity]) AS Quantity
 		               ,AVG([price]) AS AvgPrice
 		            FROM
 			            [dbo].[product_details]
@@ -289,7 +289,7 @@ public class ProductRepository : IProductRepository
             WHERE
 	            p.is_deleted = 0
             ORDER BY
-	            p.[Code]
+	            p.[created_at] DESC
             OFFSET @Skip ROWS
             FETCH NEXT @Take ROWS ONLY;
 
