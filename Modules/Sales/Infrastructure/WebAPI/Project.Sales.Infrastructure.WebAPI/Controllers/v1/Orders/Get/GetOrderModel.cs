@@ -3,6 +3,8 @@
     public class GetOrderModel
     {
         public int Id { get; set; }
+        public string FullName { get; set; }
+        public Guid OrderCode { get; set; }
         public float OrderTotal { get; set; }
         public int PaymentMethodId { get; set; }
         public int IsOrdered { get; set; }

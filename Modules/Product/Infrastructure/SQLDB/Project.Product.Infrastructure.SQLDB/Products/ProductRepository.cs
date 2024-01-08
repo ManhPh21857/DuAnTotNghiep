@@ -25,13 +25,14 @@ public class ProductRepository : IProductRepository
 
         const string query = @"
             SELECT
-	            p.[Id]			 AS Id
-               ,p.[Name]		 AS Name
-               ,p.[Image]		 AS Image
-               ,MIN(pd.[price])	 AS MinPrice
-               ,MAX(pd.[price])	 AS MaxPrice
-               ,SUM(pd.Quantity) AS Quantity
-               ,p.[Description]	 AS Description
+	            p.[Id]			        AS Id
+               ,p.[Name]		        AS Name
+               ,p.[Image]		        AS Image
+               ,MIN(pd.[price])	        AS MinPrice
+               ,MAX(pd.[price])	        AS MaxPrice
+               ,SUM(pd.Quantity)        AS Quantity
+               ,SUM(pd.actual_quantity) AS ActualQuantity
+               ,p.[Description]	        AS Description
             FROM
 	            [dbo].[products] AS p
 	            LEFT JOIN [dbo].[product_details] AS pd
@@ -190,22 +191,14 @@ public class ProductRepository : IProductRepository
 
         builder.Having("SUM(pd.Quantity) > 0");
 
-        var priceConditions = new List<string>();
         if (filterParam.MinPrice.HasValue)
         {
-            priceConditions.Add("MAX(pd.[price]) >= @MinPrice");
-            builder.AddParameters(new { MinPrice = filterParam.MinPrice });
+            builder.Having("MIN(pd.[price]) >= @MinPrice", new { MinPrice = filterParam.MinPrice });
         }
 
         if (filterParam.MaxPrice.HasValue)
         {
-            priceConditions.Add("MIN(pd.[price]) <= @MaxPrice");
-            builder.AddParameters(new { MaxPrice = filterParam.MaxPrice });
-        }
-
-        if (priceConditions.Any())
-        {
-            builder.Having($"({string.Join(" OR ", priceConditions)})");
+            builder.Having("MIN(pd.[price]) <= @MaxPrice", new { MaxPrice = filterParam.MaxPrice });
         }
 
         var response = await connect.QueryMultipleAsync(template.RawSql, template.Parameters);
@@ -260,15 +253,16 @@ public class ProductRepository : IProductRepository
 
         const string query = @"
             SELECT
-	            p.[Id]		    AS Id
-               ,p.[Code]	    AS Code
-               ,p.[Name]	    AS Name
-               ,p.[Image]       AS Image
-               ,p.data_version  AS DataVersion
-               ,c.[Name]	    AS ClassificationName
-               ,m.[Name]	    AS MaterialName
-               ,pd.Quantity     AS Quantity
-               ,pd.AvgPrice     AS AvgPrice
+	            p.[Id]		      AS Id
+               ,p.[Code]	      AS Code
+               ,p.[Name]	      AS Name
+               ,p.[Image]         AS Image
+               ,p.data_version    AS DataVersion
+               ,c.[Name]	      AS ClassificationName
+               ,m.[Name]	      AS MaterialName
+               ,pd.Quantity       AS Quantity
+               ,pd.ActualQuantity AS ActualQuantity
+               ,pd.AvgPrice       AS AvgPrice
             FROM
 	            [dbo].[products] AS p
 	            LEFT JOIN [dbo].[classifications] AS c
@@ -278,8 +272,9 @@ public class ProductRepository : IProductRepository
 	            LEFT JOIN (
 		            SELECT
 			            [product_id]
-		               ,SUM([quantity]) AS Quantity
-		               ,AVG([price]) AS AvgPrice
+		               ,SUM([quantity])        AS Quantity
+                       ,SUM([actual_quantity]) AS ActualQuantity
+		               ,AVG([price])           AS AvgPrice
 		            FROM
 			            [dbo].[product_details]
 		            GROUP BY
@@ -390,6 +385,35 @@ public class ProductRepository : IProductRepository
         );
 
         result.IsOptimisticLocked();
+    }
+
+    public async Task<IEnumerable<int>> CheckProductOrder(int productId)
+    {
+        await using var connect = await this.provider.Connect();
+
+        const string query = @"
+            SELECT
+	            o.Id AS Id
+            FROM
+	            orders AS o
+	            LEFT JOIN order_details AS od
+		            ON o.Id = od.order_id
+            WHERE
+	            o.order_date > @OrderDate
+	            AND o.is_ordered = 1
+	            AND o.status IN (0, 1, 2, 3)
+	            AND od.product_id = @ProductId
+        ";
+
+        var result = await connect.QueryAsync<int>(query,
+            new
+            {
+                OrderDate = DateTime.Now.AddDays(-15).ToString("d"),
+                ProductId = productId
+            }
+        );
+
+        return result;
     }
 
     #endregion
@@ -650,13 +674,14 @@ public class ProductRepository : IProductRepository
         await using var connect = await this.provider.Connect();
         const string query = @"
             SELECT
-	            [Id]		   AS Id
-               ,[color_id]     AS ColorId
-               ,[size_id]      AS SizeId
-               ,[import_price] AS ImportPrice
-               ,[Price]		   AS Price
-               ,[Quantity]	   AS Quantity
-               ,[data_version] AS DataVersion
+	            [Id]		      AS Id
+               ,[color_id]        AS ColorId
+               ,[size_id]         AS SizeId
+               ,[import_price]    AS ImportPrice
+               ,[Price]		      AS Price
+               ,[Quantity]	      AS Quantity
+               ,[actual_quantity] AS ActualQuantity
+               ,[data_version]    AS DataVersion
             FROM
 	            [dbo].[product_details]
             WHERE
@@ -686,6 +711,7 @@ public class ProductRepository : IProductRepository
                ,[import_price]
                ,[price]
                ,[quantity]
+               ,[actual_quantity]
             )
             VALUES (
 	            @ProductId
@@ -693,6 +719,7 @@ public class ProductRepository : IProductRepository
                ,@ProductSizeId
                ,@ImportPrice
                ,@Price
+               ,@Quantity
                ,@Quantity
             )
         ";
@@ -705,7 +732,7 @@ public class ProductRepository : IProductRepository
                 ProductSizeId = param.SizeId,
                 ImportPrice = param.ImportPrice,
                 Price = param.Price,
-                Quantity = param.Quantity
+                Quantity = param.ImportQuantity
             }
         );
     }
@@ -716,9 +743,10 @@ public class ProductRepository : IProductRepository
         const string command = @"
             UPDATE [dbo].[product_details]
             SET
-	            [import_price] = @ImportPrice
-               ,[price]		   = @Price
-               ,[quantity]	   = @Quantity
+	            [import_price]    = @ImportPrice
+               ,[price]		      = @Price
+               ,[quantity]	      = @Quantity
+               ,[actual_quantity] = @ActualQuantity
             WHERE
 	            [id] = @Id
 	            AND [product_id] = @ProductId
@@ -734,6 +762,7 @@ public class ProductRepository : IProductRepository
                 ImportPrice = param.ImportPrice,
                 Price = param.Price,
                 Quantity = param.Quantity,
+                ActualQuantity = param.ActualQuantity,
                 Id = param.Id,
                 ProductId = param.ProductId,
                 ColorId = param.ColorId,
