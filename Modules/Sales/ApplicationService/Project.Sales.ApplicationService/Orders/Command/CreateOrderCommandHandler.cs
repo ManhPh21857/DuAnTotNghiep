@@ -74,7 +74,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
             if (request.Order.PaymentMethodId == PaymentMethod.MoMoPayment.GetHashCode())
             {
                 createOrderParam.EmployeeId = 0;
-                createOrderParam.IsOrder = OrderType.NotYet.GetHashCode();
+                createOrderParam.IsOrder = OrderType.Ordered.GetHashCode();
                 createOrderParam.IsPaid = PayType.NotYet.GetHashCode();
                 createOrderParam.OrderDate = null;
                 createOrderParam.PaymentDate = null;
@@ -96,7 +96,12 @@ namespace Project.Sales.ApplicationService.Orders.Command
             //create order detail
             foreach (var item in request.CartDetails)
             {
-                var productDetail = await this.productRepository.GetProductDetailById(item.ProductDetailId);
+                var productDetail = await this.productRepository.GetProductDetailById(item.ProductDetailId) ??
+                                    await this.productRepository.GetProductDetails(
+                                        item.ProductId,
+                                        item.ColorId,
+                                        item.SizeId
+                                    );
                 if (productDetail is null)
                 {
                     throw new DomainException("", "Sản phẩm không tồn tại");

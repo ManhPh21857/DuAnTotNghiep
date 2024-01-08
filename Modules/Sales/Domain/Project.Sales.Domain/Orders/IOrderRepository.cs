@@ -5,6 +5,7 @@
         Task<int> CreateOrder(CreateOrderParam param);
         Task CreateOrderDetail(CreateOrderDetailParam param);
         Task FinishOrderOnlinePayment(FinishOrderOnlinePaymentParam param);
+        Task FinishOrderCashPayment(FinishOrderOnlinePaymentParam param);
         Task<IEnumerable<OrderInfo>> GetOrders(int customerId, int? order);
         Task<OrderInfo> GetOrder(int id);
         Task<IEnumerable<OrderDetailInfo>> GetOrderDetails(int orderId);

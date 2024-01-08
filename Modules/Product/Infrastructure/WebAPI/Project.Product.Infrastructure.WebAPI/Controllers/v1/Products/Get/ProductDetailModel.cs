@@ -8,6 +8,7 @@
         public float ImportPrice { get; set; }
         public float Price { get; set; }
         public int Quantity { get; set; }
+        public int ActualQuantity { get; set; }
         public byte[]? DataVersion { get; set; }
     }
 }

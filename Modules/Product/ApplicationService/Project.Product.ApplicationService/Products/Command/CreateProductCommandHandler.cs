@@ -125,6 +125,9 @@ namespace Project.Product.ApplicationService.Products.Command
                     }
                     else
                     {
+                        var oldItem = oldData.FirstOrDefault(x => x.Id == item.Id);
+                        item.Quantity = item.ImportQuantity + oldItem?.Quantity ?? 0;
+                        item.ActualQuantity = item.ImportQuantity + oldItem?.ActualQuantity ?? 0;
                         await this.productRepository.UpdateProductDetail(item);
                     }
                 }

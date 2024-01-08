@@ -11,14 +11,16 @@ using Project.Sales.Integration.Payments.Query;
 namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Payments
 {
     public class PaymentController : SalesController
-    { 
+    {
         public PaymentController(ISender mediator) : base(mediator)
         {
         }
 
         [AllowAnonymous]
         [HttpPost("order-finish")]
-        public async Task<ActionResult<ResponseBaseModel<CommandSalesBase>>> UpdateOrder(FinishOrderRequestModel request)
+        public async Task<ActionResult<ResponseBaseModel<CommandSalesBase>>> UpdateOrder(
+            FinishOrderRequestModel request
+        )
         {
             var command = request.Adapt<FinishOrderCommand>();
 
@@ -32,7 +34,6 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Payments
             return response;
         }
 
-
         [HttpGet]
         public async Task<ActionResult<ResponseBaseModel<GetPaymentMethodResponseModel>>> GetPaymentMethods()
         {
@@ -43,6 +44,26 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Payments
             var response = new ResponseBaseModel<GetPaymentMethodResponseModel>
             {
                 Data = result.Adapt<GetPaymentMethodResponseModel>()
+            };
+
+            return response;
+        }
+
+        [HttpPost("continue")]
+        public async Task<ActionResult<ResponseBaseModel<ContinuePaySessionResponseModel>>> ContinuePaySession(
+            ContinuePaySessionRequestModel request
+        )
+        {
+            var command = request.Adapt<CreateMoMoPaymentCommand>();
+
+            var result = await this.Mediator.Send(command);
+
+            var response = new ResponseBaseModel<ContinuePaySessionResponseModel>
+            {
+                Data = new ContinuePaySessionResponseModel
+                {
+                    PayUrl = result.PayUrl
+                }
             };
 
             return response;

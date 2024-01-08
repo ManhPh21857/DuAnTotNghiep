@@ -106,7 +106,6 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders
             return response;
         }
 
-        [AllowAnonymous]
         [HttpGet("detail/{orderId}")]
         public async Task<ActionResult<ResponseBaseModel<GetOrderDetailResponseModel>>> GetOrderDetails(int orderId)
         {
@@ -163,6 +162,21 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders
             }
 
             var command = request.Adapt<FinishPrepareCommand>();
+
+            var result = await this.Mediator.Send(command);
+
+            var response = new ResponseBaseModel<CommandSalesBase>
+            {
+                Data = result.Adapt<CommandSalesBase>()
+            };
+
+            return response;
+        }
+
+        [HttpPut("completion/{id}")]
+        public async Task<ActionResult<ResponseBaseModel<CommandSalesBase>>> CompleteOrder(int id)
+        {
+            var command = new ReceivedOrderCommand(id);
 
             var result = await this.Mediator.Send(command);
 

@@ -1,5 +1,7 @@
-﻿using Project.Core.ApplicationService;
+﻿using Microsoft.IdentityModel.Tokens;
+using Project.Core.ApplicationService;
 using Project.Core.ApplicationService.Commands;
+using Project.Core.Domain;
 using Project.Product.Domain.Products;
 using Project.Product.Integration.Products.Command;
 
@@ -23,6 +25,18 @@ namespace Project.Product.ApplicationService.Products.Command
 
             foreach (var item in request.Products)
             {
+                var product = await this.productRepository.GetProductView(item.Id);
+                if (product.ActualQuantity > 0)
+                {
+                    throw new DomainException("", "Sản phẩm vẫn còn hàng trong kho");
+                }
+
+                var orders = await this.productRepository.CheckProductOrder(item.Id);
+                if (!orders.IsNullOrEmpty())
+                {
+                    throw new DomainException("", "Sản phẩm đã chọn tồn tại đơn hàng chưa hoàn thành");
+                }
+
                 await this.productRepository.DeleteProduct(new DeleteProductParam
                 {
                     Id = item.Id,
