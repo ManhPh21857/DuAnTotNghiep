@@ -141,4 +141,20 @@ public class ProductController : CommonController
 
         return response;
     }
+
+    [AllowAnonymous]
+    [HttpGet("new")]
+    public async Task<ActionResult<ResponseBaseModel<GetNewProductResponseModel>>> GetNewProduct()
+    {
+        var query = new GetNewProductQuery();
+
+        var result = await this.Mediator.Send(query);
+
+        var response = new ResponseBaseModel<GetNewProductResponseModel>
+        {
+            Data = result.Adapt<GetNewProductResponseModel>()
+        };
+
+        return response;
+    }
 }

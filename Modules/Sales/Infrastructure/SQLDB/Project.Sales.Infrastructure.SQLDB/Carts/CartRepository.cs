@@ -256,8 +256,6 @@ namespace Project.Sales.Infrastructure.SQLDB.Carts
                     DataVersion = param.DataVersion
                 }
             );
-
-            result.IsOptimisticLocked();
         }
     }
 }

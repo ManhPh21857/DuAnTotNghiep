@@ -8,6 +8,7 @@ public class ProductViewModel
     public string Image { get; set; }
     public byte[]? DataVersion { get; set; }
     public int Quantity { get; set; }
+    public int ActualQuantity { get; set; }
     public float AvgPrice { get; set; }
     public string ClassificationName { get; set; }
     public string MaterialName { get; set; }

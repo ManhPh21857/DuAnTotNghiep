@@ -154,6 +154,30 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
                 }
             );
         }
+        public async Task FinishOrderCashPayment(FinishOrderOnlinePaymentParam param)
+        {
+            await using var connect = await this.provider.Connect();
+
+            const string command = @"
+                UPDATE [dbo].[orders]
+                SET
+                    [payment_date] = @PaymentDate
+                   ,[is_paid]	   = @IsPaid
+                   ,[status]	   = @Status
+                WHERE
+	                [id] = @Id
+            ";
+
+            await connect.ExecuteAsync(command,
+                new
+                {
+                    PaymentDate = param.PaymentDate,
+                    IsPaid = param.IsPaid,
+                    Status = param.Status,
+                    Id = param.Id
+                }
+            );
+        }
 
         public async Task<IEnumerable<OrderInfo>> GetOrders(int customerId, int? orderId)
         {
@@ -163,12 +187,15 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
             const string query = @"
                 SELECT
 	                [Id]				AS Id
+                   ,[full_name]			AS FullName
+                   ,[order_code]		AS OrderCode
                    ,[order_total]		AS OrderTotal
                    ,[payment_method_id] AS PaymentMethodId
                    ,[is_ordered]		AS IsOrdered
                    ,[is_paid]			AS IsPaid
                    ,[order_date]		AS OrderDate
                    ,[Status]			AS Status
+                   ,[voucher_id]		AS VoucherId
                 FROM
 	                [dbo].[orders]
                 /**where**/
@@ -196,8 +223,25 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
 
             const string query = @"
                 SELECT
-	                [Id]		   AS Id
-                   ,[data_version] AS DataVersion
+	                [Id]						 AS Id
+                   ,[order_code]				 AS OrderCode
+                   ,[customer_id]				 AS CustomerId
+                   ,[employee_id]				 AS EmployeeId
+                   ,[full_name]					 AS FullName
+                   ,[phone_number]				 AS PhoneNumber
+                   ,[Address]					 AS Address
+                   ,[merchandise_subtotal]		 AS MerchandiseSubtotal
+                   ,[shipping_fee]				 AS ShippingFee
+                   ,[shipping_discount_subtotal] AS ShippingDiscountSubtotal
+                   ,[voucher_applied]			 AS VoucherApplied
+                   ,[order_total]				 AS OrderTotal
+                   ,[payment_method_id]			 AS PaymentMethodId
+                   ,[order_date]				 AS OrderDate
+                   ,[payment_date]				 AS PaymentDate
+                   ,[is_ordered]				 AS IsOrdered
+                   ,[is_paid]					 AS IsPaid
+                   ,[Status]					 AS Status
+                   ,[data_version]				 AS DataVersion
                 FROM
 	                [dbo].[orders]
                 WHERE

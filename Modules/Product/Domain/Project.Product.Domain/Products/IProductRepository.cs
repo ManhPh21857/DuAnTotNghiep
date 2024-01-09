@@ -11,6 +11,7 @@ public interface IProductRepository
     Task<int> CreateProduct(ProductInfo param);
     Task UpdateProduct(ProductInfo param);
     Task DeleteProduct(DeleteProductParam param);
+    Task<IEnumerable<int>> CheckProductOrder(int productId);
 
     #endregion
 

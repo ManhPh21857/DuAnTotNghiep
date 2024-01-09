@@ -7,6 +7,7 @@ using Project.Product.Domain.Products;
 using Project.Sales.Domain.Orders;
 using Project.Sales.Integration.Orders.Command;
 using System.Net;
+using Project.Sales.Domain.Vouchers;
 
 namespace Project.Sales.ApplicationService.Orders.Command
 {
@@ -16,18 +17,21 @@ namespace Project.Sales.ApplicationService.Orders.Command
         private readonly IOrderRepository orderRepository;
         private readonly ICustomerRepository customerRepository;
         private readonly ISessionInfo sessionInfo;
+        private readonly IVoucherRepository voucherRepository;
 
         public CancelOrderCommandHandler(
             IProductRepository productRepository,
             IOrderRepository orderRepository,
             ICustomerRepository customerRepository,
-            ISessionInfo sessionInfo
+            ISessionInfo sessionInfo,
+            IVoucherRepository voucherRepository
         )
         {
             this.productRepository = productRepository;
             this.orderRepository = orderRepository;
             this.customerRepository = customerRepository;
             this.sessionInfo = sessionInfo;
+            this.voucherRepository = voucherRepository;
         }
 
         public async override Task<CancelOrderCommandResult> Handle(
@@ -35,7 +39,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
             CancellationToken cancellationToken
         )
         {
-            var scope = TransactionFactory.Create();
+            using var scope = TransactionFactory.Create();
             int userId = this.sessionInfo.UserId.value;
             int? customerId = await this.customerRepository.GetCustomerId(userId);
             if (customerId is null)
@@ -49,16 +53,45 @@ namespace Project.Sales.ApplicationService.Orders.Command
                 throw new DomainException("", "Đơn hàng không tồn tại");
             }
 
-            switch (order.Status)
+            if (order.OrderDate < DateTime.Now.AddDays(-10))
             {
-                case (int)OrderStatus.Pending:
-                case (int)OrderStatus.NeedToConfirm:
-                case (int)OrderStatus.Preparing:
-                    await this.RefundProductQuantity(request.OrderId);
+                throw new DomainException("", "Đã quá hạn hủy có thể đơn hàng");
+            }
+
+            var voucher = await this.voucherRepository.GetVoucher(order.VoucherId);
+            if (voucher is null)
+            {
+                throw new DomainException("", "Voucher không tồn tại");
+            }
+
+            await this.voucherRepository.UpdateVoucherQuantity(order.VoucherId, voucher.Quantity + 1);
+
+            switch ((OrderStatus)order.Status)
+            {
+                case OrderStatus.Pending:
+                case OrderStatus.NeedToConfirm:
+                case OrderStatus.Preparing:
                     break;
-                case (int)OrderStatus.Deliver:
-                    await this.RefundProductBothQuantity(request.OrderId);
-                    break;
+                case OrderStatus.Deliver:
+                    throw new DomainException(
+                        HttpStatusCode.BadRequest.GetHashCode().ToString(),
+                        nameof(HttpStatusCode.BadRequest)
+                    );
+                case OrderStatus.Received:
+                    throw new DomainException(
+                        HttpStatusCode.BadRequest.GetHashCode().ToString(),
+                        nameof(HttpStatusCode.BadRequest)
+                    );
+                case OrderStatus.Cancel:
+                    throw new DomainException(
+                        HttpStatusCode.BadRequest.GetHashCode().ToString(),
+                        nameof(HttpStatusCode.BadRequest)
+                    );
+                case OrderStatus.Refund:
+                    throw new DomainException(
+                        HttpStatusCode.BadRequest.GetHashCode().ToString(),
+                        nameof(HttpStatusCode.BadRequest)
+                    );
                 default:
                     throw new DomainException(
                         HttpStatusCode.BadRequest.GetHashCode().ToString(),
@@ -70,9 +103,17 @@ namespace Project.Sales.ApplicationService.Orders.Command
 
             var result = new CancelOrderCommandResult(true, "");
 
-            if (order.IsPaid == PayType.Paid.GetHashCode())
+            if (order.IsOrdered == OrderType.Ordered.GetHashCode())
             {
-                result.Message = "Hãy liên hệ shop để được hoàn tiền";
+                if (order.IsPaid == PayType.Paid.GetHashCode())
+                {
+                    await this.RefundProductBothQuantity(request.OrderId);
+                    result.Message = "Hãy liên hệ shop để được hoàn tiền";
+                }
+                else
+                {
+                    await this.RefundProductQuantity(request.OrderId);
+                }
             }
 
             scope.Complete();
