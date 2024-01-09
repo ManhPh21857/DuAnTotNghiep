@@ -99,7 +99,7 @@ public class ProductController : CommonController
 
     [Authorize(Roles = nameof(Role.ProductEdit))]
     [HttpPost]
-    public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> UpdateProduct(
+    public async Task<ActionResult<ResponseBaseModel<UpdateProductResponseModel>>> UpdateProduct(
         [FromBody] UpdateProductRequestModel request
     )
     {
@@ -116,9 +116,9 @@ public class ProductController : CommonController
 
         var result = await this.Mediator.Send(command);
 
-        var response = new ResponseBaseModel<CommandProductBase>
+        var response = new ResponseBaseModel<UpdateProductResponseModel>
         {
-            Data = result.Adapt<CommandProductBase>()
+            Data = result.Adapt<UpdateProductResponseModel>()
         };
 
         return response;

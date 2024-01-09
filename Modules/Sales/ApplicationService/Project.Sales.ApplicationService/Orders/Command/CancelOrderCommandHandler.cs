@@ -59,12 +59,10 @@ namespace Project.Sales.ApplicationService.Orders.Command
             }
 
             var voucher = await this.voucherRepository.GetVoucher(order.VoucherId);
-            if (voucher is null)
+            if (voucher is not null)
             {
-                throw new DomainException("", "Voucher không tồn tại");
+                await this.voucherRepository.UpdateVoucherQuantity(order.VoucherId, voucher.Quantity + 1);
             }
-
-            await this.voucherRepository.UpdateVoucherQuantity(order.VoucherId, voucher.Quantity + 1);
 
             switch ((OrderStatus)order.Status)
             {

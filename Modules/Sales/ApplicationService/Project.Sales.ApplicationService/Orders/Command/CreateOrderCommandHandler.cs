@@ -139,7 +139,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
                     {
                         OrderId = orderId,
                         ProductId = item.ProductId,
-                        ProductName = item.ProductName,
+                        ProductName = item.ProductName ?? "",
                         ColorId = item.ColorId,
                         SizeId = item.SizeId,
                         Price = item.Price,
@@ -151,7 +151,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
                 {
                     await this.cartRepository.DeleteCartDetail(new DeleteCartDetailParam
                         {
-                            CartId = item.CartId.Value,
+                            CartId = item.CartId ?? 0,
                             ProductDetailId = item.ProductDetailId,
                             DataVersion = item.DataVersion
                         }
