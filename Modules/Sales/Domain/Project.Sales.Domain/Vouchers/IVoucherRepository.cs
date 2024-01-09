@@ -15,5 +15,8 @@
             byte[]? dataVersion,
             int lastUpdateBy
         );
+
+        Task<Voucher> GetVoucher(int id);
+        Task UpdateVoucherQuantity(int id, int quantity);
     }
 }

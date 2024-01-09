@@ -195,6 +195,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
                    ,[is_paid]			AS IsPaid
                    ,[order_date]		AS OrderDate
                    ,[Status]			AS Status
+                   ,[voucher_id]		AS VoucherId
                 FROM
 	                [dbo].[orders]
                 /**where**/

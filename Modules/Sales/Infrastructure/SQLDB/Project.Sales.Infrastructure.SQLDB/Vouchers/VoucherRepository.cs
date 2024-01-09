@@ -38,6 +38,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Vouchers
 	                AND [apply_period_start] <= @DateNow
 	                AND [apply_period_end] >= @DateNow
                     AND [minimum_price] <= @TotalPrice
+                    AND [quantity] > 0
             ";
 
             var result = await connect.QueryAsync<Voucher>(query,
@@ -241,6 +242,60 @@ namespace Project.Sales.Infrastructure.SQLDB.Vouchers
             );
 
             result.IsOptimisticLocked();
+        }
+
+        public async Task<Voucher> GetVoucher(int id)
+        {
+            await using var connect = await this.provider.Connect();
+
+            const string query = @"
+                SELECT
+	                [Id]				 AS Id
+                   ,[Name]				 AS Name
+                   ,[Quantity]			 AS Quantity
+                   ,[voucher_type]		 AS VoucherType
+                   ,[minimum_price]		 AS MinimumPrice
+                   ,[Discount]			 AS Discount
+                   ,[discount_type]		 AS DiscountType
+                   ,[maximum_discount]	 AS MaximumDiscount
+                   ,[apply_period_start] AS ApplyPeriodStart
+                   ,[apply_period_end]	 AS ApplyPeriodEnd
+                   ,[data_version]		 AS DataVersion
+                FROM
+	                vouchers
+                WHERE
+	                Id = @Id
+            ";
+
+            var result = await connect.QueryFirstOrDefaultAsync<Voucher>(query,
+                new
+                {
+                    Id = id
+                }
+            );
+
+            return result;
+        }
+
+        public async Task UpdateVoucherQuantity(int id, int quantity)
+        {
+            await using var connect = await this.provider.Connect();
+
+            const string command = @"
+                UPDATE vouchers
+                SET
+	                quantity = @Quantity
+                WHERE
+	                id = @Id
+            ";
+
+            await connect.ExecuteAsync(command,
+                new
+                {
+                    Id = id,
+                    Quantity = quantity
+                }
+            );
         }
     }
 }
