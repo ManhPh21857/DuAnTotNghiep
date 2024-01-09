@@ -51,7 +51,8 @@ namespace Project.Sales.Infrastructure.SQLDB.SaleCounters
                             )
                             OUTPUT Inserted.Id
                             VALUES (
-	                            @CustomerId
+                               ,@OrderCode
+	                           ,@CustomerId
                                ,@EmployeeId
                                ,@FullName
                                ,@PhoneNumer
