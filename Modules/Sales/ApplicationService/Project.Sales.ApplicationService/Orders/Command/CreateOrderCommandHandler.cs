@@ -8,6 +8,7 @@ using Project.HumanResources.Domain.Customers;
 using Project.Product.Domain.Products;
 using Project.Sales.Domain.Carts;
 using Project.Sales.Domain.Orders;
+using Project.Sales.Domain.Vouchers;
 using Project.Sales.Integration.Orders.Command;
 using Project.Sales.Integration.Payments.Command;
 
@@ -17,6 +18,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
     {
         private readonly ICustomerRepository customerRepository;
         private readonly IProductRepository productRepository;
+        private readonly IVoucherRepository voucherRepository;
         private readonly IOrderRepository orderRepository;
         private readonly ICartRepository cartRepository;
         private readonly ISessionInfo sessionInfo;
@@ -25,6 +27,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
         public CreateOrderCommandHandler(
             ICustomerRepository customerRepository,
             IProductRepository productRepository,
+            IVoucherRepository voucherRepository,
             IOrderRepository orderRepository,
             ICartRepository cartRepository,
             ISessionInfo sessionInfo,
@@ -33,6 +36,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
         {
             this.customerRepository = customerRepository;
             this.productRepository = productRepository;
+            this.voucherRepository = voucherRepository;
             this.orderRepository = orderRepository;
             this.cartRepository = cartRepository;
             this.sessionInfo = sessionInfo;
@@ -56,6 +60,19 @@ namespace Project.Sales.ApplicationService.Orders.Command
 
             var orderCode = Guid.NewGuid();
 
+            var voucher = await this.voucherRepository.GetVoucher(request.Order.VoucherId);
+            if (voucher is null)
+            {
+                throw new DomainException("", "Voucher không tồn tại");
+            }
+
+            if (voucher.Quantity < 1)
+            {
+                throw new DomainException("", "Voucher đã hết số lần sử dụng");
+            }
+
+            await this.voucherRepository.UpdateVoucherQuantity(request.Order.VoucherId, voucher.Quantity - 1);
+
             var createOrderParam = new CreateOrderParam
             {
                 OrderCode = orderCode,
@@ -66,6 +83,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
                 MerchandiseSubtotal = request.Order.MerchandiseSubtotal,
                 ShippingFee = request.Order.ShippingFee,
                 ShippingDiscountSubtotal = request.Order.ShippingDiscountSubtotal,
+                VoucherId = request.Order.VoucherId,
                 VoucherApplied = request.Order.VoucherApplied,
                 OrderTotal = request.Order.OrderTotal,
                 PaymentMethodId = request.Order.PaymentMethodId
@@ -76,7 +94,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
                 createOrderParam.EmployeeId = 0;
                 createOrderParam.IsOrder = OrderType.Ordered.GetHashCode();
                 createOrderParam.IsPaid = PayType.NotYet.GetHashCode();
-                createOrderParam.OrderDate = null;
+                createOrderParam.OrderDate = DateTime.Now;
                 createOrderParam.PaymentDate = null;
                 createOrderParam.Status = OrderStatus.Pending.GetHashCode();
             }

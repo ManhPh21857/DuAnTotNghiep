@@ -7,6 +7,7 @@ using Project.Product.Domain.Products;
 using Project.Sales.Domain.Orders;
 using Project.Sales.Integration.Orders.Command;
 using System.Net;
+using Project.Sales.Domain.Vouchers;
 
 namespace Project.Sales.ApplicationService.Orders.Command
 {
@@ -16,18 +17,21 @@ namespace Project.Sales.ApplicationService.Orders.Command
         private readonly IOrderRepository orderRepository;
         private readonly ICustomerRepository customerRepository;
         private readonly ISessionInfo sessionInfo;
+        private readonly IVoucherRepository voucherRepository;
 
         public CancelOrderCommandHandler(
             IProductRepository productRepository,
             IOrderRepository orderRepository,
             ICustomerRepository customerRepository,
-            ISessionInfo sessionInfo
+            ISessionInfo sessionInfo,
+            IVoucherRepository voucherRepository
         )
         {
             this.productRepository = productRepository;
             this.orderRepository = orderRepository;
             this.customerRepository = customerRepository;
             this.sessionInfo = sessionInfo;
+            this.voucherRepository = voucherRepository;
         }
 
         public async override Task<CancelOrderCommandResult> Handle(
@@ -53,6 +57,14 @@ namespace Project.Sales.ApplicationService.Orders.Command
             {
                 throw new DomainException("", "Đã quá hạn hủy có thể đơn hàng");
             }
+
+            var voucher = await this.voucherRepository.GetVoucher(order.VoucherId);
+            if (voucher is null)
+            {
+                throw new DomainException("", "Voucher không tồn tại");
+            }
+
+            await this.voucherRepository.UpdateVoucherQuantity(order.VoucherId, voucher.Quantity + 1);
 
             switch ((OrderStatus)order.Status)
             {
