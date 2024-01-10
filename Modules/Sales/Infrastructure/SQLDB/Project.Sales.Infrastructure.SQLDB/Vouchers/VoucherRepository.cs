@@ -35,8 +35,8 @@ namespace Project.Sales.Infrastructure.SQLDB.Vouchers
                 WHERE
 	                [is_deleted] = 0
                     AND [voucher_type] = 1
-	                AND [apply_period_start] <= @DateNow
-	                AND [apply_period_end] >= @DateNow
+	                AND FORMAT([apply_period_start], 'yyyy-MM-dd') <= @DateNow
+	                AND FORMAT([apply_period_end], 'yyyy-MM-dd') >= @DateNow
                     AND [minimum_price] <= @TotalPrice
                     AND [quantity] > 0
             ";
@@ -44,7 +44,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Vouchers
             var result = await connect.QueryAsync<Voucher>(query,
                 new
                 {
-                    DateNow = DateTime.Now.ToString("d"),
+                    DateNow = DateTime.Now.ToString("yyyy-MM-dd"),
                     TotalPrice = totalPrice
                 }
             );
