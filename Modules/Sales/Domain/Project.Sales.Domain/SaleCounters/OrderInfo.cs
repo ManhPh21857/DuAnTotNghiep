@@ -11,6 +11,7 @@
         public float MerchandiseSubtotal { get; set; }
         public float ShippingFee { get; set; }
         public float ShippingDiscountSubtotal { get; set; }
+        public int VoucherId { get; set; }
         public float VoucherApplied { get; set; }
         public float OrderTotal { get; set; }
         public int PaymentMethodId { get; set; }
@@ -19,7 +20,5 @@
         public int? IsOrder { get; set; }
         public int? IsPaid { get; set; }
         public int? Status { get; set; }
-
-        //order_code, customer_id, employee_id, full_name, phone_number, address, merchandise_subtotal, shipping_fee, voucher_applied, order_total, payment_method_id, order_date, payment_date, is_ordered, is_paid, status
     }
 }

@@ -32,7 +32,8 @@ namespace Project.Sales.Infrastructure.SQLDB.SaleCounters
             await using var connect = await provider.Connect();
             const string sql = @"
                                 INSERT INTO [dbo].[orders] (
-	                            [customer_id]
+                                [order_code]
+	                           ,[customer_id]
                                ,[employee_id]
                                ,[full_name]
                                ,[phone_number]
@@ -41,6 +42,7 @@ namespace Project.Sales.Infrastructure.SQLDB.SaleCounters
                                ,[shipping_fee]
                                ,[shipping_discount_subtotal]
                                ,[voucher_applied]
+                               ,[voucher_id]
                                ,[order_total]
                                ,[payment_method_id]
                                ,[order_date]
@@ -51,7 +53,7 @@ namespace Project.Sales.Infrastructure.SQLDB.SaleCounters
                             )
                             OUTPUT Inserted.Id
                             VALUES (
-                               ,@OrderCode
+                                @OrderCode
 	                           ,@CustomerId
                                ,@EmployeeId
                                ,@FullName
@@ -61,6 +63,7 @@ namespace Project.Sales.Infrastructure.SQLDB.SaleCounters
                                ,0
                                ,0
                                ,@VoucherApplied
+                               ,@VoucherId
                                ,@OrderTotal
                                ,@PaymentMethodId
                                ,@OrderDate
@@ -71,6 +74,7 @@ namespace Project.Sales.Infrastructure.SQLDB.SaleCounters
                             )";
             var result = await connect.QueryFirstOrDefaultAsync<int>(sql, new
             {
+                OrderCode = param.OrderCode,
                 CustomerId = param.CustomerId,
                 EmployeeId = param.EmployeeId,
                 FullName = param.FullName,
@@ -78,6 +82,7 @@ namespace Project.Sales.Infrastructure.SQLDB.SaleCounters
                 Address = param.Address,
                 MerchandiseSubtotal = param.MerchandiseSubtotal,
                 VoucherApplied = param.VoucherApplied,
+                VoucherId = param.VoucherId,
                 OrderTotal = param.OrderTotal,
                 PaymentMethodId = param.PaymentMethodId,
                 OrderDate = param.OrderDate,

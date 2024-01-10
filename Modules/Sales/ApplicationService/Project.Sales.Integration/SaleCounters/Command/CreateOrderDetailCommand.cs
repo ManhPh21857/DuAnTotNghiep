@@ -7,11 +7,11 @@ namespace Project.Sales.Integration.SaleCounters.Command
     {
         //Order
         public OrderInfo Order { get; set; }
-        public List<OrderDetailInfo> Orderdetails { get; set; }
+        public IEnumerable<OrderDetailInfo> Orderdetails { get; set; }
 
         public CreateOrderDetailCommand(
             OrderInfo order,
-            List<OrderDetailInfo> orderdetails)
+            IEnumerable<OrderDetailInfo> orderdetails)
         
         {
             Order = order;

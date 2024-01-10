@@ -21,14 +21,17 @@ namespace Project.Sales.ApplicationService.SaleCounters.Command
             var code = Guid.NewGuid();
             var order = new OrderInfo
             {
-                EmployeeId = sessionInfo.UserId.value,
+
+                EmployeeId = this.sessionInfo.UserId.value,
                 OrderCode = code,
                 Address = "Tại Quầy",
                 FullName = request.Order.FullName,
                 CustomerId = request.Order.CustomerId,
                 MerchandiseSubtotal = request.Order.MerchandiseSubtotal,
+                OrderTotal = request.Order.OrderTotal,
                 PhoneNumber = request.Order.PhoneNumber,
                 VoucherApplied = request.Order.VoucherApplied,
+                VoucherId = request.Order.VoucherId,
                 PaymentMethodId = 2,
                 IsOrder = 1,
                 IsPaid = 1,
@@ -49,7 +52,7 @@ namespace Project.Sales.ApplicationService.SaleCounters.Command
                     SizeId = item.SizeId,
                     Price = item.Price,
                     Quantity = item.Quantity,
-                    TotalQuantity = a - item.Quantity
+                    TotalQuantity = a-item.Quantity
                 });
                 UpdateQuantityInfo update = new UpdateQuantityInfo()
                 {

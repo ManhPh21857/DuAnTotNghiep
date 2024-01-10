@@ -8,8 +8,10 @@
         public string PhoneNumber { get; set; }
         public float VoucherApplied { get; set; }
         public float OrderTotal { get; set; }
+        public int VoucherId { get; set; }
         public float MerchandiseSubtotal { get; set; }
         public int PaymentMethodId { get; set; }
         public int? Status { get; set; }
+
     }
 }
