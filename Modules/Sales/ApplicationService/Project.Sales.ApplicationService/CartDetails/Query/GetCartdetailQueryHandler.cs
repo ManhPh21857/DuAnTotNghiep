@@ -1,5 +1,4 @@
 ﻿using Project.Core.ApplicationService.Queries;
-using Project.Product.Domain.Products;
 using Project.Sales.Domain.CartDetails;
 using Project.Sales.Integration.CartDetails.Query;
 

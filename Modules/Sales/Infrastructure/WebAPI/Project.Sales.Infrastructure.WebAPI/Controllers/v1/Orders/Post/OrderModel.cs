@@ -10,6 +10,7 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders.Post
         public float? MerchandiseSubtotal { get; set; }
         public float? ShippingFee { get; set; }
         public float? ShippingDiscountSubtotal { get; set; }
+        public int? VoucherId { get; set; }
         public float? VoucherApplied { get; set; }
         public float? OrderTotal { get; set; }
         public int? PaymentMethodId { get; set; }
@@ -19,15 +20,42 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders.Post
     {
         public OrderModelValidator()
         {
-            this.RuleFor(x => x.FullName).NotEmpty();
-            this.RuleFor(x => x.PhoneNumber).NotEmpty();
-            this.RuleFor(x => x.Address).NotEmpty();
-            this.RuleFor(x => x.MerchandiseSubtotal).NotNull();
-            this.RuleFor(x => x.ShippingFee).NotNull();
-            this.RuleFor(x => x.ShippingDiscountSubtotal).NotNull();
-            this.RuleFor(x => x.VoucherApplied).NotNull();
-            this.RuleFor(x => x.OrderTotal).NotNull();
-            this.RuleFor(x => x.PaymentMethodId).NotNull();
+            this.RuleFor(x => x.FullName)
+                .NotEmpty()
+                .WithMessage($"{nameof(OrderModel.FullName)} không thể trống");
+
+            this.RuleFor(x => x.PhoneNumber)
+                .NotEmpty()
+                .WithMessage($"{nameof(OrderModel.PhoneNumber)} không thể trống");
+
+            this.RuleFor(x => x.Address)
+                .NotEmpty()
+                .WithMessage($"{nameof(OrderModel.Address)} không thể trống");
+
+            this.RuleFor(x => x.MerchandiseSubtotal)
+                .NotNull()
+                .WithMessage($"{nameof(OrderModel.MerchandiseSubtotal)} không thể trống");
+
+            this.RuleFor(x => x.ShippingFee)
+                .NotNull()
+                .WithMessage($"{nameof(OrderModel.ShippingFee)} không thể trống");
+
+            this.RuleFor(x => x.ShippingDiscountSubtotal)
+                .NotNull()
+                .WithMessage($"{nameof(OrderModel.ShippingDiscountSubtotal)} không thể trống");
+
+            this.RuleFor(x => x.VoucherApplied)
+                .NotNull()
+                .WithMessage($"{nameof(OrderModel.VoucherApplied)} không thể trống");
+
+            this.RuleFor(x => x.OrderTotal)
+                .NotNull()
+                .WithMessage($"{nameof(OrderModel.OrderTotal)} không thể trống");
+
+            this.RuleFor(x => x.PaymentMethodId)
+                .NotNull()
+                .WithMessage($"{nameof(OrderModel.PaymentMethodId)} không thể trống");
+
         }
     }
 }

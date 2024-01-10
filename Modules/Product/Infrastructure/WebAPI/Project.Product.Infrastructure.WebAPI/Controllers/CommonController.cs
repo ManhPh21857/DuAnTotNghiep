@@ -11,7 +11,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers
         {
         }
 
-        protected CommonController() : base(null)
+        protected CommonController() : base(null!)
         {
         }
     }

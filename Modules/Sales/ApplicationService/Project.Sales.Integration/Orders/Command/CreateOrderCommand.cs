@@ -12,8 +12,8 @@ namespace Project.Sales.Integration.Orders.Command
 
         public CreateOrderCommand(OrderInfo order, IEnumerable<CartDetailInfo> cartDetails)
         {
-            Order = order;
-            CartDetails = cartDetails;
+            this.Order = order;
+            this.CartDetails = cartDetails;
         }
     }
 }

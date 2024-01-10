@@ -8,8 +8,6 @@ using Project.HumanResources.Domain.Users;
 using Project.HumanResources.Integration.Authentication.VerifyEmail;
 using Project.HumanResources.Integration.Services;
 using System.Net;
-using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace Project.HumanResources.ApplicationService.Authentication;
 

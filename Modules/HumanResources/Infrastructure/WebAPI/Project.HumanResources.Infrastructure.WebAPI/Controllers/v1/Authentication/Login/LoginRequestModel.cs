@@ -12,12 +12,12 @@ public class LoginRequestModelValidator : AbstractValidator<LoginRequestModel>
 {
     public LoginRequestModelValidator()
     {
-        RuleFor(x => x.UserName)
+        this.RuleFor(x => x.UserName)
             .NotEmpty()
-            .WithMessage($"{nameof(LoginRequestModel.UserName)} must has a value");
+            .WithMessage($"{nameof(LoginRequestModel.UserName)} không thể trống");
 
-        RuleFor(x => x.Password)
+        this.RuleFor(x => x.Password)
             .NotEmpty()
-            .WithMessage($"{nameof(LoginRequestModel.Password)} must has a value");
+            .WithMessage($"{nameof(LoginRequestModel.Password)} không thể trống");
     }
 }

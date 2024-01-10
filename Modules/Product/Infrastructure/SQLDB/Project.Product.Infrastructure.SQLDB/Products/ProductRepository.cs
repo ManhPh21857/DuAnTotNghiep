@@ -4,8 +4,6 @@ using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.Product.Domain.Enums;
 using Project.Product.Domain.Products;
-using System.Drawing;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Project.Product.Infrastructure.SQLDB.Products;
 

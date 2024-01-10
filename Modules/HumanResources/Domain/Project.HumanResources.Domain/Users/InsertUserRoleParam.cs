@@ -1,6 +1,4 @@
-﻿using Project.Core.Domain.Enums;
-
-namespace Project.HumanResources.Domain.Users;
+﻿namespace Project.HumanResources.Domain.Users;
 
 public class InsertUserRoleParam
 {

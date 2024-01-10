@@ -11,7 +11,6 @@ using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Roles.Get;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Roles.Post;
 using Project.HumanResources.Integration.Roles.Command;
 using Project.HumanResources.Integration.Roles.Query;
-using System.Text.RegularExpressions;
 
 namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Roles
 {

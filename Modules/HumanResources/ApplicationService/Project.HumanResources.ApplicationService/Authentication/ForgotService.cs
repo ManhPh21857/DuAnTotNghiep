@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using Microsoft.IdentityModel.Tokens;
 using Project.Core.ApplicationService;
 using Project.Core.ApplicationService.Commands;
 using Project.Core.Domain;
+using Project.Core.Domain.Enums;
 using Project.HumanResources.Domain.Users;
 using Project.HumanResources.Integration.Authentication.Forgot;
 using System.Net;
-using Project.Core.Domain.Enums;
 
 namespace Project.HumanResources.ApplicationService.Authentication
 {

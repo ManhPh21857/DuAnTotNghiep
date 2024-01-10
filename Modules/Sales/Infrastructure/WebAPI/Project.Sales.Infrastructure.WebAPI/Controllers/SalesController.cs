@@ -11,7 +11,7 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers
         {
         }
 
-        protected SalesController() : base(null)
+        protected SalesController() : base(null!)
         {
         }
     }

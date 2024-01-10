@@ -6,11 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Sales.Infrastructure.WebAPI.Controllers.Base;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails.Delete;
-using Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails.Get;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails.Put;
 using Project.Sales.Integration.CartDetails.Command;
-using Project.Sales.Integration.CartDetails.Query;
 
 namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails
 {

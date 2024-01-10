@@ -6,12 +6,12 @@ public class ResponseBaseModel<T>
 
     public ResponseBaseModel()
     {
-        Status = true;
+        this.Status = true;
     }
 
     public ResponseBaseModel(T? data) : this()
     {
-        Data = data;
+        this.Data = data;
     }
 
     public T? Data { get; set; }

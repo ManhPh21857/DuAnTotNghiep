@@ -1,6 +1,5 @@
 ﻿using Project.Core.ApplicationService.Commands;
 using Project.Core.Domain;
-using Project.Core.Domain.Enums;
 using Project.Sales.Domain.SaleCounters;
 using Project.Sales.Integration.SaleCounters.Command;
 

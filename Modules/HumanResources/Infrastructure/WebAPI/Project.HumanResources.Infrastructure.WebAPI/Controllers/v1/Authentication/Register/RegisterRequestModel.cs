@@ -15,37 +15,37 @@ public class RegisterRequestModelValidator : AbstractValidator<RegisterRequestMo
 {
     public RegisterRequestModelValidator()
     {
-        RuleFor(v => v.UserName)
+        this.RuleFor(v => v.UserName)
             .NotEmpty()
-            .WithMessage($"{nameof(RegisterRequestModel.UserName)} can not be empty")
+            .WithMessage($"{nameof(RegisterRequestModel.UserName)} không thể trống")
             .MinimumLength(8)
-            .WithMessage($"{nameof(RegisterRequestModel.UserName)} needs at least 8 characters")
+            .WithMessage($"{nameof(RegisterRequestModel.UserName)} phải có tối thiểu 8 ký tự")
             .MaximumLength(50)
-            .WithMessage($"{nameof(RegisterRequestModel.UserName)} too long");
+            .WithMessage($"{nameof(RegisterRequestModel.UserName)} quá dài, tối đa 50 ký tự");
 
-        RuleFor(v => v.Password)
+        this.RuleFor(v => v.Password)
             .NotEmpty()
-            .WithMessage($"{nameof(RegisterRequestModel.Password)} can not be empty")
+            .WithMessage($"{nameof(RegisterRequestModel.Password)} không thể trống")
             .MinimumLength(6)
-            .WithMessage($"{nameof(RegisterRequestModel.Password)} needs at least 8 characters")
+            .WithMessage($"{nameof(RegisterRequestModel.Password)} phải có tối thiểu 8 ký tự")
             .MaximumLength(50)
-            .WithMessage($"{nameof(RegisterRequestModel.Password)} too long");
+            .WithMessage($"{nameof(RegisterRequestModel.Password)} quá dài, tối đa 50 ký tự");
 
-        RuleFor(v => v.RePassword)
+        this.RuleFor(v => v.RePassword)
             .NotEmpty()
-            .WithMessage($"{nameof(RegisterRequestModel.RePassword)} can not be empty");
+            .WithMessage($"{nameof(RegisterRequestModel.RePassword)} không thể trống");
 
-        RuleFor(v => v.Email)
+        this.RuleFor(v => v.Email)
             .NotEmpty()
-            .WithMessage($"{nameof(RegisterRequestModel.Email)} can not be empty");
+            .WithMessage($"{nameof(RegisterRequestModel.Email)} không thể trống");
 
-        RuleFor(v => v.Code)
+        this.RuleFor(v => v.Code)
             .NotEmpty()
-            .WithMessage($"{nameof(RegisterRequestModel.Code)} can not be empty");
+            .WithMessage($"{nameof(RegisterRequestModel.Code)} không thể trống");
 
-        RuleFor(v => v)
+        this.RuleFor(v => v)
             .Must(m => m.RePassword == m.Password)
             .WithMessage(
-                $"{nameof(RegisterRequestModel.RePassword)} is not the same as {nameof(RegisterRequestModel.Password)}");
+                $"{nameof(RegisterRequestModel.RePassword)} không trùng {nameof(RegisterRequestModel.Password)}");
     }
 }

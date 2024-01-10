@@ -3,11 +3,6 @@ using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.Product.Domain.Enums;
 using Project.Product.Domain.Trademarks;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Product.Infrastructure.SQLDB.Trademarks
 {
