@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using EmailValidator.NET;
+using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Project.Core.ApplicationService.Commands;
 using Project.Core.Domain;
@@ -7,6 +8,8 @@ using Project.HumanResources.Domain.Users;
 using Project.HumanResources.Integration.Authentication.VerifyEmail;
 using Project.HumanResources.Integration.Services;
 using System.Net;
+using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Project.HumanResources.ApplicationService.Authentication;
 
@@ -38,11 +41,22 @@ public class VerifyEmailService : CommandHandler<VerifyEmailRequest, VerifyEmail
                     throw new DomainException("", "email already exist!");
                 }
 
+                if (!this.VerifyEmail(request.Email))
+                {
+                    throw new DomainException("", "Email không tồn tại");
+                }
+
                 break;
             case SendMailMode.Forgot:
                 if (user is null)
                 {
                     throw new DomainException("", "email not exist!");
+                }
+
+                var roles = await this.userRepository.GetUserRoles(user.Id);
+                if (roles.All(x => x.Id != Role.ShopLogin.GetHashCode()))
+                {
+                    throw new DomainException("", "tài khoản không có quyền đăng nhập");
                 }
 
                 break;
@@ -86,5 +100,22 @@ public class VerifyEmailService : CommandHandler<VerifyEmailRequest, VerifyEmail
         this.memoryCache.Set(request.Email, code, cacheExpiryOptions);
 
         return new VerifyEmailResponse(code);
+    }
+
+    public bool VerifyEmail(string emailVerify)
+    {
+        var emailValidator = new EmailValidator.NET.EmailValidator();
+
+        if (!emailValidator.Validate(emailVerify, out var result))
+        {
+            return false;
+        }
+
+        if (result == EmailValidationResult.OK)
+        {
+            return true;
+        }
+
+        return false;
     }
 }

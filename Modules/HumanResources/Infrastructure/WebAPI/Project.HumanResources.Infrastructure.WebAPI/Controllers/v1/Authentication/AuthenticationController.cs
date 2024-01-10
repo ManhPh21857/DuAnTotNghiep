@@ -5,6 +5,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
+using Project.Core.Domain;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.Base;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Authentication.Accuracy;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Authentication.Forgot;
@@ -124,8 +126,10 @@ public class AuthenticationController : HumanResourcesController
         var validator = await this.emailValidator.ValidateAsync(request);
         if (!validator.IsValid)
         {
-            validator.AddToModelState(this.ModelState);
-            return this.BadRequest(this.ModelState);
+            foreach (var error in validator.Errors)
+            {
+                throw new DomainException(error.PropertyName, error.ErrorMessage);
+            }
         }
 
         var sendMailRequest = request.Adapt<VerifyEmailRequest>();

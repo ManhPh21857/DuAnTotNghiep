@@ -1,15 +1,11 @@
 ﻿using FluentValidation;
 using Mapster;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Core.Domain;
-using Project.Core.Domain.Enums;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.Base;
-using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Users.Get;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Users.Put;
 using Project.HumanResources.Integration.Users.Command;
-using Project.HumanResources.Integration.Users.Query;
 
 namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Users;
 
@@ -23,43 +19,6 @@ public class UserController : HumanResourcesController
     ) : base(mediator)
     {
         this.validatorChangePasswordRequestModel = validatorChangePasswordRequestModel;
-    }
-
-    [Authorize(Roles = nameof(Role.ShopLogin))]
-    [HttpGet("list")]
-    public async Task<ActionResult<ResponseBaseModel<UsersModel>>> GetUsers()
-    {
-        //create query
-        var query = new UsersQuery();
-
-        //result
-        var result = await Mediator.Send(query);
-
-        //response
-        var response = new ResponseBaseModel<UsersModel>
-        {
-            Data = result.Adapt<UsersModel>()
-        };
-
-        return response;
-    }
-
-    [HttpGet]
-    public async Task<ActionResult<ResponseBaseModel<UserModel>>> GetUser()
-    {
-        //create query
-        var query = new UserQuery();
-
-        //result
-        var result = await Mediator.Send(query);
-
-        //response
-        var response = new ResponseBaseModel<UserModel>
-        {
-            Data = result.User.Adapt<UserModel>()
-        };
-
-        return response;
     }
 
     [HttpPut("change-password")]
