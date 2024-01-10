@@ -1,11 +1,4 @@
-﻿using Project.Product.Domain.Colors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Project.Product.Domain.Sizes
+﻿namespace Project.Product.Domain.Sizes
 {
     public interface ISizeRepository
     {

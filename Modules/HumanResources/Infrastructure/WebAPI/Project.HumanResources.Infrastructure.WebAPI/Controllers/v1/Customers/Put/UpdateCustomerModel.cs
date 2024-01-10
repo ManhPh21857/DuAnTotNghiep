@@ -19,14 +19,38 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Customers.
     {
         public UpdateCustomerModelValidator()
         {
-            this.RuleFor(x => x.Id).NotNull();
-            this.RuleFor(x => x.Username).NotEmpty();
-            this.RuleFor(x => x.LastName).NotEmpty();
-            this.RuleFor(x => x.FirstName).NotEmpty();
-            this.RuleFor(x => x.PhoneNumber).NotEmpty();
-            this.RuleFor(x => x.Birthday).NotNull();
-            this.RuleFor(x => x.Image).NotEmpty();
-            this.RuleFor(x => x.Sex).NotNull().InclusiveBetween(0, 1);
+            this.RuleFor(x => x.Id)
+                .NotNull()
+                .WithMessage($"{nameof(UpdateCustomerModel.Id)} không thể trống");
+
+            this.RuleFor(x => x.Username)
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateCustomerModel.Username)} không thể trống");
+
+            this.RuleFor(x => x.LastName)
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateCustomerModel.LastName)} không thể trống");
+
+            this.RuleFor(x => x.FirstName)
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateCustomerModel.FirstName)} không thể trống");
+
+            this.RuleFor(x => x.PhoneNumber)
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateCustomerModel.PhoneNumber)} không thể trống");
+
+            this.RuleFor(x => x.Birthday)
+                .NotNull()
+                .WithMessage($"{nameof(UpdateCustomerModel.Birthday)} không thể trống");
+
+            this.RuleFor(x => x.Image)
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateCustomerModel.Image)} không thể trống");
+
+            this.RuleFor(x => x.Sex)
+                .NotNull()
+                .WithMessage($"{nameof(UpdateCustomerModel.Sex)} không thể trống")
+                .InclusiveBetween(0, 1);
         }
     }
 }

@@ -4,7 +4,6 @@ using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.Product.Domain.Enums;
 using Project.Product.Domain.Products;
-using System.Drawing;
 
 namespace Project.Product.Infrastructure.SQLDB.Products;
 
@@ -362,6 +361,44 @@ public class ProductRepository : IProductRepository
 
     public async Task UpdateProduct(ProductInfo param)
     {
+        await using var connect = await this.provider.Connect();
+
+        const string command = @"
+            UPDATE [dbo].[products]
+            SET
+	            [code]				= @Code
+               ,[supplier_id]		= @SupplierId
+               ,[material_id]		= @MaterialId
+               ,[classification_id] = @ClassificationId
+               ,[origin_id]			= @OriginId
+               ,[trademark_id]		= @TrademarkId
+               ,[name]				= @Name
+               ,[image]				= @Image
+               ,[description]		= @Description
+            WHERE
+	            id = @Id
+	            AND data_version = @DataVersion
+                AND is_deleted = 0
+        ";
+
+        var result = await connect.ExecuteAsync(command,
+            new
+            {
+                Id = param.Id,
+                Code = param.Code,
+                SupplierId = param.SupplierId,
+                MaterialId = param.MaterialId,
+                ClassificationId = param.ClassificationId,
+                OriginId = param.OriginId,
+                TrademarkId = param.TrademarkId,
+                Name = param.Name,
+                Image = param.Image,
+                Description = param.Description,
+                DataVersion = param.DataVersion
+            }
+        );
+
+        result.IsOptimisticLocked();
     }
 
     public async Task DeleteProduct(DeleteProductParam param)
@@ -606,7 +643,7 @@ public class ProductRepository : IProductRepository
 
     #region Product Detail
 
-    public async Task<ProductDetailInfo> GetProductDetailById(int id)
+    public async Task<ProductDetailInfo?> GetProductDetailById(int id)
     {
         await using var connect = await this.provider.Connect();
         const string query = @"

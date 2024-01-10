@@ -26,39 +26,50 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees.
         public UpdateEmployeeRequestModelValidator()
         {
             this.RuleFor(x => x.Email)
-                .NotEmpty();
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.Email)} không thể trống");
 
             this.RuleFor(x => x.Username)
-                .MinimumLength(8);
+                .MinimumLength(8)
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.Username)} cần tối thiểu 8 ký tự");
 
             this.RuleFor(x => x.Password)
-                .MinimumLength(8);
+                .MinimumLength(8)
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.Password)} cần tối thiểu 8 ký tự");
 
             this.RuleFor(x => x.Id);
 
             this.RuleFor(x => x.FirstName)
-                .NotEmpty();
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.FirstName)} không thể trống");
 
             this.RuleFor(x => x.LastName)
-                .NotEmpty();
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.LastName)} không thể trống");
 
             this.RuleFor(x => x.Image)
-                .NotEmpty();
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.Image)} không thể trống");
 
             this.RuleFor(x => x.Address);
 
             this.RuleFor(x => x.Birthday)
                 .NotNull()
-                .NotEmpty();
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.Birthday)} không thể trống")
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.Birthday)} không thể trống");
 
             this.RuleFor(x => x.Sex)
-                .NotNull();
+                .NotNull()
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.Sex)} không thể trống");
 
             this.RuleFor(x => x.PhoneNumber)
-                .NotEmpty();
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.PhoneNumber)} không thể trống");
 
             this.RuleFor(x => x.Roles)
-                .NotEmpty();
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.Roles)} không thể trống");
         }
     }
 }

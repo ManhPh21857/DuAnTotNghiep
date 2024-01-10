@@ -12,7 +12,9 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees.
     {
         public DeleteEmployeeModelValidator()
         {
-            this.RuleFor(x => x.Id).NotNull();
+            this.RuleFor(x => x.Id)
+                .NotNull()
+                .WithMessage($"{nameof(DeleteEmployeeModel.Id)} không thể trống");
         }
     }
 }

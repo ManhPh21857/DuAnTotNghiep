@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors.Get;
 
 namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors.Post
 {

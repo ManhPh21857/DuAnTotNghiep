@@ -14,7 +14,7 @@ namespace Project.Product.ApplicationService.Suppliers.Command
 
         }
 
-        public override async Task<UpdateSupplierCommandResult> Handle(UpdateSupplierCommand request, CancellationToken cancellationToken)
+        public async override Task<UpdateSupplierCommandResult> Handle(UpdateSupplierCommand request, CancellationToken cancellationToken)
         {
             foreach (var item in request.Suppliers)
             {

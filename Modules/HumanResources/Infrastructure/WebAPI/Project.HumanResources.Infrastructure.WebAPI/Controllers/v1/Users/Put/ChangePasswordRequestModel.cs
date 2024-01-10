@@ -4,9 +4,9 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Users.Put
 {
     public class ChangePasswordRequestModel
     {
-        public string OldPassword { get; set; }
-        public string NewPassword { get; set; }
-        public string ReNewPassword { get; set; }
+        public string? OldPassword { get; set; }
+        public string? NewPassword { get; set; }
+        public string? ReNewPassword { get; set; }
     }
 
     public class ChangePasswordRequestModelValidator : AbstractValidator<ChangePasswordRequestModel>
@@ -15,11 +15,15 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Users.Put
         {
             this.RuleFor(x => x.OldPassword)
                 .NotEmpty()
-                .MinimumLength(8);
+                .WithMessage($"{nameof(ChangePasswordRequestModel.OldPassword)} không thể trống");
             this.RuleFor(x => x.NewPassword)
                 .NotEmpty()
-                .MinimumLength(8);
-            this.RuleFor(x => x.ReNewPassword).NotEmpty();
+                .WithMessage($"{nameof(ChangePasswordRequestModel.NewPassword)} không thể trống")
+                .MinimumLength(8)
+                .WithMessage($"{nameof(ChangePasswordRequestModel.NewPassword)} cần tối thiểu 8 ký tự");
+            this.RuleFor(x => x.ReNewPassword)
+                .NotEmpty()
+                .WithMessage($"{nameof(ChangePasswordRequestModel.ReNewPassword)} không thể trống");
             this.RuleFor(x => x)
                 .Must(x => x.ReNewPassword == x.NewPassword)
                 .WithMessage("Mật khẩu mới không giống nhau")

@@ -58,13 +58,14 @@ namespace Project.Sales.ApplicationService.Orders.Command
                 throw new DomainException("", "Đã quá hạn hủy có thể đơn hàng");
             }
 
-            var voucher = await this.voucherRepository.GetVoucher(order.VoucherId);
-            if (voucher is null)
+            if (order.VoucherId.HasValue)
             {
-                throw new DomainException("", "Voucher không tồn tại");
+                var voucher = await this.voucherRepository.GetVoucher(order.VoucherId.Value);
+                if (voucher is not null)
+                {
+                    await this.voucherRepository.UpdateVoucherQuantity(order.VoucherId.Value, voucher.Quantity + 1);
+                }   
             }
-
-            await this.voucherRepository.UpdateVoucherQuantity(order.VoucherId, voucher.Quantity + 1);
 
             switch ((OrderStatus)order.Status)
             {

@@ -3,11 +3,8 @@
 using Dapper;
 using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
-using Project.Product.Domain.Colors;
 using Project.Product.Domain.Enums;
 using Project.Product.Domain.Sizes;
-using System.Drawing;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Project.Product.Infrastructure.SQLDB.Sizes
 {

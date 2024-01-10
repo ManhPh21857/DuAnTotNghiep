@@ -25,9 +25,7 @@ namespace Project.Sales.ApplicationService.Carts.Query
             int? cartId = await this.cartRepository.FindCartId(userId);
             if (!cartId.HasValue)
             {
-                var ex = new DomainException("", "somethings went wrong!");
-
-                throw ex;
+                return new GetCartDetailQueryResult(new List<CartDetailInfo>());
             }
 
             var cartDetails = await this.cartRepository.GetCartDetail(cartId.Value);

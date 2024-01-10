@@ -11,7 +11,9 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Roles.Dele
     {
         public DeleteGroupModelValidator()
         {
-            this.RuleFor(x => x.Id).NotNull();
+            this.RuleFor(x => x.Id)
+                .NotNull()
+                .WithMessage($"{nameof(DeleteGroupModel.Id)} không thể trống");
         }
     }
 }

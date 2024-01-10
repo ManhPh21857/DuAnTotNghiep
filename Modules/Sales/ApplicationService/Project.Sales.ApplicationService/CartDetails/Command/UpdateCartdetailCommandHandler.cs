@@ -1,5 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using Project.Core.ApplicationService.Commands;
+﻿using Project.Core.ApplicationService.Commands;
 using Project.Sales.Domain.CartDetails;
 using Project.Sales.Integration.CartDetails.Command;
 

@@ -11,7 +11,9 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Customers.
     {
         public UpdateDefaultAddressRequestValidator()
         {
-            this.RuleFor(x => x.Id).NotNull();
+            this.RuleFor(x => x.Id)
+                .NotNull()
+                .WithMessage($"{nameof(UpdateDefaultAddressRequest.Id)} không thể trống");
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
-using FluentValidation.AspNetCore;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Project.Core.Domain;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.Base;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Authentication.Accuracy;
 using Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Authentication.Forgot;
@@ -52,8 +52,10 @@ public class AuthenticationController : HumanResourcesController
         var validator = await this.loginValidator.ValidateAsync(request);
         if (!validator.IsValid)
         {
-            validator.AddToModelState(this.ModelState);
-            return this.BadRequest(this.ModelState);
+            foreach (var error in validator.Errors)
+            {
+                throw new DomainException(error.PropertyName, error.ErrorMessage);
+            }
         }
 
         var loginRequest = request.Adapt<EmployeeLoginRequest>();
@@ -76,8 +78,10 @@ public class AuthenticationController : HumanResourcesController
         var validator = await this.loginValidator.ValidateAsync(request);
         if (!validator.IsValid)
         {
-            validator.AddToModelState(this.ModelState);
-            return this.BadRequest(this.ModelState);
+            foreach (var error in validator.Errors)
+            {
+                throw new DomainException(error.PropertyName, error.ErrorMessage);
+            }
         }
 
         var loginRequest = request.Adapt<LoginRequest>();
@@ -100,8 +104,10 @@ public class AuthenticationController : HumanResourcesController
         var validator = await this.registerValidator.ValidateAsync(request);
         if (!validator.IsValid)
         {
-            validator.AddToModelState(this.ModelState);
-            return this.BadRequest(this.ModelState);
+            foreach (var error in validator.Errors)
+            {
+                throw new DomainException(error.PropertyName, error.ErrorMessage);
+            }
         }
 
         var registerRequest = request.Adapt<RegisterRequest>();
@@ -124,8 +130,10 @@ public class AuthenticationController : HumanResourcesController
         var validator = await this.emailValidator.ValidateAsync(request);
         if (!validator.IsValid)
         {
-            validator.AddToModelState(this.ModelState);
-            return this.BadRequest(this.ModelState);
+            foreach (var error in validator.Errors)
+            {
+                throw new DomainException(error.PropertyName, error.ErrorMessage);
+            }
         }
 
         var sendMailRequest = request.Adapt<VerifyEmailRequest>();
@@ -166,8 +174,10 @@ public class AuthenticationController : HumanResourcesController
         var validator = await this.forgotValidator.ValidateAsync(request);
         if (!validator.IsValid)
         {
-            validator.AddToModelState(this.ModelState);
-            return this.BadRequest(this.ModelState);
+            foreach (var error in validator.Errors)
+            {
+                throw new DomainException(error.PropertyName, error.ErrorMessage);
+            }
         }
 
         var sendMailRequest = request.Adapt<ForgotRequest>();

@@ -12,7 +12,6 @@ public interface IUserRepository
     Task DeleteUserRoles(int userId);
     Task<int> RegisterUser(RegisterUserParam param);
     Task InsertUserRole(InsertUserRoleParam param);
-    Task<UserInfo> GetUserInfo(int id);
     Task<IEnumerable<User>> GetEmployeeLogin(string username, string password, int roleId);
     Task ForgotPassword(string email, string newPassword);
     Task DeleteUser(int id);

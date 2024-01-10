@@ -3,7 +3,6 @@ using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.Product.Domain.Colors;
 using Project.Product.Domain.Enums;
-using System.Drawing;
 
 namespace Project.Product.Infrastructure.SQLDB.Colors
 {

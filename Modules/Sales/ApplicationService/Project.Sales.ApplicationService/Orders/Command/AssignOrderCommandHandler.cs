@@ -12,7 +12,11 @@ namespace Project.Sales.ApplicationService.Orders.Command
         {
             this.orderRepository = orderRepository;
         }
-        public async override Task<AssignOrderCommandResult> Handle(AssignOrderCommand request, CancellationToken cancellationToken)
+
+        public async override Task<AssignOrderCommandResult> Handle(
+            AssignOrderCommand request,
+            CancellationToken cancellationToken
+        )
         {
             await this.orderRepository.AssignEmployee(request.Id, request.EmployeeId, request.DataVersion);
 
