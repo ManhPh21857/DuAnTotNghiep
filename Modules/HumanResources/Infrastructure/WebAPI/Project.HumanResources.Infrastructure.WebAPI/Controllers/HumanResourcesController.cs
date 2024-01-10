@@ -11,7 +11,7 @@ public abstract class HumanResourcesController : CoreController
     {
     }
 
-    protected HumanResourcesController() : base(null)
+    protected HumanResourcesController() : base(null!)
     {
     }
 }

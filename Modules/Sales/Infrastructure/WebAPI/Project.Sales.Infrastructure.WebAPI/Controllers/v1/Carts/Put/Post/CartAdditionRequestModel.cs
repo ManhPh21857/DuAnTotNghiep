@@ -12,9 +12,13 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Carts.Post
     {
         public CartAdditionRequestModelValidator()
         {
-            this.RuleFor(x => x.ProductDetailId).NotNull();
+            this.RuleFor(x => x.ProductDetailId)
+                .NotNull()
+                .WithMessage($"{nameof(CartAdditionRequestModel.ProductDetailId)} không thể trống");
 
-            this.RuleFor(x => x.Quantity).NotNull();
+            this.RuleFor(x => x.Quantity)
+                .NotNull()
+                .WithMessage($"{nameof(CartAdditionRequestModel.Quantity)} không thể trống");
         }
     }
 }

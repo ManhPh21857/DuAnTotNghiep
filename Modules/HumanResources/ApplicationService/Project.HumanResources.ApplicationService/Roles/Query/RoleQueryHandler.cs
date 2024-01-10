@@ -1,5 +1,4 @@
 ﻿using Project.Core.ApplicationService.Queries;
-using Project.Core.Domain;
 using Project.HumanResources.Domain.Roles;
 using Project.HumanResources.Integration.Roles.Query;
 

@@ -35,7 +35,7 @@ public class UserController : HumanResourcesController
             }
         }
 
-        var command = new ChangePasswordCommand(request.OldPassword, request.NewPassword);
+        var command = new ChangePasswordCommand($"{request.OldPassword}", $"{request.NewPassword}");
 
         var result = await this.Mediator.Send(command);
 

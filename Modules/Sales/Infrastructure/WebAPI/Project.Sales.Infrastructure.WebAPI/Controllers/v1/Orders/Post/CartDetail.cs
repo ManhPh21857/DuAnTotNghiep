@@ -19,12 +19,29 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders.Post
     {
         public CartDetailValidator()
         {
-            this.RuleFor(x => x.ProductId).NotNull();
-            this.RuleFor(x => x.ColorId).NotNull();
-            this.RuleFor(x => x.SizeId).NotNull();
-            this.RuleFor(x => x.ProductName).NotEmpty();
-            this.RuleFor(x => x.Price).NotNull();
-            this.RuleFor(x => x.Quantity).NotNull();
+            this.RuleFor(x => x.ProductId)
+                .NotNull()
+                .WithMessage($"{nameof(CartDetail.ProductId)} không thể trống");
+
+            this.RuleFor(x => x.ColorId)
+                .NotNull()
+                .WithMessage($"{nameof(CartDetail.ColorId)} không thể trống");
+
+            this.RuleFor(x => x.SizeId)
+                .NotNull()
+                .WithMessage($"{nameof(CartDetail.SizeId)} không thể trống");
+
+            this.RuleFor(x => x.ProductName)
+                .NotEmpty()
+                .WithMessage($"{nameof(CartDetail.ProductName)} không thể trống");
+
+            this.RuleFor(x => x.Price)
+                .NotNull()
+                .WithMessage($"{nameof(CartDetail.Price)} không thể trống");
+
+            this.RuleFor(x => x.Quantity)
+                .NotNull()
+                .WithMessage($"{nameof(CartDetail.Quantity)} không thể trống");
         }
     }
 }

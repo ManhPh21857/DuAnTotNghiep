@@ -18,12 +18,29 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Customers.
     {
         public UpdateAddressRequestModelValidator()
         {
-            this.RuleFor(x => x.CustomerName).NotEmpty();
-            this.RuleFor(x => x.PhoneNumber).NotEmpty();
-            this.RuleFor(x => x.City).NotEmpty();
-            this.RuleFor(x => x.District).NotEmpty();
-            this.RuleFor(x => x.Commune).NotEmpty();
-            this.RuleFor(x => x.AddressDetail).NotEmpty();
+            this.RuleFor(x => x.CustomerName)
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateAddressRequestModel.CustomerName)} không thể trống");
+
+            this.RuleFor(x => x.PhoneNumber)
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateAddressRequestModel.PhoneNumber)} không thể trống");
+
+            this.RuleFor(x => x.City)
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateAddressRequestModel.City)} không thể trống");
+
+            this.RuleFor(x => x.District)
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateAddressRequestModel.District)} không thể trống");
+
+            this.RuleFor(x => x.Commune)
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateAddressRequestModel.Commune)} không thể trống");
+
+            this.RuleFor(x => x.AddressDetail)
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateAddressRequestModel.AddressDetail)} không thể trống");
         }
     }
 }

@@ -15,9 +15,17 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Roles.Post
     {
         public UpdateGroupRoleRequestModelValidator()
         {
-            this.RuleFor(x => x.Name).NotEmpty();
-            this.RuleFor(x => x.Description).NotEmpty();
-            this.RuleFor(x => x.Roles).NotNull();
+            this.RuleFor(x => x.Name)
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateGroupRoleRequestModel.Name)} không thể trống");
+
+            this.RuleFor(x => x.Description)
+                .NotEmpty()
+                .WithMessage($"{nameof(UpdateGroupRoleRequestModel.Description)} không thể trống");
+
+            this.RuleFor(x => x.Roles)
+                .NotNull()
+                .WithMessage($"{nameof(UpdateGroupRoleRequestModel.Roles)} không thể trống");
         }
     }
 }

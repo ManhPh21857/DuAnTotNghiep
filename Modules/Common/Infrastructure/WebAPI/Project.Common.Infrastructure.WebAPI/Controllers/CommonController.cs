@@ -11,7 +11,7 @@ public abstract class CommonController : CoreController
     {
     }
 
-    protected CommonController() : base(null)
+    protected CommonController() : base(null!)
     {
     }
 }

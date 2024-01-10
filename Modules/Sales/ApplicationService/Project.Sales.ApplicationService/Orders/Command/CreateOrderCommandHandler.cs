@@ -60,18 +60,22 @@ namespace Project.Sales.ApplicationService.Orders.Command
 
             var orderCode = Guid.NewGuid();
 
-            var voucher = await this.voucherRepository.GetVoucher(request.Order.VoucherId);
-            if (voucher is null)
+            if (request.Order.VoucherId.HasValue)
             {
-                throw new DomainException("", "Voucher không tồn tại");
-            }
+                var voucher = await this.voucherRepository.GetVoucher(request.Order.VoucherId.Value);
+                if (voucher is null)
+                {
+                    throw new DomainException("", "Voucher không tồn tại");
+                }
 
-            if (voucher.Quantity < 1)
-            {
-                throw new DomainException("", "Voucher đã hết số lần sử dụng");
-            }
+                if (voucher.Quantity < 1)
+                {
+                    throw new DomainException("", "Voucher đã hết số lần sử dụng");
+                }
 
-            await this.voucherRepository.UpdateVoucherQuantity(request.Order.VoucherId, voucher.Quantity - 1);
+                await this.voucherRepository.UpdateVoucherQuantity(request.Order.VoucherId.Value, voucher.Quantity - 1);
+            }
+            
 
             var createOrderParam = new CreateOrderParam
             {
