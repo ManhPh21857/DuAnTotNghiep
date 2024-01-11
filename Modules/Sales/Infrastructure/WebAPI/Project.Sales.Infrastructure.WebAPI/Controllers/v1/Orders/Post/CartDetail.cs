@@ -33,7 +33,8 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders.Post
 
             this.RuleFor(x => x.ProductName)
                 .NotEmpty()
-                .WithMessage($"{nameof(CartDetail.ProductName)} không thể trống");
+                .WithMessage($"{nameof(CartDetail.ProductName)} không thể trống")
+                .MaximumLength(500);
 
             this.RuleFor(x => x.Price)
                 .NotNull()

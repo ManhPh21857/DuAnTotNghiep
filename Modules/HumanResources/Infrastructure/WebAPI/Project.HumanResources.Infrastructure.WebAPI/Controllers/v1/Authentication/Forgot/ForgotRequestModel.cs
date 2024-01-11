@@ -26,7 +26,9 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Authentica
                 .NotEmpty()
                 .WithMessage($"{nameof(ForgotRequestModel.Password)} không thể trống")
                 .MinimumLength(8)
-                .WithMessage($"{nameof(ForgotRequestModel.Password)} tối thiểu 8 ký tự");
+                .WithMessage($"{nameof(ForgotRequestModel.Password)} tối thiểu 8 ký tự")
+                .MaximumLength(50)
+                .WithMessage($"{nameof(ForgotRequestModel.Password)} tối đa 50 ký tự");
 
             this.RuleFor(c => c)
                 .Must(x => x.RePassword == x.Password)
