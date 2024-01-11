@@ -18,6 +18,7 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Customers.
     public class UpdateAddressRequestModelValidator : AbstractValidator<UpdateAddressRequestModel>
     {
         private readonly Regex regex = new(@"(84|0[3|5|7|8|9])+([0-9]{8})\b");
+
         public UpdateAddressRequestModelValidator()
         {
             this.RuleFor(x => x.CustomerName)
@@ -29,7 +30,7 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Customers.
             this.RuleFor(x => x.PhoneNumber)
                 .NotEmpty()
                 .WithMessage($"{nameof(UpdateAddressRequestModel.PhoneNumber)} không thể trống")
-                .Must(x => this.regex.IsMatch(x))
+                .Must(x => this.regex.IsMatch(x ?? ""))
                 .WithMessage($"{nameof(UpdateAddressRequestModel.PhoneNumber)} sai định dạng");
 
             this.RuleFor(x => x.City)
