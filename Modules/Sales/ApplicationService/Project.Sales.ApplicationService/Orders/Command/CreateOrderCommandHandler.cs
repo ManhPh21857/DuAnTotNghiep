@@ -167,7 +167,8 @@ namespace Project.Sales.ApplicationService.Orders.Command
 
             if (request.Order.PaymentMethodId == PaymentMethod.MoMoPayment.GetHashCode())
             {
-                var command = new CreateMoMoPaymentCommand(request.Order.FullName,
+                var command = new CreateMoMoPaymentCommand(
+                    request.Order.FullName,
                     orderId,
                     orderCode,
                     request.Order.OrderTotal
