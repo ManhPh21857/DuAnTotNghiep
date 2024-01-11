@@ -154,6 +154,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
                 }
             );
         }
+
         public async Task FinishOrderCashPayment(FinishOrderOnlinePaymentParam param)
         {
             await using var connect = await this.provider.Connect();
@@ -179,7 +180,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
             );
         }
 
-        public async Task<IEnumerable<OrderInfo>> GetOrders(int customerId, int? orderId)
+        public async Task<IEnumerable<OrderInfo>> GetOrders(int? customerId, int? orderId)
         {
             await using var connect = await this.provider.Connect();
             var builder = new SqlBuilder();
@@ -204,8 +205,11 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
             ";
 
             var template = builder.AddTemplate(query);
+            if (customerId.HasValue)
+            {
+                builder.Where("customer_id = @CustomerId", new { CustomerId = customerId });
+            }
 
-            builder.Where("customer_id = @CustomerId", new { CustomerId = customerId });
             if (orderId.HasValue)
             {
                 builder.Where("id = @Id", new { Id = orderId.Value });
@@ -219,7 +223,6 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
         public async Task<OrderInfo> GetOrder(int id)
         {
             await using var connect = await this.provider.Connect();
-            var builder = new SqlBuilder();
 
             const string query = @"
                 SELECT
@@ -314,7 +317,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
             return result;
         }
 
-        public async Task CancelOrder(int id, int customerId)
+        public async Task CancelOrder(int id)
         {
             await using var connect = await this.provider.Connect();
 
@@ -324,14 +327,12 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
 	                status = @Status
                 WHERE
 	                id = @Id
-                    AND customer_id = @CustomerId
             ";
 
             await connect.ExecuteAsync(command,
                 new
                 {
                     Id = id,
-                    CustomerId = customerId,
                     Status = OrderStatus.Cancel
                 }
             );

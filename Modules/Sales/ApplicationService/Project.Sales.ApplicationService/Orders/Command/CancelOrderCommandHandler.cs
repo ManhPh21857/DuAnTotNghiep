@@ -40,14 +40,25 @@ namespace Project.Sales.ApplicationService.Orders.Command
         )
         {
             using var scope = TransactionFactory.Create();
-            int userId = this.sessionInfo.UserId.value;
-            int? customerId = await this.customerRepository.GetCustomerId(userId);
-            if (customerId is null)
+
+            OrderInfo? order;
+            if (request.IsGarbage)
             {
-                throw new DomainException("", "Khách hàng không tồn tại");
+                order = (await this.orderRepository.GetOrders(null, request.OrderId)).FirstOrDefault();
+            }
+            else
+
+            {
+                int userId = this.sessionInfo.UserId.value;
+                int? customerId = await this.customerRepository.GetCustomerId(userId);
+                if (customerId is null)
+                {
+                    throw new DomainException("", "Khách hàng không tồn tại");
+                }
+
+                order = (await this.orderRepository.GetOrders(customerId, request.OrderId)).FirstOrDefault();
             }
 
-            var order = (await this.orderRepository.GetOrders(customerId.Value, request.OrderId)).FirstOrDefault();
             if (order is null)
             {
                 throw new DomainException("", "Đơn hàng không tồn tại");
@@ -55,7 +66,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
 
             if (order.OrderDate < DateTime.Now.AddDays(-10))
             {
-                throw new DomainException("", "Đã quá hạn hủy có thể đơn hàng");
+                throw new DomainException("", "Đã quá hạn hủy đơn hàng");
             }
 
             if (order.VoucherId.HasValue)
@@ -64,7 +75,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
                 if (voucher is not null)
                 {
                     await this.voucherRepository.UpdateVoucherQuantity(order.VoucherId.Value, voucher.Quantity + 1);
-                }   
+                }
             }
 
             switch ((OrderStatus)order.Status)
@@ -100,7 +111,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
                     );
             }
 
-            await this.orderRepository.CancelOrder(order.Id, customerId.Value);
+            await this.orderRepository.CancelOrder(order.Id);
 
             var result = new CancelOrderCommandResult(true, "");
 
