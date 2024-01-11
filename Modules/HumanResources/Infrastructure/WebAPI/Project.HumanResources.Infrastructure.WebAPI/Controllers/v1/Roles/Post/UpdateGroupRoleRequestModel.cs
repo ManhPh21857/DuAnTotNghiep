@@ -17,11 +17,13 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Roles.Post
         {
             this.RuleFor(x => x.Name)
                 .NotEmpty()
-                .WithMessage($"{nameof(UpdateGroupRoleRequestModel.Name)} không thể trống");
+                .WithMessage($"{nameof(UpdateGroupRoleRequestModel.Name)} không thể trống")
+                .MaximumLength(50);
 
             this.RuleFor(x => x.Description)
                 .NotEmpty()
-                .WithMessage($"{nameof(UpdateGroupRoleRequestModel.Description)} không thể trống");
+                .WithMessage($"{nameof(UpdateGroupRoleRequestModel.Description)} không thể trống")
+                .MaximumLength(200);
 
             this.RuleFor(x => x.Roles)
                 .NotNull()

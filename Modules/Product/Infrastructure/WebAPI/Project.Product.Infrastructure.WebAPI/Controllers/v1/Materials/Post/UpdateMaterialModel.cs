@@ -16,7 +16,8 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Materials.Post
                .NotNull()
                .WithMessage($"{nameof(UpdateMaterialModel.Name)} must have a value")
                .NotEmpty()
-               .WithMessage($"{nameof(UpdateMaterialModel.Name)} must have a value");
+               .WithMessage($"{nameof(UpdateMaterialModel.Name)} must have a value")
+               .MaximumLength(200);
         }
     }
 }

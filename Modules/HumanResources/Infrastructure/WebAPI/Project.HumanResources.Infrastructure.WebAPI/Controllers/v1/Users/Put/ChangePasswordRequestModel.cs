@@ -20,7 +20,8 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Users.Put
                 .NotEmpty()
                 .WithMessage($"{nameof(ChangePasswordRequestModel.NewPassword)} không thể trống")
                 .MinimumLength(8)
-                .WithMessage($"{nameof(ChangePasswordRequestModel.NewPassword)} cần tối thiểu 8 ký tự");
+                .WithMessage($"{nameof(ChangePasswordRequestModel.NewPassword)} cần tối thiểu 8 ký tự")
+                .MaximumLength(50);
             this.RuleFor(x => x.ReNewPassword)
                 .NotEmpty()
                 .WithMessage($"{nameof(ChangePasswordRequestModel.ReNewPassword)} không thể trống");

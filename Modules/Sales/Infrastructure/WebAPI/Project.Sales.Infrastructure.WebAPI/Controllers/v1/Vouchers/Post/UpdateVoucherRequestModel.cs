@@ -21,7 +21,9 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Vouchers.Post
     {
         public UpdateVoucherRequestModelValidator()
         {
-            this.RuleFor(x => x.Name).NotEmpty();
+            this.RuleFor(x => x.Name)
+                .NotEmpty()
+                .MaximumLength(500);
             this.RuleFor(x => x.VoucherType).NotNull().InclusiveBetween(1, 2);
             this.RuleFor(x => x.MinimumPrice).NotNull();
             this.RuleFor(x => x.Discount).NotNull();
