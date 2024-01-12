@@ -75,7 +75,7 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders
         [HttpPut("cancel/{id}")]
         public async Task<ActionResult<ResponseBaseModel<CancelOrderResponseModel>>> CancelOrder(int id)
         {
-            var command = new CancelOrderCommand(id);
+            var command = new CancelOrderCommand(id, false);
 
             var result = await this.Mediator.Send(command);
 

@@ -31,27 +31,32 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees.
 
             this.RuleFor(x => x.Username)
                 .MinimumLength(8)
-                .WithMessage($"{nameof(UpdateEmployeeRequestModel.Username)} cần tối thiểu 8 ký tự");
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.Username)} cần tối thiểu 8 ký tự")
+                .MaximumLength(50);
 
             this.RuleFor(x => x.Password)
                 .MinimumLength(8)
-                .WithMessage($"{nameof(UpdateEmployeeRequestModel.Password)} cần tối thiểu 8 ký tự");
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.Password)} cần tối thiểu 8 ký tự")
+                .MaximumLength(50);
 
             this.RuleFor(x => x.Id);
 
             this.RuleFor(x => x.FirstName)
                 .NotEmpty()
-                .WithMessage($"{nameof(UpdateEmployeeRequestModel.FirstName)} không thể trống");
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.FirstName)} không thể trống")
+                .MaximumLength(100);
 
             this.RuleFor(x => x.LastName)
                 .NotEmpty()
-                .WithMessage($"{nameof(UpdateEmployeeRequestModel.LastName)} không thể trống");
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.LastName)} không thể trống")
+                .MaximumLength(100);
 
             this.RuleFor(x => x.Image)
                 .NotEmpty()
                 .WithMessage($"{nameof(UpdateEmployeeRequestModel.Image)} không thể trống");
 
-            this.RuleFor(x => x.Address);
+            this.RuleFor(x => x.Address)
+                .MaximumLength(500);
 
             this.RuleFor(x => x.Birthday)
                 .NotNull()
@@ -65,7 +70,8 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees.
 
             this.RuleFor(x => x.PhoneNumber)
                 .NotEmpty()
-                .WithMessage($"{nameof(UpdateEmployeeRequestModel.PhoneNumber)} không thể trống");
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.PhoneNumber)} không thể trống")
+                .MaximumLength(10);
 
             this.RuleFor(x => x.Roles)
                 .NotEmpty()

@@ -16,7 +16,8 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Trademarks.Post
                 .NotNull()
                 .WithMessage($"{nameof(UpdateTrademarkModel.Name)} must have a value")
                 .NotEmpty()
-                .WithMessage($"{nameof(UpdateTrademarkModel.Name)} must have a value");
+                .WithMessage($"{nameof(UpdateTrademarkModel.Name)} must have a value")
+                .MaximumLength(500);
         }
     }
 }

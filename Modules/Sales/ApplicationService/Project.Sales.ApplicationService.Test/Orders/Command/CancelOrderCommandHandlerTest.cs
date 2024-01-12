@@ -260,7 +260,7 @@ namespace Project.Sales.ApplicationService.Test.Orders.Command
 
         private CancelOrderCommand Command()
         {
-            return new CancelOrderCommand(1);
+            return new CancelOrderCommand(1, false);
         }
     }
 }

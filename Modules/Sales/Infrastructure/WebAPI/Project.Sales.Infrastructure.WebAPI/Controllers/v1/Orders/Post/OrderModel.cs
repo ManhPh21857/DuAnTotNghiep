@@ -22,15 +22,18 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders.Post
         {
             this.RuleFor(x => x.FullName)
                 .NotEmpty()
-                .WithMessage($"{nameof(OrderModel.FullName)} không thể trống");
+                .WithMessage($"{nameof(OrderModel.FullName)} không thể trống")
+                .MaximumLength(100);
 
             this.RuleFor(x => x.PhoneNumber)
                 .NotEmpty()
-                .WithMessage($"{nameof(OrderModel.PhoneNumber)} không thể trống");
+                .WithMessage($"{nameof(OrderModel.PhoneNumber)} không thể trống")
+                .MaximumLength(10);
 
             this.RuleFor(x => x.Address)
                 .NotEmpty()
-                .WithMessage($"{nameof(OrderModel.Address)} không thể trống");
+                .WithMessage($"{nameof(OrderModel.Address)} không thể trống")
+                .MaximumLength(500);
 
             this.RuleFor(x => x.MerchandiseSubtotal)
                 .NotNull()
