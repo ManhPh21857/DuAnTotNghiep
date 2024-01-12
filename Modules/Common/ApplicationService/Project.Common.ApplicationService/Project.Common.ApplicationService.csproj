@@ -10,11 +10,16 @@
 		<PackageReference Include="Dapper.SqlBuilder" Version="2.0.78" />
 		<PackageReference Include="Mapster" Version="7.3.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Quartz" Version="3.8.0" />
+		<PackageReference Include="Quartz.AspNetCore" Version="3.8.0" />
+		<PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.8.0" />
+		<PackageReference Include="Quartz.Extensions.Hosting" Version="3.8.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\..\Core\ApplicationService\Project.Core.ApplicationService.csproj" />
 	  <ProjectReference Include="..\..\..\..\Core\Infrastructure\SQLDB\Project.Core.Infrastructure.SQLDB.csproj" />
+	  <ProjectReference Include="..\..\..\Sales\ApplicationService\Project.Sales.Integration\Project.Sales.Integration.csproj" />
 	  <ProjectReference Include="..\..\Domain\Project.Common.Domain\Project.Common.Domain.csproj" />
 	  <ProjectReference Include="..\..\Infrastructure\SQLDB\Project.Common.Infrastructure.SQLDB\Project.Common.Infrastructure.SQLDB.csproj" />
 	  <ProjectReference Include="..\Project.Common.Integration\Project.Common.Integration.csproj" />

@@ -24,9 +24,11 @@ namespace Project.Product.ApplicationService.Products.Command
         {
             using var scope = TransactionFactory.Create();
 
+            int idReturn;
+
             var imageDictionary = new Dictionary<string, string>();
 
-            var product = request.Product;
+            var product = request.Product ?? throw new ArgumentNullException();
             if (product is null)
             {
                 throw new ArgumentNullException();
@@ -45,6 +47,7 @@ namespace Project.Product.ApplicationService.Products.Command
             {
                 //create
                 int productId = await this.productRepository.CreateProduct(product);
+                idReturn = productId;
 
                 //insert product color
                 foreach (var productColor in request.ProductColors)
@@ -80,6 +83,7 @@ namespace Project.Product.ApplicationService.Products.Command
             }
             else
             {
+                idReturn = request.Product.Id;
                 //update
                 await this.productRepository.UpdateProduct(product);
 
@@ -198,7 +202,7 @@ namespace Project.Product.ApplicationService.Products.Command
 
             scope.Complete();
 
-            return new CreateProductCommandResult(true);
+            return new CreateProductCommandResult(idReturn);
         }
 
         public bool IsBase64String(string base64)

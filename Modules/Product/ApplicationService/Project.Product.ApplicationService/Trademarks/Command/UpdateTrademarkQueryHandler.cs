@@ -3,18 +3,21 @@ using Project.Core.ApplicationService.Commands;
 using Project.Product.Domain.Trademarks;
 using Project.Product.Integration.Trademarks.Command;
 
-
-
 namespace Project.Product.ApplicationService.Trademarks.Command
 {
     public class UpdateTrademarkQueryHandler : CommandHandler<UpdateTrademarkCommand, UpdateTrademarkCommandResult>
     {
         private readonly ITrademarkRepository trademark;
+
         public UpdateTrademarkQueryHandler(ITrademarkRepository trademark)
         {
             this.trademark = trademark;
         }
-        public async override Task<UpdateTrademarkCommandResult> Handle(UpdateTrademarkCommand request, CancellationToken cancellationToken)
+
+        public async override Task<UpdateTrademarkCommandResult> Handle(
+            UpdateTrademarkCommand request,
+            CancellationToken cancellationToken
+        )
         {
             foreach (var item in request.Trademarks)
             {
@@ -25,6 +28,7 @@ namespace Project.Product.ApplicationService.Trademarks.Command
                     {
                         throw new InvalidOperationException();
                     }
+
                     await this.trademark.CreateTrademark(item);
                 }
                 else
@@ -34,6 +38,7 @@ namespace Project.Product.ApplicationService.Trademarks.Command
                     {
                         throw new InvalidOperationException();
                     }
+
                     await this.trademark.UpdateTrademark(item);
                 }
             }

@@ -97,7 +97,7 @@ namespace Project.Sales.ApplicationService.Payments.Command
                 );
             }
 
-            var result = JsonConvert.DeserializeObject<MoMoCreatePaymentResponse>(response.Content);
+            var result = JsonConvert.DeserializeObject<MoMoCreatePaymentResponse>(response.Content ?? "");
 
             if (result is null)
             {

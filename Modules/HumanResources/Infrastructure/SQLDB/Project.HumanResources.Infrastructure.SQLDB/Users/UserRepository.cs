@@ -86,7 +86,7 @@ public class UserRepository : IUserRepository
             WHERE
 	            [user_name] = @Username
 	            OR [email] = @Email
-            ";
+        ";
 
         var result = await connect.QueryAsync<User>(query,
             new
@@ -219,32 +219,6 @@ public class UserRepository : IUserRepository
                 UserId = param.UserId,
                 RoleId = param.Role
             });
-    }
-
-    public async Task<UserInfo> GetUserInfo(int id)
-    {
-        await using var connect = await this.provider.Connect();
-        const string query = @"
-            SELECT
-	            u.[user_name]   AS Username
-               ,ui.[first_name] AS FirstName
-               ,ui.[last_name]  AS LastName
-               ,ui.[image]		AS Image
-            FROM
-	            [users] AS u
-	            LEFT JOIN [user_infos] AS ui
-		            ON u.[id] = ui.[user_id]
-            WHERE
-	            id = @Id";
-
-        var result = await connect.QuerySingleOrDefaultAsync<UserInfo>(query,
-            new
-            {
-                Id = id
-            }
-        );
-
-        return result;
     }
 
     public async Task<IEnumerable<User>> GetEmployeeLogin(string username, string password, int roleId)

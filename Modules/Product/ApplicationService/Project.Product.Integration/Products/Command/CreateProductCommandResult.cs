@@ -2,11 +2,11 @@
 {
     public class CreateProductCommandResult
     {
-        public bool IsSuccess { get; set; }
+        public int Id { get; set; }
 
-        public CreateProductCommandResult(bool isSuccess)
+        public CreateProductCommandResult(int id)
         {
-            IsSuccess = isSuccess;
+            this.Id = id;
         }
     }
 }

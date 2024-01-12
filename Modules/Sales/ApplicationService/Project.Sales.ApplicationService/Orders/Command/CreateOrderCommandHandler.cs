@@ -60,18 +60,22 @@ namespace Project.Sales.ApplicationService.Orders.Command
 
             var orderCode = Guid.NewGuid();
 
-            var voucher = await this.voucherRepository.GetVoucher(request.Order.VoucherId);
-            if (voucher is null)
+            if (request.Order.VoucherId.HasValue)
             {
-                throw new DomainException("", "Voucher không tồn tại");
-            }
+                var voucher = await this.voucherRepository.GetVoucher(request.Order.VoucherId.Value);
+                if (voucher is null)
+                {
+                    throw new DomainException("", "Voucher không tồn tại");
+                }
 
-            if (voucher.Quantity < 1)
-            {
-                throw new DomainException("", "Voucher đã hết số lần sử dụng");
-            }
+                if (voucher.Quantity < 1)
+                {
+                    throw new DomainException("", "Voucher đã hết số lần sử dụng");
+                }
 
-            await this.voucherRepository.UpdateVoucherQuantity(request.Order.VoucherId, voucher.Quantity - 1);
+                await this.voucherRepository.UpdateVoucherQuantity(request.Order.VoucherId.Value, voucher.Quantity - 1);
+            }
+            
 
             var createOrderParam = new CreateOrderParam
             {
@@ -139,7 +143,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
                     {
                         OrderId = orderId,
                         ProductId = item.ProductId,
-                        ProductName = item.ProductName,
+                        ProductName = item.ProductName ?? "",
                         ColorId = item.ColorId,
                         SizeId = item.SizeId,
                         Price = item.Price,
@@ -151,7 +155,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
                 {
                     await this.cartRepository.DeleteCartDetail(new DeleteCartDetailParam
                         {
-                            CartId = item.CartId.Value,
+                            CartId = item.CartId ?? 0,
                             ProductDetailId = item.ProductDetailId,
                             DataVersion = item.DataVersion
                         }
@@ -163,7 +167,8 @@ namespace Project.Sales.ApplicationService.Orders.Command
 
             if (request.Order.PaymentMethodId == PaymentMethod.MoMoPayment.GetHashCode())
             {
-                var command = new CreateMoMoPaymentCommand(request.Order.FullName,
+                var command = new CreateMoMoPaymentCommand(
+                    request.Order.FullName,
                     orderId,
                     orderCode,
                     request.Order.OrderTotal

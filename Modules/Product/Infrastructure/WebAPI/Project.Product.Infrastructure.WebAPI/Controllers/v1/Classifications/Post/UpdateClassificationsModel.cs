@@ -8,6 +8,7 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications.P
         public string? Name { get; set; }
         public byte[]? DataVersion { get; set; }
     }
+
     public class UpdateClassificationsModelValidator : AbstractValidator<UpdateClassificationsModel>
     {
         public UpdateClassificationsModelValidator()
@@ -16,10 +17,8 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Classifications.P
                 .NotEmpty()
                 .WithMessage($"{nameof(UpdateClassificationsModel.Name)} can not be empty")
                 .NotNull()
-                .WithMessage($"{nameof(UpdateClassificationsModel.Name)} can not null");
-
-           
-
+                .WithMessage($"{nameof(UpdateClassificationsModel.Name)} can not null")
+                .MaximumLength(200);
         }
     }
 }

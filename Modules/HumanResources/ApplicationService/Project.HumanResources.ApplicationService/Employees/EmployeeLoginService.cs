@@ -57,7 +57,7 @@ namespace Project.HumanResources.ApplicationService.Employees
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString(CultureInfo.CurrentCulture)),
                 new($"{nameof(UserId).ToLower()}", user.Id.ToString()),
-                new("Username", user.Username),
+                new("Username", user.Username ?? ""),
             };
 
             claims.AddRange(roles.Select(role =>

@@ -1,9 +1,4 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Post
 {
@@ -21,7 +16,8 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Origins.Post
                 .NotEmpty()
                 .WithMessage($"{nameof(UpdateOriginModel.Name)} must have a value")
                 .NotNull()
-                .WithMessage($"{nameof(UpdateOriginModel.Name)} must have a value");
+                .WithMessage($"{nameof(UpdateOriginModel.Name)} must have a value")
+                .MaximumLength(500);
         }
     }
 }

@@ -23,11 +23,13 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Post
         {
             this.RuleFor(x => x.Code)
                 .NotNull()
-                .NotEmpty();
+                .NotEmpty()
+                .MaximumLength(50);
 
             this.RuleFor(x => x.Name)
                 .NotNull()
-                .NotEmpty();
+                .NotEmpty()
+                .MaximumLength(200);
 
             this.RuleFor(x => x.Image)
                 .NotNull()
@@ -49,7 +51,8 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Post
                 .NotNull();
 
             this.RuleFor(x => x.Description)
-                .NotNull();
+                .NotNull()
+                .MaximumLength(500);
         }
     }
 }

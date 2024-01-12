@@ -1,6 +1,4 @@
 ﻿
-using FluentValidation;
-
 namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails.Put
 {
     public class UpdateCartdetailModel

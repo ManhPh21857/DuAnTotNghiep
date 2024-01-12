@@ -17,7 +17,8 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Colors.Post
                 .NotNull()
                 .WithMessage($"{nameof(UpdateColorModel.Color)} must have a value")
                 .NotEmpty()
-                .WithMessage($"{nameof(UpdateColorModel.Color)} must have a value");
+                .WithMessage($"{nameof(UpdateColorModel.Color)} must have a value")
+                .MaximumLength(100);
         }
     }
 }
