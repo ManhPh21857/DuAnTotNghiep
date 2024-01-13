@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Core.Domain;
+using Project.Core.Domain.Enums;
 using Project.Sales.Infrastructure.WebAPI.Controllers.Base;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.Vouchers.Get;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.Vouchers.Post;
@@ -44,7 +45,7 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Vouchers
             return response;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Role.VoucherView))]
         [HttpGet("info/{page}")]
         public async Task<ActionResult<ResponseBaseModel<GetAllVoucherResponseModel>>> GetVouchers(int page)
         {
@@ -60,6 +61,7 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Vouchers
             return response;
         }
 
+        [Authorize(Roles = nameof(Role.VoucherEdit))]
         [HttpPost]
         public async Task<ActionResult<ResponseBaseModel<CommandSalesBase>>> UpdateVoucher(
             UpdateVoucherRequestModel request
@@ -86,6 +88,7 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Vouchers
             return response;
         }
 
+        [Authorize(nameof(Role.VoucherDelete))]
         [HttpPut("delete")]
         public async Task<ActionResult<ResponseBaseModel<CommandSalesBase>>> DeleteVoucher(
             DeleteVoucherRequestModel request
@@ -112,6 +115,7 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Vouchers
             return response;
         }
 
+        [Authorize(nameof(Role.VoucherDelete))]
         [HttpPut("reactive")]
         public async Task<ActionResult<ResponseBaseModel<CommandSalesBase>>> ReactiveVoucher(
             DeleteVoucherRequestModel request

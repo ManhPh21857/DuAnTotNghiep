@@ -39,7 +39,7 @@ namespace Project.HumanResources.ApplicationService.Employees.Command
                 var user = await this.userRepository.GetUserRegister(request.Email, request.Username);
                 if (!user.IsNullOrEmpty())
                 {
-                    var exception = new DomainException("", "Username already exists");
+                    var exception = new DomainException("", "tài khoản đã tồn tại");
 
                     throw exception;
                 }

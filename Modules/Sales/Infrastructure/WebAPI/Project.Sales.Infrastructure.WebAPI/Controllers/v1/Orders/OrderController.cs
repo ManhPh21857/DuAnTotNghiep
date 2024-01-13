@@ -1,9 +1,10 @@
 ﻿using FluentValidation;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Core.Domain;
-using Project.Sales.Domain.Orders;
+using Project.Core.Domain.Enums;
 using Project.Sales.Infrastructure.WebAPI.Controllers.Base;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders.Get;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders.Post;
@@ -87,13 +88,13 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders
             return response;
         }
 
-        [HttpPost("shop-order/{page}")]
+        [HttpGet("shop-order/{page}/{mode}")]
         public async Task<ActionResult<ResponseBaseModel<GetShopOrderResponseModel>>> GetShopOrder(
             int page,
-            [FromBody] GetShopOrderRequestModel? request
+            int mode
         )
         {
-            var query = new GetShopOrderQuery(page, request?.Adapt<GetOrderFilter>());
+            var query = new GetShopOrderQuery(page, mode);
 
             var result = await this.Mediator.Send(query);
 
@@ -120,6 +121,7 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders
             return response;
         }
 
+        [Authorize(Roles = nameof(Role.OrderEdit))]
         [HttpPut("assignment")]
         public async Task<ActionResult<ResponseBaseModel<CommandSalesBase>>> AssignOrder(
             AssignOrderRequestModel request
@@ -146,6 +148,7 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders
             return response;
         }
 
+        [Authorize(Roles = nameof(Role.OrderEdit))]
         [HttpPut("prepare-completion")]
         public async Task<ActionResult<ResponseBaseModel<CommandSalesBase>>> FinishPrepare(
             FinishPrepareRequestModel request
