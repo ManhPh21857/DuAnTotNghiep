@@ -37,14 +37,14 @@ namespace Project.HumanResources.ApplicationService.Employees
                 Role.ManagementLogin.GetHashCode())).SingleOrDefault();
             if (user is null)
             {
-                var exception = new DomainException("", "username or password is incorrect");
+                var exception = new DomainException("", "tài khoản và mật khẩu không chính xác");
 
                 throw exception;
             }
 
             if (user.IsDeleted == 1)
             {
-                var exception = new DomainException("", "account has been deleted");
+                var exception = new DomainException("", "tài khoản đã bị xóa");
 
                 throw exception;
             }

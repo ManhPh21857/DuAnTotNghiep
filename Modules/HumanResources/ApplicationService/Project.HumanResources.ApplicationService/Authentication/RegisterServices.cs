@@ -43,7 +43,7 @@ public class RegisterServices : CommandHandler<RegisterRequest, RegisterResponse
         var user = await this.userRepository.GetUserRegister(request.Email, request.UserName);
         if (!user.IsNullOrEmpty())
         {
-            var exception = new DomainException("", "Username already exists");
+            var exception = new DomainException("", "Username đã tồn tại");
 
             throw exception;
         }

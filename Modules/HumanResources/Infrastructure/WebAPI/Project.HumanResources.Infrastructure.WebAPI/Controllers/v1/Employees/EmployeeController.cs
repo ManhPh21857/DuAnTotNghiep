@@ -114,7 +114,6 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees
             return response;
         }
 
-        [Authorize(Roles = nameof(Role.UserView))]
         [HttpGet]
         public async Task<ActionResult<ResponseBaseModel<GetEmployeeOrderResponseModelModel>>> GetEmployees()
         {

@@ -22,7 +22,8 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Carts.Put
                 .WithMessage($"{nameof(UpdateCartDetailRequestModel.ProductDetailIdNew)} không thể trống");
             this.RuleFor(x => x.Quantity)
                 .NotNull()
-                .WithMessage($"{nameof(UpdateCartDetailRequestModel.Quantity)} không thể trống");
+                .WithMessage($"{nameof(UpdateCartDetailRequestModel.Quantity)} không thể trống")
+                .GreaterThan(0);
         }
     }
 }

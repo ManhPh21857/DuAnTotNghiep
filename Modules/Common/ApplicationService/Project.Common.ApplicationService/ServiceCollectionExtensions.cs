@@ -24,7 +24,7 @@ public static class ServiceCollectionExtensions
                     .ForJob(jobKey)
                     .WithIdentity("TimerJob-trigger")
                     //This Cron interval can be described as "run every minute" (when second is zero)
-                    .WithCronSchedule("0 * * ? * *").StartNow()
+                    .WithCronSchedule("0 0 3 * * ?").StartNow()
                 );
             }
         );

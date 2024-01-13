@@ -36,7 +36,7 @@ public class VerifyEmailService : CommandHandler<VerifyEmailRequest, VerifyEmail
             case SendMailMode.Create:
                 if (user is not null)
                 {
-                    throw new DomainException("", "email already exist!");
+                    throw new DomainException("", "email đã tồn tại");
                 }
 
                 if (!this.VerifyEmail(request.Email))
@@ -48,7 +48,7 @@ public class VerifyEmailService : CommandHandler<VerifyEmailRequest, VerifyEmail
             case SendMailMode.Forgot:
                 if (user is null)
                 {
-                    throw new DomainException("", "email not exist!");
+                    throw new DomainException("", "email không tồn tại");
                 }
 
                 var roles = await this.userRepository.GetUserRoles(user.Id);
@@ -74,8 +74,8 @@ public class VerifyEmailService : CommandHandler<VerifyEmailRequest, VerifyEmail
 
         var sendMailRequest = new SendMailRequest(
             sendTo,
-            "Accuracy Email",
-            $"Your verification codes is : {code}"
+            "Xác nhận email",
+            $"Email của bạn được sử dùng để đăng ký vào hệ thống Velosa.\n Đây là mã xác nhận của bạn : {code}"
         );
 
         var cacheExpiryOptions = new MemoryCacheEntryOptions
