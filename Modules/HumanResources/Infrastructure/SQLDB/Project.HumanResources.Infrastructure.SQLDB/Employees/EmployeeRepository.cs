@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Project.Core.Domain.Enums;
 using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.HumanResources.Domain.Employees;
@@ -241,18 +242,26 @@ namespace Project.HumanResources.Infrastructure.SQLDB.Employees
             await using var connect = await this.provider.Connect();
 
             const string query = @"
-               SELECT
-	                [Id]								   AS Id
-                   ,CONCAT([last_name], ' ', [first_name]) AS FullName
+                SELECT
+	                e.[Id]									   AS Id
+                   ,CONCAT(e.[last_name], ' ', e.[first_name]) AS FullName
                 FROM
-	                [dbo].[employees]
+	                [dbo].[employees] AS e
+	                LEFT JOIN user_roles AS ur
+		                ON e.user_id = ur.user_id
                 WHERE
-	                [is_deleted] = 0
+	                e.[is_deleted] = 0
+	                AND ur.role_id = @RoleId
                 ORDER BY
 	                FullName
             ";
 
-            var result = await connect.QueryAsync<EmployeeOrder>(query);
+            var result = await connect.QueryAsync<EmployeeOrder>(query,
+                new
+                {
+                    RoleId = Role.OrderView
+                }
+            );
 
             return result;
         }

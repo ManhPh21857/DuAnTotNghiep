@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Microsoft.IdentityModel.Tokens;
 using Project.Core.Domain.Enums;
 using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
@@ -338,7 +337,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
             );
         }
 
-        public async Task<(IEnumerable<OrderInfo>, int)> GetShopOrder(int skip, int take, GetOrderFilter? param)
+        public async Task<(IEnumerable<OrderInfo>, int)> GetShopOrder(int skip, int take, int? employeeId)
         {
             await using var connect = await this.provider.Connect();
 
@@ -388,27 +387,9 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
                 }
             );
 
-            if (param is not null)
+            if (employeeId.HasValue)
             {
-                if (!param.Name.IsNullOrEmpty())
-                {
-                    builder.Where("full_name like @Name", new { Name = $"%{param.Name}%" });
-                }
-
-                if (param.From.HasValue)
-                {
-                    builder.Where("order_date >= @From", new { From = param.From.Value.ToString("MM-dd-yyyy") });
-                }
-
-                if (param.To.HasValue)
-                {
-                    builder.Where("order_date <= @To", new { To = param.To.Value.ToString("MM-dd-yyyy") });
-                }
-
-                if (!param.ListStatus.IsNullOrEmpty())
-                {
-                    builder.Where("status IN @ListStatus", new { ListStatus = param.ListStatus });
-                }
+                builder.Where("o.employee_id = @EmployeeId", new { EmployeeId = employeeId.Value });
             }
 
             var result = await connect.QueryMultipleAsync(template.RawSql, template.Parameters);

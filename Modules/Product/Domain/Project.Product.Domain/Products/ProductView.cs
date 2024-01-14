@@ -14,6 +14,9 @@
         public float AvgPrice { get; set; }
         public string ClassificationName { get; set; }
         public string MaterialName { get; set; }
+        public string SupplierName { get; set; }
+        public string TrademarkName { get; set; }
+        public string OriginName { get; set; }
         public string Description { get; set; }
     }
 }

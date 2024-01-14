@@ -54,7 +54,7 @@ namespace Project.Sales.ApplicationService.Test.Orders.Command
                             PaymentMethodId = 1,
                             IsOrdered = 1,
                             IsPaid = 1,
-                            OrderDate = new DateTime(2024, 1, 1),
+                            OrderDate = DateTime.Now.AddDays(-5),
                             Status = 1,
                             EmployeeId = 1,
                             EmployeeName = "1",
@@ -255,7 +255,7 @@ namespace Project.Sales.ApplicationService.Test.Orders.Command
             var result = await Assert.ThrowsAsync<DomainException>(()
                 => handler.Handle(command, It.IsAny<CancellationToken>()));
 
-            Assert.Equal("Đã quá hạn hủy có thể đơn hàng", result.ErrorMessage);
+            Assert.Equal("Đã quá hạn hủy đơn hàng", result.ErrorMessage);
         }
 
         private CancelOrderCommand Command()

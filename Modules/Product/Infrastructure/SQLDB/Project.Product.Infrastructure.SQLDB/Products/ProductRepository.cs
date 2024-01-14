@@ -32,11 +32,26 @@ public class ProductRepository : IProductRepository
                ,SUM(pd.Quantity)        AS Quantity
                ,SUM(pd.actual_quantity) AS ActualQuantity
                ,p.[Description]	        AS Description
+               ,c.[Name]				AS ClassificationName
+               ,m.[Name]				AS MaterialName
+               ,t.[Name]				AS TrademarkName
+               ,s.[Name]				AS SupplierName
+               ,o.[Name]				AS OriginName
             FROM
 	            [dbo].[products] AS p
 	            LEFT JOIN [dbo].[product_details] AS pd
 		            ON p.[Id] = pd.[product_id]
 		            AND pd.[is_deleted] = 0
+                LEFT JOIN [dbo].[classifications] AS c
+		            ON p.classification_id = c.Id
+	            LEFT JOIN [dbo].[materials] AS m
+		            ON p.material_id = m.Id
+	            LEFT JOIN [dbo].trademarks AS t
+		            ON p.trademark_id = t.Id
+	            LEFT JOIN [dbo].[suppliers] AS s
+		            ON p.supplier_id = s.Id
+	            LEFT JOIN [dbo].[origins] AS o
+		            ON p.origin_id = o.Id
             WHERE
 	            p.[is_deleted] = 0
                 AND p.[id] = @Id
@@ -46,6 +61,11 @@ public class ProductRepository : IProductRepository
                ,p.[Image]
                ,p.[Code]
                ,p.[Description]
+               ,c.[Name]
+               ,m.[Name]
+               ,t.[Name]
+               ,s.[Name]
+               ,o.[Name]
             ORDER BY
 	            p.[Code]
         ";

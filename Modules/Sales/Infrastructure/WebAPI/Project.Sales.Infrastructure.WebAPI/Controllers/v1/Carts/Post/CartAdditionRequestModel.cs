@@ -18,7 +18,8 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Carts.Post
 
             this.RuleFor(x => x.Quantity)
                 .NotNull()
-                .WithMessage($"{nameof(CartAdditionRequestModel.Quantity)} không thể trống");
+                .WithMessage($"{nameof(CartAdditionRequestModel.Quantity)} không thể trống")
+                .GreaterThan(0);
         }
     }
 }

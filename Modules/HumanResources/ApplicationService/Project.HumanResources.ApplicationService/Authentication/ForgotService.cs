@@ -35,7 +35,7 @@ namespace Project.HumanResources.ApplicationService.Authentication
             var user = (await this.userRepository.GetUserRegister(request.Email, null)).FirstOrDefault();
             if (user is null)
             {
-                var exception = new DomainException("", "Username not exists");
+                var exception = new DomainException("", "Username không tồn tại");
 
                 throw exception;
             }

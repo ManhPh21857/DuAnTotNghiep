@@ -38,14 +38,14 @@ public class LoginService : CommandHandler<LoginRequest, LoginResponse>
         var user = (await this.userRepository.GetUserLogin(getUserParam)).SingleOrDefault();
         if (user is null)
         {
-            var exception = new DomainException("", "username or password is incorrect");
+            var exception = new DomainException("", "tài khoản hoặc mật khẩu không chính xác");
 
             throw exception;
         }
 
         if (user.IsDeleted == 1)
         {
-            var exception = new DomainException("", "account has been deleted");
+            var exception = new DomainException("", "tài khoản đã bị xóa");
 
             throw exception;
         }
@@ -53,7 +53,7 @@ public class LoginService : CommandHandler<LoginRequest, LoginResponse>
         var roles = await this.userRepository.GetUserRoles(user.Id);
         if (roles.All(x => x.Id != Role.ShopLogin.GetHashCode()))
         {
-            var exception = new DomainException("", "username or password is incorrect");
+            var exception = new DomainException("", "tài khoản hoặc mật khẩu không chính xác");
 
             throw exception;
         }
