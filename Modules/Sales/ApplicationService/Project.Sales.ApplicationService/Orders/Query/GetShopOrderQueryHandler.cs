@@ -45,8 +45,8 @@ namespace Project.Sales.ApplicationService.Orders.Query
 
             var result = await this.orderRepository.GetShopOrder(skip, take, employeeId);
 
-            int totalPage = result.Item2 / CommonConst.EMPLOYEE_PAGE_SIZE;
-            if (result.Item2 % CommonConst.EMPLOYEE_PAGE_SIZE > 0)
+            int totalPage = result.Item2 / CommonConst.ORDER_PAGE_SIZE;
+            if (result.Item2 % CommonConst.ORDER_PAGE_SIZE > 0)
             {
                 totalPage++;
             }
