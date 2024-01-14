@@ -24,15 +24,7 @@ namespace Project.Sales.ApplicationService.SaleCounters.Command
 
             
                 var voucher = await this.voucherRepository.GetVoucher(request.Order.VoucherId);
-                if (voucher is null)
-                {
-                    throw new DomainException("", "Voucher không tồn tại");
-                }
-
-                if (voucher.Quantity < 1)
-                {
-                    throw new DomainException("", "Voucher đã hết số lần sử dụng");
-                }
+              
 
                 await this.voucherRepository.UpdateVoucherQuantity(request.Order.VoucherId, voucher.Quantity - 1);
             
