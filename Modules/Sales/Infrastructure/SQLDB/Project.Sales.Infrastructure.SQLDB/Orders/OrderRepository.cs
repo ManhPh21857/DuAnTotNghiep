@@ -381,6 +381,8 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
 	                COUNT(id) AS Total
                 FROM
 	                orders
+                /**where**/
+            
             ";
 
             var template = builder.AddTemplate(query);
