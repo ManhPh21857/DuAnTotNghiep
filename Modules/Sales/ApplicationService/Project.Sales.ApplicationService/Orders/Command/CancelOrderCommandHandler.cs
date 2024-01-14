@@ -2,12 +2,11 @@
 using Project.Core.ApplicationService.Commands;
 using Project.Core.Domain;
 using Project.Core.Domain.Enums;
-using Project.HumanResources.Domain.Customers;
 using Project.Product.Domain.Products;
 using Project.Sales.Domain.Orders;
+using Project.Sales.Domain.Vouchers;
 using Project.Sales.Integration.Orders.Command;
 using System.Net;
-using Project.Sales.Domain.Vouchers;
 
 namespace Project.Sales.ApplicationService.Orders.Command
 {
@@ -15,22 +14,16 @@ namespace Project.Sales.ApplicationService.Orders.Command
     {
         private readonly IProductRepository productRepository;
         private readonly IOrderRepository orderRepository;
-        private readonly ICustomerRepository customerRepository;
-        private readonly ISessionInfo sessionInfo;
         private readonly IVoucherRepository voucherRepository;
 
         public CancelOrderCommandHandler(
             IProductRepository productRepository,
             IOrderRepository orderRepository,
-            ICustomerRepository customerRepository,
-            ISessionInfo sessionInfo,
             IVoucherRepository voucherRepository
         )
         {
             this.productRepository = productRepository;
             this.orderRepository = orderRepository;
-            this.customerRepository = customerRepository;
-            this.sessionInfo = sessionInfo;
             this.voucherRepository = voucherRepository;
         }
 
@@ -41,23 +34,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
         {
             using var scope = TransactionFactory.Create();
 
-            OrderInfo? order;
-            if (request.IsGarbage)
-            {
-                order = (await this.orderRepository.GetOrders(null, request.OrderId)).FirstOrDefault();
-            }
-            else
-
-            {
-                int userId = this.sessionInfo.UserId.value;
-                int? customerId = await this.customerRepository.GetCustomerId(userId);
-                if (customerId is null)
-                {
-                    throw new DomainException("", "Khách hàng không tồn tại");
-                }
-
-                order = (await this.orderRepository.GetOrders(customerId, request.OrderId)).FirstOrDefault();
-            }
+            var order = (await this.orderRepository.GetOrders(null, request.OrderId)).FirstOrDefault();
 
             if (order is null)
             {
