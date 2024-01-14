@@ -68,7 +68,7 @@ namespace Project.HumanResources.ApplicationService.Employees
             var token = new JwtSecurityToken(this.configuration["Jwt:Issuer"],
                 this.configuration["Jwt:Audience"],
                 claims,
-                expires: DateTime.UtcNow.AddMinutes(10),
+                expires: DateTime.UtcNow.AddHours(24),
                 signingCredentials: signIn);
 
             var bearToken = new JwtSecurityTokenHandler().WriteToken(token);

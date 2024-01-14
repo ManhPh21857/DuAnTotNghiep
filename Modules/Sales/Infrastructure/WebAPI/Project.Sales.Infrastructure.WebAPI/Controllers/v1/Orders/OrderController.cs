@@ -73,6 +73,7 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders
             return response;
         }
 
+        [AllowAnonymous]
         [HttpPut("cancel/{id}")]
         public async Task<ActionResult<ResponseBaseModel<CancelOrderResponseModel>>> CancelOrder(int id)
         {

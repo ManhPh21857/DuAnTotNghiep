@@ -3,6 +3,7 @@ using Project.Core.Domain.Enums;
 using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.Sales.Domain.Orders;
+using Project.Sales.Domain.Vouchers;
 
 namespace Project.Sales.Infrastructure.SQLDB.Orders
 {
@@ -30,6 +31,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
                    ,[merchandise_subtotal]
                    ,[shipping_fee]
                    ,[shipping_discount_subtotal]
+                   ,[voucher_id]
                    ,[voucher_applied]
                    ,[order_total]
                    ,[payment_method_id]
@@ -50,6 +52,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
                    ,@MerchandiseSubtotal
                    ,@ShippingFee
                    ,@ShippingDiscountSubtotal
+                   ,@VoucherId
                    ,@VoucherApplied
                    ,@OrderTotal
                    ,@PaymentMethodId
@@ -73,6 +76,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
                     MerchandiseSubtotal = param.MerchandiseSubtotal,
                     ShippingFee = param.ShippingFee,
                     ShippingDiscountSubtotal = param.ShippingDiscountSubtotal,
+                    VoucherId = param.VoucherId,
                     VoucherApplied = param.VoucherApplied,
                     OrderTotal = param.OrderTotal,
                     PaymentMethodId = param.PaymentMethodId,
