@@ -18,6 +18,7 @@
         public float MinPrice { get; set; }
         public float MaxPrice { get; set; }
         public float AvgPrice { get; set; }
+        public int ActualQuantity { get; set; }
         public string Description { get; set; }
         public string ProductName { get; set; }
 

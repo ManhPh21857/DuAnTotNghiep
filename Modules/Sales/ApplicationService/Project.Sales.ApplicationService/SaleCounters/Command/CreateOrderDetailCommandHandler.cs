@@ -50,7 +50,6 @@ namespace Project.Sales.ApplicationService.SaleCounters.Command
             var id = await this.saleCounterRepository.CreateOrder(order);
             foreach (var item in request.Orderdetails)
             {
-                var a = await this.saleCounterRepository.GetQuantity(item.ProductId, item.ColorId, item.SizeId);
                 await this.saleCounterRepository.CreateOrderDetail(new OrderDetailInfo
                 {
                     OrderId = id,
@@ -60,14 +59,15 @@ namespace Project.Sales.ApplicationService.SaleCounters.Command
                     SizeId = item.SizeId,
                     Price = item.Price,
                     Quantity = item.Quantity,
-                    TotalQuantity = a-item.Quantity
                 });
+                var a = await this.saleCounterRepository.GetQuantity(item.ProductId, item.ColorId, item.SizeId);
                 UpdateQuantityInfo update = new UpdateQuantityInfo()
                 {
                     ProductId = item.ProductId,
                     ColorId = item.ColorId,
                     SizeId = item.SizeId,
-                    Quantity = a - item.Quantity
+                    Quantity = a - item.Quantity,
+                    Actual_Quantity = a - item.Quantity,
                 };
 
                 await this.saleCounterRepository.UpdateQuantity(update);
