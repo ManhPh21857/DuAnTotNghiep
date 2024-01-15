@@ -8,5 +8,6 @@
         Task<IEnumerable<SoldOutProductInfo>> SoldOutProducts();
         Task<IEnumerable<OrderUnconfimred>> GetOrderUnconfimred();
         Task<IEnumerable<NewCustomerInfo>> GetNewCustomer();
+        Task<IEnumerable<SoldOutProductDetailInfo>> GetSoldOutProductDetail();
     }
 }

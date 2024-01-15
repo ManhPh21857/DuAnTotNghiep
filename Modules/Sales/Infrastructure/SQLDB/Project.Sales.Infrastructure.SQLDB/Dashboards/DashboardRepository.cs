@@ -93,5 +93,22 @@ namespace Project.Sales.Infrastructure.SQLDB.Dashboards
             var result = await connect.QueryAsync<NewCustomerInfo>(sql);
             return result;
         }
+
+        public async Task<IEnumerable<SoldOutProductDetailInfo>> GetSoldOutProductDetail()
+        {
+            var connect = await this.provider.Connect();
+            const string sql = @"
+                SELECT  p.name, c.color, s.size, pd.quantity, 
+                pd.actual_quantity AS ActualQuantity, pd.price
+                FROM product_details AS pd 
+				LEFT JOIN products AS p 
+				ON pd.product_id = p.id
+				LEFT JOIN colors AS c ON pd.color_id = c.id
+				LEFT JOIN sizes AS s ON pd.size_id = s.id
+                WHERE pd.is_deleted = 0 AND pd.quantity<=5
+            ";
+            var result = await connect.QueryAsync<SoldOutProductDetailInfo>(sql);
+            return result;
+        }
     }
 }

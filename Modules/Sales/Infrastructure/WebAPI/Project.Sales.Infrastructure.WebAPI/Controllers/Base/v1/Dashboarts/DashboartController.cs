@@ -91,5 +91,18 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.Dashboarts
                 Data = result.Adapt<GetNewCustomerQueryResult>()
             };
         }
+
+        [AllowAnonymous]
+        [HttpGet("SoldOutProductDetail")]
+        public async Task<ActionResult<ResponseBaseModel<GetSoldOutProductDetailQueryResult>>> SoldOutProductDetail()
+        {
+
+            var result = await Mediator.Send(new GetSoldOutProductDetailQuery());
+
+            return new ResponseBaseModel<GetSoldOutProductDetailQueryResult>
+            {
+                Data = result.Adapt<GetSoldOutProductDetailQueryResult>()
+            };
+        }
     }
 }
