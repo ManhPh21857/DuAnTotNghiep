@@ -119,11 +119,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Product.Infrastruct
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Product.Infrastructure.WebAPI", "Modules\Product\Infrastructure\WebAPI\Project.Product.Infrastructure.WebAPI\Project.Product.Infrastructure.WebAPI.csproj", "{63FF6496-A12A-4E81-8E05-C3AA621077F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.HumanResources.ApplicationService.Test", "Modules\HumanResources\ApplicationService\Project.HumanResources.ApplicationService.Test\Project.HumanResources.ApplicationService.Test.csproj", "{50A913BD-4230-45CD-9F5B-830013FE4D7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.HumanResources.ApplicationService.Test", "Modules\HumanResources\ApplicationService\Project.HumanResources.ApplicationService.Test\Project.HumanResources.ApplicationService.Test.csproj", "{50A913BD-4230-45CD-9F5B-830013FE4D7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Product.ApplicationService.Test", "Modules\Product\ApplicationService\Project.Product.ApplicationService.Test\Project.Product.ApplicationService.Test.csproj", "{45C94D99-252C-4ED0-BDE1-5CD2436F1366}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Product.ApplicationService.Test", "Modules\Product\ApplicationService\Project.Product.ApplicationService.Test\Project.Product.ApplicationService.Test.csproj", "{45C94D99-252C-4ED0-BDE1-5CD2436F1366}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Sales.ApplicationService.Test", "Modules\Sales\ApplicationService\Project.Sales.ApplicationService.Test\Project.Sales.ApplicationService.Test.csproj", "{39B2FFA2-ECFD-4ABF-BD1B-47B521ABF41A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Sales.ApplicationService.Test", "Modules\Sales\ApplicationService\Project.Sales.ApplicationService.Test\Project.Sales.ApplicationService.Test.csproj", "{39B2FFA2-ECFD-4ABF-BD1B-47B521ABF41A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

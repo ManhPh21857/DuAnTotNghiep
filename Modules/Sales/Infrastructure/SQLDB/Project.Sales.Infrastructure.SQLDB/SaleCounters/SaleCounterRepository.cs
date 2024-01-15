@@ -218,17 +218,19 @@ namespace Project.Sales.Infrastructure.SQLDB.SaleCounters
             const string sql = @"
                               UPDATE [dbo].[product_details]
                                 SET
-	                                [quantity] = @Quantity
+	                                [quantity] = @Quantity,
+                                    [actual_quantity] = @Actual_Quantity
                    
                                 WHERE
-	                                product_id = @ProductId AND color_id = @ColorId AND size_id = @SizeID
+	                                product_id = @ProductId AND color_id = @ColorId AND size_id = @SizeId
                                     ";
             await connect.ExecuteAsync(sql, new
             {
                 ProductId = sale.ProductId,
                 ColorId = sale.ColorId,
                 SizeId = sale.SizeId,
-                Quantity = sale.Quantity
+                Quantity = sale.Quantity,
+                Actual_Quantity = sale.Actual_Quantity
             }); ;
         }
     }

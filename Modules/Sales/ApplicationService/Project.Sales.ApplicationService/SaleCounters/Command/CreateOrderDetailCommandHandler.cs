@@ -1,6 +1,7 @@
 ﻿using Project.Core.ApplicationService.Commands;
 using Project.Core.Domain;
 using Project.Sales.Domain.SaleCounters;
+using Project.Sales.Domain.Vouchers;
 using Project.Sales.Integration.SaleCounters.Command;
 
 namespace Project.Sales.ApplicationService.SaleCounters.Command
@@ -9,18 +10,26 @@ namespace Project.Sales.ApplicationService.SaleCounters.Command
     {
         private readonly ISaleCounterRepository saleCounterRepository;
         private readonly ISessionInfo sessionInfo;
-        public CreateOrderDetailCommandHandler(ISaleCounterRepository saleCounterRepository, ISessionInfo sessionInfo)
+        private readonly IVoucherRepository voucherRepository;
+        public CreateOrderDetailCommandHandler(ISaleCounterRepository saleCounterRepository, IVoucherRepository voucherRepository, ISessionInfo sessionInfo)
         {
             this.saleCounterRepository = saleCounterRepository;
             this.sessionInfo = sessionInfo;
+            this.voucherRepository = voucherRepository;
         }
 
         public async override Task<CreateOrderDetailCommandResult> Handle(CreateOrderDetailCommand request, CancellationToken cancellationToken)
         {
             var code = Guid.NewGuid();
+
+            
+                var voucher = await this.voucherRepository.GetVoucher(request.Order.VoucherId);
+              
+
+                await this.voucherRepository.UpdateVoucherQuantity(request.Order.VoucherId, voucher.Quantity - 1);
+            
             var order = new OrderInfo
             {
-
                 EmployeeId = this.sessionInfo.UserId.value,
                 OrderCode = code,
                 Address = "Tại Quầy",
@@ -41,7 +50,6 @@ namespace Project.Sales.ApplicationService.SaleCounters.Command
             var id = await this.saleCounterRepository.CreateOrder(order);
             foreach (var item in request.Orderdetails)
             {
-                var a = await this.saleCounterRepository.GetQuantity(item.ProductId, item.ColorId, item.SizeId);
                 await this.saleCounterRepository.CreateOrderDetail(new OrderDetailInfo
                 {
                     OrderId = id,
@@ -51,14 +59,15 @@ namespace Project.Sales.ApplicationService.SaleCounters.Command
                     SizeId = item.SizeId,
                     Price = item.Price,
                     Quantity = item.Quantity,
-                    TotalQuantity = a-item.Quantity
                 });
+                var a = await this.saleCounterRepository.GetQuantity(item.ProductId, item.ColorId, item.SizeId);
                 UpdateQuantityInfo update = new UpdateQuantityInfo()
                 {
                     ProductId = item.ProductId,
                     ColorId = item.ColorId,
                     SizeId = item.SizeId,
-                    Quantity = a - item.Quantity
+                    Quantity = a - item.Quantity,
+                    Actual_Quantity = a - item.Quantity,
                 };
 
                 await this.saleCounterRepository.UpdateQuantity(update);
