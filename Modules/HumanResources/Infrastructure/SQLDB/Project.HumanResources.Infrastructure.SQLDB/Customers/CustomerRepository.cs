@@ -243,6 +243,30 @@ namespace Project.HumanResources.Infrastructure.SQLDB.Customers
             return result;
         }
 
+        public async Task<string?> GetCustomerEmail(int customerId)
+        {
+            await using var connect = await this.provider.Connect();
+            
+            const string query = @"
+                SELECT
+                    email AS Email
+                FROM
+	                customers
+                WHERE
+	                is_deleted = 0
+	                AND id = @CustomerId
+            ";
+
+            var result = await connect.QueryFirstOrDefaultAsync<string?>(query,
+                new
+                {
+                    CustomerId = customerId
+                }
+            );
+            
+            return result;
+        }
+
         public async Task UpdateCustomer(UpdateCustomerParam param)
         {
             await using var connect = await this.provider.Connect();

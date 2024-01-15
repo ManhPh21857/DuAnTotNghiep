@@ -18,6 +18,7 @@
 		<ProjectReference Include="..\..\..\..\Core\ApplicationService\Project.Core.ApplicationService.csproj" />
 		<ProjectReference Include="..\..\..\..\Core\Infrastructure\SQLDB\Project.Core.Infrastructure.SQLDB.csproj" />
 		<ProjectReference Include="..\..\..\Common\Domain\Project.Common.Domain\Project.Common.Domain.csproj" />
+		<ProjectReference Include="..\..\..\HumanResources\ApplicationService\Project.HumanResources.Intergration\Project.HumanResources.Integration.csproj" />
 		<ProjectReference Include="..\..\..\HumanResources\Domain\Project.HumanResources.Domain\Project.HumanResources.Domain.csproj" />
 		<ProjectReference Include="..\..\..\Product\Domain\Project.Product.Domain\Project.Product.Domain.csproj" />
 		<ProjectReference Include="..\..\Domain\Project.Sales.Domain\Project.Sales.Domain.csproj" />

@@ -89,6 +89,22 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders
             return response;
         }
 
+        [AllowAnonymous]
+        [HttpPut("forced-cancel/{id}")]
+        public async Task<ActionResult<ResponseBaseModel<CancelOrderResponseModel>>> ForcedCancelOrder(int id)
+        {
+            var command = new CancelOrderCommand(id, true);
+
+            var result = await this.Mediator.Send(command);
+
+            var response = new ResponseBaseModel<CancelOrderResponseModel>
+            {
+                Data = result.Adapt<CancelOrderResponseModel>()
+            };
+
+            return response;
+        }
+
         [HttpGet("shop-order/{page}/{mode}")]
         public async Task<ActionResult<ResponseBaseModel<GetShopOrderResponseModel>>> GetShopOrder(
             int page,

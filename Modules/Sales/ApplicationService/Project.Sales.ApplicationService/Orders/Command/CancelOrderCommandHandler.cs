@@ -1,7 +1,10 @@
-﻿using Project.Core.ApplicationService;
+﻿using MediatR;
+using Project.Core.ApplicationService;
 using Project.Core.ApplicationService.Commands;
 using Project.Core.Domain;
 using Project.Core.Domain.Enums;
+using Project.HumanResources.Domain.Customers;
+using Project.HumanResources.Integration.Services;
 using Project.Product.Domain.Products;
 using Project.Sales.Domain.Orders;
 using Project.Sales.Domain.Vouchers;
@@ -12,19 +15,25 @@ namespace Project.Sales.ApplicationService.Orders.Command
 {
     public class CancelOrderCommandHandler : CommandHandler<CancelOrderCommand, CancelOrderCommandResult>
     {
+        private readonly ICustomerRepository customerRepository;
         private readonly IProductRepository productRepository;
-        private readonly IOrderRepository orderRepository;
         private readonly IVoucherRepository voucherRepository;
+        private readonly IOrderRepository orderRepository;
+        private readonly ISender mediator;
 
         public CancelOrderCommandHandler(
+            ICustomerRepository customerRepository,
             IProductRepository productRepository,
+            IVoucherRepository voucherRepository,
             IOrderRepository orderRepository,
-            IVoucherRepository voucherRepository
+            ISender mediator
         )
         {
+            this.customerRepository = customerRepository;
             this.productRepository = productRepository;
-            this.orderRepository = orderRepository;
             this.voucherRepository = voucherRepository;
+            this.orderRepository = orderRepository;
+            this.mediator = mediator;
         }
 
         public async override Task<CancelOrderCommandResult> Handle(
@@ -105,8 +114,25 @@ namespace Project.Sales.ApplicationService.Orders.Command
                 }
             }
 
+            if (request.IsForced && order.CustomerId.HasValue)
+            {
+                await this.SendMail(order.CustomerId.Value);
+            }
+
             scope.Complete();
             return result;
+        }
+
+        private async Task SendMail(int customerId)
+        {
+            var emailTo = await this.customerRepository.GetCustomerEmail(customerId);
+            if (!string.IsNullOrEmpty(emailTo))
+            {
+                var input = new SendMailRequest(new[] { emailTo },
+                    "Thông báo hủy đơn hàng",
+                    "Đơn hàng của ông/bà đã bị hủy");
+                await this.mediator.Send(input);
+            }
         }
 
         private async Task RefundProductQuantity(int orderId)
