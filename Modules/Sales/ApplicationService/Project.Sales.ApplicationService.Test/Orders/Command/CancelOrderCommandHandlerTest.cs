@@ -1,6 +1,6 @@
-﻿using Moq;
+﻿using MediatR;
+using Moq;
 using Project.Core.Domain;
-using Project.Core.Domain.User;
 using Project.HumanResources.Domain.Customers;
 using Project.Product.Domain.Products;
 using Project.Sales.ApplicationService.Orders.Command;
@@ -16,7 +16,7 @@ namespace Project.Sales.ApplicationService.Test.Orders.Command
         private readonly Mock<IProductRepository> mockProductRepository;
         private readonly Mock<IOrderRepository> mockOrderRepository;
         private readonly Mock<ICustomerRepository> mockCustomerRepository;
-        private readonly Mock<ISessionInfo> mockSessionInfo;
+        private readonly Mock<ISender> mockMediator;
         private readonly Mock<IVoucherRepository> mockVoucherRepository;
 
         public CancelOrderCommandHandlerTest()
@@ -24,10 +24,9 @@ namespace Project.Sales.ApplicationService.Test.Orders.Command
             this.mockProductRepository = new Mock<IProductRepository>();
             this.mockOrderRepository = new MockOrderRepository();
             this.mockCustomerRepository = new Mock<ICustomerRepository>();
-            this.mockSessionInfo = new Mock<ISessionInfo>();
+            this.mockMediator = new Mock<ISender>();
             this.mockVoucherRepository = new Mock<IVoucherRepository>();
 
-            this.mockSessionInfo.SetupGet(x => x.UserId).Returns(new UserId(1));
             this.mockCustomerRepository
                 .Setup(x => x.GetCustomerId(It.IsAny<int>()))
                 .ReturnsAsync(1);
@@ -136,17 +135,16 @@ namespace Project.Sales.ApplicationService.Test.Orders.Command
                         DataVersion = new byte[] { 0x10 }
                     }
                 );
-
         }
 
         private CancelOrderCommandHandler Handler()
         {
             return new CancelOrderCommandHandler(
-                this.mockProductRepository.Object,
-                this.mockOrderRepository.Object,
                 this.mockCustomerRepository.Object,
-                this.mockSessionInfo.Object,
-                this.mockVoucherRepository.Object
+                this.mockProductRepository.Object,
+                this.mockVoucherRepository.Object,
+                this.mockOrderRepository.Object,
+                this.mockMediator.Object
             );
         }
 
@@ -178,7 +176,7 @@ namespace Project.Sales.ApplicationService.Test.Orders.Command
             var result = await Assert.ThrowsAsync<DomainException>(()
                 => handler.Handle(command, It.IsAny<CancellationToken>()));
 
-            Assert.Equal("Khách hàng không tồn tại", result.ErrorMessage);
+            Assert.Equal("Đơn hàng không tồn tại", result.ErrorMessage);
         }
 
         [Fact]

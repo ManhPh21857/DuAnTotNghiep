@@ -9,6 +9,7 @@
         Task UpdateCustomerAddress(UpdateCustomerAddressParam param);
         Task UpdateDefaultAddress(int customerId, int id);
         Task<CustomerInfo> GetCustomerInfo(int userId);
+        Task<string?> GetCustomerEmail(int customerId);
         Task UpdateCustomer(UpdateCustomerParam param);
     }
 }

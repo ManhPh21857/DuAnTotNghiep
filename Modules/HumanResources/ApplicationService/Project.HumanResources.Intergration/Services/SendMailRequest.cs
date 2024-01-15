@@ -4,14 +4,14 @@ namespace Project.HumanResources.Integration.Services;
 
 public class SendMailRequest : ICommand<SendMailResponse>
 {
-    public List<string> SendTo { get; set; }
+    public IEnumerable<string> SendTo { get; set; }
     public string Title { get; set; }
     public string Content { get; set; }
 
-    public SendMailRequest(List<string> sendTo, string title, string content)
+    public SendMailRequest(IEnumerable<string> sendTo, string title, string content)
     {
-        SendTo = sendTo;
-        Title = title;
-        Content = content;
+        this.SendTo = sendTo;
+        this.Title = title;
+        this.Content = content;
     }
 }
