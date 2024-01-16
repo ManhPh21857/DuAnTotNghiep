@@ -122,11 +122,12 @@ namespace Project.Sales.ApplicationService.Orders.Command
                                     await this.productRepository.GetProductDetails(
                                         item.ProductId,
                                         item.ColorId,
-                                        item.SizeId
+                                        item.SizeId,
+                                        0
                                     );
                 if (productDetail is null)
                 {
-                    throw new DomainException("", "Sản phẩm không tồn tại");
+                    throw new DomainException("", "Sản phẩm không tồn tại hoặc đã không còn kinh doanh mặt hàng này");
                 }
 
                 if (productDetail.Quantity < item.Quantity)
