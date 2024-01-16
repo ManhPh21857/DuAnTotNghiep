@@ -120,7 +120,7 @@ namespace Project.Sales.ApplicationService.Test.Orders.Command
                 );
 
             this.mockProductRepository
-                .Setup(x => x.GetProductDetails(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Setup(x => x.GetProductDetails(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(new ProductDetailInfo
                     {
                         Id = 1,

@@ -730,10 +730,11 @@ public class ProductRepository : IProductRepository
         return result;
     }
 
-    public async Task<ProductDetailInfo> GetProductDetails(int productId, int colorId, int sizeId)
+    public async Task<ProductDetailInfo> GetProductDetails(int productId, int colorId, int sizeId, int? isDeleted)
     {
         await using var connect = await this.provider.Connect();
-        const string query = @"
+
+        string query = @"
             SELECT
 	            [Id]		      AS Id
                ,[color_id]	      AS ColorId
@@ -749,15 +750,20 @@ public class ProductRepository : IProductRepository
 	            [product_id] = @ProductId
 	            AND [color_id] = @ColorId
 	            AND [size_id] = @SizeId
-	            AND [is_deleted] = 0
         ";
+
+        if (isDeleted.HasValue)
+        {
+            query = query + "AND [is_deleted] = @IsDeleted";
+        }
 
         var result = await connect.QueryFirstOrDefaultAsync<ProductDetailInfo>(query,
             new
             {
                 ProductId = productId,
                 ColorId = colorId,
-                SizeId = sizeId
+                SizeId = sizeId,
+                IsDeleted = isDeleted
             }
         );
 
