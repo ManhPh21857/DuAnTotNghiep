@@ -17,7 +17,7 @@ namespace Project.Product.Infrastructure.SQLDB.Colors
 
         public async Task<IEnumerable<ColorInfo>> GetColors(int? id)
         {
-            var connect = await provider.Connect();
+            await using var connect = await this.provider.Connect();
 
             var builder = new SqlBuilder();
 
@@ -46,7 +46,7 @@ namespace Project.Product.Infrastructure.SQLDB.Colors
 
         public async Task CreateColor(ColorInfo param)
         {
-            var connect = await provider.Connect();
+            await using var connect = await this.provider.Connect();
 
             const string query = @"
                 INSERT [dbo].[colors] (
@@ -67,7 +67,7 @@ namespace Project.Product.Infrastructure.SQLDB.Colors
 
         public async Task UpdateColor(ColorInfo param)
         {
-            var connect = await provider.Connect();
+            await using var connect = await this.provider.Connect();
 
             const string query = @"
                 UPDATE [dbo].[colors]
@@ -94,7 +94,7 @@ namespace Project.Product.Infrastructure.SQLDB.Colors
 
         public async Task DeleteColor(ColorInfo param)
         {
-            var connect = await provider.Connect();
+            await using var connect = await this.provider.Connect();
 
             const string query = @"
                 UPDATE [dbo].[colors]
@@ -121,7 +121,7 @@ namespace Project.Product.Infrastructure.SQLDB.Colors
 
         public async Task ReActiveColor(ColorInfo param)
         {
-            var connect = await provider.Connect();
+            await using var connect = await this.provider.Connect();
 
             const string query = @"
                 UPDATE [dbo].[colors]
@@ -144,6 +144,27 @@ namespace Project.Product.Infrastructure.SQLDB.Colors
             );
 
             result.IsOptimisticLocked();
+        }
+
+        public async Task<ColorInfo> GetColorByName(string name)
+        {
+            await using var connect = await this.provider.Connect();
+
+            string query = $@"
+                SELECT
+	                [id]            AS Id
+                   ,[color]         AS Color
+                   ,[is_deleted]    AS IsDeleted
+                   ,[data_version]  AS DataVersion
+                FROM
+	                [colors]
+                WHERE
+                    color = N'{name}'
+            ";
+
+            var result = await connect.QueryAsync<ColorInfo>(query);
+
+            return result.FirstOrDefault();
         }
     }
 }

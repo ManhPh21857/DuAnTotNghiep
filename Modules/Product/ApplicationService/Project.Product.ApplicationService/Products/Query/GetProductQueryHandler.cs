@@ -18,7 +18,7 @@ namespace Project.Product.ApplicationService.Products.Query
             int skip = (request.PageNo - 1) * CommonConst.PRODUCT_PAGE_SIZE;
             int take = CommonConst.PRODUCT_PAGE_SIZE;
 
-            var result = await this.productRepository.GetProducts(skip, take);
+            var result = await this.productRepository.GetProducts(skip, take, request.IsDeleted);
 
             int totalPage = result.TotalProduct / CommonConst.PRODUCT_PAGE_SIZE;
             if (result.TotalProduct % CommonConst.PRODUCT_PAGE_SIZE > 0)
