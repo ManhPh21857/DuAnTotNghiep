@@ -82,11 +82,11 @@ namespace Project.Sales.Infrastructure.SQLDB.Dashboards
             var connect = await this.provider.Connect();
             const string sql = @"
                 SELECT c.id AS Id, 
-                c.last_name+' '+c.first_name AS FullName, 
-                c.birthday, 
+                u.user_name AS UserName, 
+                c.address, 
                 c.phone_number AS PhoneNumber,
                 c.created_at AS CreateAt  
-                FROM customers AS c 
+                FROM customers AS c LEFT JOIN users AS u ON u.id= c.user_id
                 WHERE Convert(Date,c.created_at) >= GetDate() -30
             ";
             var result = await connect.QueryAsync<NewCustomerInfo>(sql);
