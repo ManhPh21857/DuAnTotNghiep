@@ -11,7 +11,7 @@
         public float MerchandiseSubtotal { get; set; }
         public float ShippingFee { get; set; }
         public float ShippingDiscountSubtotal { get; set; }
-        public int VoucherId { get; set; }
+        public int? VoucherId { get; set; }
         public float VoucherApplied { get; set; }
         public float OrderTotal { get; set; }
         public int PaymentMethodId { get; set; }
