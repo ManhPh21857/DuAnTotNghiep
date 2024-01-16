@@ -22,9 +22,9 @@ namespace Project.Sales.ApplicationService.SaleCounters.Command
         {
             var code = Guid.NewGuid();
 
-            if (request.Order.VoucherId==null)
+            if (request.Order.VoucherId>1)
             {
-                var voucher = await this.voucherRepository.GetVoucher(request.Order.VoucherId);
+                var voucher = await this.voucherRepository.GetVoucher(request.Order.VoucherId.Value);
                 if (voucher is null)
                 {
                     throw new DomainException("", "Voucher không tồn tại");
@@ -35,9 +35,10 @@ namespace Project.Sales.ApplicationService.SaleCounters.Command
                     throw new DomainException("", "Voucher đã hết số lần sử dụng");
                 }
 
-                await this.voucherRepository.UpdateVoucherQuantity(request.Order.VoucherId, voucher.Quantity - 1);
+                await this.voucherRepository.UpdateVoucherQuantity(request.Order.VoucherId.Value, voucher.Quantity - 1);
             }
           
+
             
             var order = new OrderInfo
             {

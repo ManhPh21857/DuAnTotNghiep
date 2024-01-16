@@ -81,14 +81,13 @@ namespace Project.Sales.Infrastructure.SQLDB.Dashboards
         {
             var connect = await this.provider.Connect();
             const string sql = @"
-                SELECT u.id AS Id, 
-                c.first_name+''+c.last_name AS FullName, 
+                SELECT c.id AS Id, 
+                c.last_name+' '+c.first_name AS FullName, 
                 c.birthday, 
                 c.phone_number AS PhoneNumber,
-                u.created_at AS CreateAt  
-                FROM users AS u Left join customers AS c 
-                ON c.user_id = u.id
-                WHERE Convert(Date,u.created_at) >= GetDate() -30
+                c.created_at AS CreateAt  
+                FROM customers AS c 
+                WHERE Convert(Date,c.created_at) >= GetDate() -30
             ";
             var result = await connect.QueryAsync<NewCustomerInfo>(sql);
             return result;
