@@ -28,9 +28,6 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Products.Post
 
             this.RuleFor(x => x.Price)
                 .NotNull();
-
-            this.RuleFor(x => x.ImportQuantity)
-                .NotNull();
         }
     }
 }
