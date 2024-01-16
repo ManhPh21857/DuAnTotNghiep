@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using Project.Core.ApplicationService;
 using Project.Core.ApplicationService.Commands;
+using Project.Core.Domain;
 using Project.Product.Domain.Products;
 using Project.Product.Integration.Products.Command;
 using SixLabors.ImageSharp;
@@ -45,6 +46,12 @@ namespace Project.Product.ApplicationService.Products.Command
 
             if (product.DataVersion.IsNullOrEmpty())
             {
+                var productCheck = await this.productRepository.CheckProductCode(product.Code);
+                if (productCheck is not null)
+                {
+                    throw new DomainException("", "Code đã tồn tại");
+                }
+
                 //create
                 int productId = await this.productRepository.CreateProduct(product);
                 idReturn = productId;

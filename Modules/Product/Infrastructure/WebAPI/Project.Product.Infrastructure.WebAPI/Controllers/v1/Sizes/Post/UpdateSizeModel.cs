@@ -18,7 +18,8 @@ namespace Project.Product.Infrastructure.WebAPI.Controllers.v1.Sizes.Post
                 .WithMessage($"{nameof(UpdateSizeModel.Size)} must have a value")
                 .NotEmpty()
                 .WithMessage($"{nameof(UpdateSizeModel.Size)} must have a value")
-                .MaximumLength(50);
+                .MaximumLength(50)
+                .Must(x => x.All(char.IsDigit));
         }
     }
 }

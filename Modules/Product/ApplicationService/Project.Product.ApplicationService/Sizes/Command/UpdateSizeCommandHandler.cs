@@ -1,5 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Project.Core.ApplicationService.Commands;
+using Project.Core.Domain;
 using Project.Product.Domain.Sizes;
 using Project.Product.Integration.Sizes.Command;
 
@@ -20,6 +21,13 @@ namespace Project.Product.ApplicationService.Sizes.Command
             {
                 if (item.DataVersion.IsNullOrEmpty())
                 {
+                    var color = await this.sizeRepository.GetSizeByName(item.Size ?? "");
+
+                    if (color is not null)
+                    {
+                        throw new DomainException("", "Size đã tồn tại");
+                    }
+
                     await this.sizeRepository.CreateSize(item);
                 }
                 else
