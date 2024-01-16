@@ -206,5 +206,20 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Orders
 
             return response;
         }
+
+        [HttpGet("revenue")]
+        public async Task<ActionResult<ResponseBaseModel<GetOrderRevenueResponseModel>>> GetOrderRevenue()
+        {
+            var query = new GetOrderRevenueQuery();
+
+            var result = await this.Mediator.Send(query);
+
+            var response = new ResponseBaseModel<GetOrderRevenueResponseModel>
+            {
+                Data = result.Adapt<GetOrderRevenueResponseModel>()
+            };
+
+            return response;
+        }
     }
 }

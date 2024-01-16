@@ -14,5 +14,6 @@
         Task AssignEmployee(int id, int employeeId, byte[]? dateVersion);
         Task UpdateOrderStatus(int id, int status, byte[]? dateVersion);
         Task<int?> GetOrderAssign(int? id);
+        Task<IEnumerable<OrderRevenueInfo>> GetOrderRevenue();
     }
 }

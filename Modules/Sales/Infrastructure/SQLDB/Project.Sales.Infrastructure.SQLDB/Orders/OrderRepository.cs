@@ -459,5 +459,40 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
 
             result.IsOptimisticLocked();
         }
+
+        public async Task<IEnumerable<OrderRevenueInfo>> GetOrderRevenue()
+        {
+            await using var connect = await this.provider.Connect();
+
+            const string query = @"
+                SELECT
+	                id			AS Id
+                   ,order_total AS OrderTotal
+                   ,order_date  AS OrderDate
+                FROM
+	                orders
+                WHERE
+	                is_ordered = 1
+	                AND status IN @Status
+                    AND FORMAT(order_date, 'yyyy/MM/dd') >= @OrderDate 
+            ";
+
+            var result = await connect.QueryAsync<OrderRevenueInfo>(query,
+                new
+                {
+                    Status = new[]
+                    {
+                        OrderStatus.Pending,
+                        OrderStatus.NeedToConfirm,
+                        OrderStatus.Preparing,
+                        OrderStatus.Deliver,
+                        OrderStatus.Received
+                    },
+                    OrderDate = DateTime.Now.AddDays(-15).ToString("yyyy/MM/dd")
+                }
+            );
+
+            return result;
+        }
     }
 }
