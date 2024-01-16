@@ -1,4 +1,6 @@
-﻿namespace Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.SaleCounters.Post
+﻿using FluentValidation;
+
+namespace Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.SaleCounters.Post
 {
     public class OrderModel1
     {
@@ -12,6 +14,29 @@
         public float MerchandiseSubtotal { get; set; }
         public int PaymentMethodId { get; set; }
         public int? Status { get; set; }
+    }
 
+    public class OrderModelValidator1 : AbstractValidator<OrderModel1>
+    {
+        public OrderModelValidator1()
+        {
+            this.RuleFor(x => x.FullName)
+                .NotEmpty()
+                .WithMessage($"{nameof(OrderModel1.FullName)} không thể trống")
+                .MaximumLength(100);
+
+            this.RuleFor(x => x.MerchandiseSubtotal)
+                .NotNull()
+                .WithMessage($"{nameof(OrderModel1.MerchandiseSubtotal)} không thể trống");
+
+            this.RuleFor(x => x.VoucherApplied)
+                .NotNull()
+                .WithMessage($"{nameof(OrderModel1.VoucherApplied)} không thể trống");
+
+            this.RuleFor(x => x.OrderTotal)
+                .NotNull()
+                .WithMessage($"{nameof(OrderModel1.OrderTotal)} không thể trống");
+
+        }
     }
 }
