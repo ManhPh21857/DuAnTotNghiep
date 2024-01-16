@@ -1,7 +1,9 @@
-﻿using Mapster;
+﻿using FluentValidation;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Project.Core.Domain;
 using Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.SaleCounters.Get;
 using Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.SaleCounters.Post;
 using Project.Sales.Integration.SaleCounters.Command;
@@ -11,9 +13,11 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.SaleCounters
 {
     public class SaleCounterController : SalesController
     {
-        public SaleCounterController(ISender mediator) : base(mediator)
+        private readonly IValidator<CreateSaleOrderDetailModel> validatorCreateOrderRequestModel;
+        public SaleCounterController(ISender mediator,
+            IValidator<CreateSaleOrderDetailModel> validatorCreateOrderRequestModel) : base(mediator)
         {
-
+            this.validatorCreateOrderRequestModel = validatorCreateOrderRequestModel;
         }
 
         [AllowAnonymous]
@@ -46,19 +50,31 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.SaleCounters
             };
 
         }
+       
 
-        [AllowAnonymous]
+       [AllowAnonymous]
         [HttpPost]
-        public async Task<ResponseBaseModel<CommandSalesBase>> CreateSaleOrderDetail([FromBody] CreateSaleOrderDetailModel request)
+        public async Task<ActionResult<ResponseBaseModel<CommandSalesBase>>> CreateSaleOrderDetail( CreateSaleOrderDetailModel request)
         {
+            var validator = await validatorCreateOrderRequestModel.ValidateAsync(request);
+            if (!validator.IsValid)
+            {
+                foreach (var error in validator.Errors)
+                {
+                    throw new DomainException(error.PropertyName, error.ErrorMessage);
+                }
+            }
+
             var command = request.Adapt<CreateOrderDetailCommand>();
 
             var result = await this.Mediator.Send(command);
 
-            return new ResponseBaseModel<CommandSalesBase>
+            var response = new ResponseBaseModel<CommandSalesBase>
             {
                 Data = result.Adapt<CommandSalesBase>()
             };
+
+            return response;
         }
        
     }

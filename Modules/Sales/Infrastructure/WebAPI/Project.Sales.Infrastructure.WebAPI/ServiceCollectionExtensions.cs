@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Project.Sales.ApplicationService;
 using Project.Sales.Domain;
 using Project.Sales.Infrastructure.SQLDB;
+using Project.Sales.Infrastructure.WebAPI.Controllers.Base.v1.SaleCounters.Post;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.CartDetails.Post;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.Carts.Post;
 using Project.Sales.Infrastructure.WebAPI.Controllers.v1.Carts.Put;
@@ -46,7 +47,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<DeleteCartDetailModel>, DeleteCartDetailModelValidator>();
         services.AddScoped<IValidator<DeleteCartDetailRequestModel>, DeleteCartDetailRequestModelValidator>();
         services.AddScoped<IValidator<UpdateCartDetailRequestModel>, UpdateCartDetailRequestModelValidator>();
-
+        services.AddScoped<IValidator<CreateSaleOrderDetailModel>, CreateOrderDetailModelValidator1>();
+        services.AddScoped<IValidator<OrderSaleDetailModel>, OrderDetailValidator1>();
+        services.AddScoped<IValidator<OrderModel1>, OrderModelValidator1>();
         services.AddScoped<IValidator<OrderModel>, OrderModelValidator>();
         services.AddScoped<IValidator<CartDetail>, CartDetailValidator>();
         services.AddScoped<IValidator<CreateOrderRequestModel>, CreateOrderRequestModelValidator>();
@@ -55,5 +58,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IValidator<DeleteVoucherRequestModel>, DeleteVoucherRequestModelValidator>();
         services.AddScoped<IValidator<AssignOrderRequestModel>, AssignOrderRequestModelValidator>();
         services.AddScoped<IValidator<FinishPrepareRequestModel>, FinishPrepareRequestModelValidator>();
+
     }
 }
