@@ -142,7 +142,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
             foreach (var item in orderDetails)
             {
                 var productDetail =
-                    await this.productRepository.GetProductDetails(item.ProductId, item.ColorId, item.SizeId);
+                    await this.productRepository.GetProductDetails(item.ProductId, item.ColorId, item.SizeId, null);
 
                 await this.productRepository.UpdateProductDetailQuantity(
                     productDetail.Id,
@@ -158,7 +158,7 @@ namespace Project.Sales.ApplicationService.Orders.Command
             foreach (var item in orderDetails)
             {
                 var productDetail =
-                    await this.productRepository.GetProductDetails(item.ProductId, item.ColorId, item.SizeId);
+                    await this.productRepository.GetProductDetails(item.ProductId, item.ColorId, item.SizeId, null);
 
                 await this.productRepository.UpdateProductDetailBothQuantity(
                     productDetail.Id,

@@ -205,7 +205,8 @@ public class ProductRepository : IProductRepository
 
         if (!filterParam.Name.IsNullOrEmpty())
         {
-            builder.Where("p.[name] LIKE @Name", new { Name = $"%{filterParam.Name}%" });
+            string input = $"N'%{filterParam.Name}%'";
+            builder.Where($"p.[name] LIKE {input}", new { Name = $"%{filterParam.Name}%" });
         }
 
         builder.Having("SUM(pd.Quantity) > 0");
@@ -266,7 +267,7 @@ public class ProductRepository : IProductRepository
         return result;
     }
 
-    public async Task<ProductViewResponse> GetProducts(int skip, int take)
+    public async Task<ProductViewResponse> GetProducts(int skip, int take, int isDeleted)
     {
         await using var connect = await this.provider.Connect();
 
@@ -301,7 +302,7 @@ public class ProductRepository : IProductRepository
 	            ) AS pd
 		            ON p.[Id] = pd.[product_id]
             WHERE
-	            p.is_deleted = 0
+	            p.is_deleted = @IsDeleted
             ORDER BY
 	            p.[created_at] DESC
             OFFSET @Skip ROWS
@@ -312,14 +313,15 @@ public class ProductRepository : IProductRepository
             FROM
 	            [dbo].[products]
             WHERE
-	            [is_deleted] = 0
+	            [is_deleted] = @IsDeleted
         ";
 
         var response = await connect.QueryMultipleAsync(query,
             new
             {
                 Skip = skip,
-                Take = take
+                Take = take,
+                IsDeleted = isDeleted
             }
         );
 
@@ -421,13 +423,13 @@ public class ProductRepository : IProductRepository
         result.IsOptimisticLocked();
     }
 
-    public async Task DeleteProduct(DeleteProductParam param)
+    public async Task DeleteProduct(DeleteProductParam param, int isDeleted)
     {
         await using var connect = await this.provider.Connect();
         const string command = @"
             UPDATE [dbo].[products]
             SET
-	            [is_deleted] = 1
+	            [is_deleted] = @IsDeleted
             WHERE
 	            [id] = @Id
                 AND [data_version] = @DataVersion
@@ -437,7 +439,8 @@ public class ProductRepository : IProductRepository
             new
             {
                 Id = param.Id,
-                DataVersion = param.DataVersion
+                DataVersion = param.DataVersion,
+                IsDeleted = isDeleted
             }
         );
 
@@ -467,6 +470,39 @@ public class ProductRepository : IProductRepository
             {
                 OrderDate = DateTime.Now.AddDays(-15).ToString("d"),
                 ProductId = productId
+            }
+        );
+
+        return result;
+    }
+
+    public async Task<ProductInfo> CheckProductCode(string code)
+    {
+        await using var connect = await this.provider.Connect();
+
+        const string query = @"
+            SELECT
+	            [Id]				AS Id
+               ,[Code]				AS Code
+               ,[supplier_id]		AS SupplierId
+               ,[material_id]		AS MaterialId
+               ,[classification_id] AS ClassificationId
+               ,[origin_id]			AS OriginId
+               ,[trademark_id]		AS TrademarkId
+               ,[Name]				AS Name
+               ,[Image]				AS Image
+               ,[Description]		AS Description
+               ,[data_version]		AS DataVersion
+            FROM
+	            [dbo].[products]
+            WHERE
+	            [Code] = @Code
+        ";
+
+        var result = await connect.QueryFirstOrDefaultAsync<ProductInfo>(query,
+            new
+            {
+                Code = code
             }
         );
 
@@ -549,13 +585,13 @@ public class ProductRepository : IProductRepository
         );
     }
 
-    public async Task DeleteProductColor(int productId)
+    public async Task DeleteProductColor(int productId, int isDeleted)
     {
         await using var connect = await this.provider.Connect();
         const string command = @"
             UPDATE [dbo].[product_colors]
             SET
-	            [is_deleted] = 1
+	            [is_deleted] = @IsDeleted
             WHERE
 	            [product_id] = @ProductId
         ";
@@ -563,7 +599,8 @@ public class ProductRepository : IProductRepository
         int result = await connect.ExecuteAsync(command,
             new
             {
-                ProductId = productId
+                ProductId = productId,
+                IsDeleted = isDeleted
             }
         );
     }
@@ -640,13 +677,13 @@ public class ProductRepository : IProductRepository
         );
     }
 
-    public async Task DeleteProductSize(int productId)
+    public async Task DeleteProductSize(int productId, int isDeleted)
     {
         await using var connect = await this.provider.Connect();
         const string command = @"
             UPDATE [dbo].[product_sizes]
             SET
-	            [is_deleted] = 1
+	            [is_deleted] = @IsDeleted
             WHERE
 	            [product_id] = @ProductId
         ";
@@ -654,7 +691,8 @@ public class ProductRepository : IProductRepository
         int result = await connect.ExecuteAsync(command,
             new
             {
-                ProductId = productId
+                ProductId = productId,
+                IsDeleted = isDeleted
             }
         );
     }
@@ -692,10 +730,11 @@ public class ProductRepository : IProductRepository
         return result;
     }
 
-    public async Task<ProductDetailInfo> GetProductDetails(int productId, int colorId, int sizeId)
+    public async Task<ProductDetailInfo> GetProductDetails(int productId, int colorId, int sizeId, int? isDeleted)
     {
         await using var connect = await this.provider.Connect();
-        const string query = @"
+
+        string query = @"
             SELECT
 	            [Id]		      AS Id
                ,[color_id]	      AS ColorId
@@ -711,15 +750,20 @@ public class ProductRepository : IProductRepository
 	            [product_id] = @ProductId
 	            AND [color_id] = @ColorId
 	            AND [size_id] = @SizeId
-	            AND [is_deleted] = 0
         ";
+
+        if (isDeleted.HasValue)
+        {
+            query = query + "AND [is_deleted] = @IsDeleted";
+        }
 
         var result = await connect.QueryFirstOrDefaultAsync<ProductDetailInfo>(query,
             new
             {
                 ProductId = productId,
                 ColorId = colorId,
-                SizeId = sizeId
+                SizeId = sizeId,
+                IsDeleted = isDeleted
             }
         );
 
@@ -832,13 +876,13 @@ public class ProductRepository : IProductRepository
         result.IsOptimisticLocked();
     }
 
-    public async Task DeleteProductDetailByProductId(int productId)
+    public async Task DeleteProductDetailByProductId(int productId, int isDeleted)
     {
         await using var connect = await this.provider.Connect();
         const string command = @"
             UPDATE [dbo].[product_details]
             SET
-	            [is_deleted] = 1
+	            [is_deleted] = @IsDeleted
             WHERE
 	            [product_id] = @ProductId
         ";
@@ -846,7 +890,8 @@ public class ProductRepository : IProductRepository
         await connect.ExecuteAsync(command,
             new
             {
-                ProductId = productId
+                ProductId = productId,
+                IsDeleted = isDeleted
             }
         );
     }

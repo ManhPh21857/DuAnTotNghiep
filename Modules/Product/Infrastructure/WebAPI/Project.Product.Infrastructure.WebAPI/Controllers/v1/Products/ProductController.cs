@@ -66,10 +66,10 @@ public class ProductController : CommonController
     }
 
     [Authorize(Roles = nameof(Role.ProductView))]
-    [HttpGet("{pageNo}")]
-    public async Task<ActionResult<ResponseBaseModel<GetProductResponseModel>>> GetProducts(int pageNo)
+    [HttpGet("{pageNo}/{isDeleted}")]
+    public async Task<ActionResult<ResponseBaseModel<GetProductResponseModel>>> GetProducts(int pageNo, int isDeleted)
     {
-        var query = new GetProductQuery(pageNo);
+        var query = new GetProductQuery(pageNo, isDeleted);
 
         var result = await this.Mediator.Send(query);
 
@@ -131,6 +131,7 @@ public class ProductController : CommonController
     )
     {
         var command = request.Adapt<DeleteProductCommand>();
+        command.IsDeleted = 1;
 
         var result = await this.Mediator.Send(command);
 
@@ -153,6 +154,25 @@ public class ProductController : CommonController
         var response = new ResponseBaseModel<GetNewProductResponseModel>
         {
             Data = result.Adapt<GetNewProductResponseModel>()
+        };
+
+        return response;
+    }
+
+    [Authorize(Roles = nameof(Role.ProductDelete))]
+    [HttpPut("reactive")]
+    public async Task<ActionResult<ResponseBaseModel<CommandProductBase>>> ReactiveProduct(
+        DeleteProductRequestModel request
+    )
+    {
+        var command = request.Adapt<DeleteProductCommand>();
+        command.IsDeleted = 0;
+
+        var result = await this.Mediator.Send(command);
+
+        var response = new ResponseBaseModel<CommandProductBase>
+        {
+            Data = result.Adapt<CommandProductBase>()
         };
 
         return response;

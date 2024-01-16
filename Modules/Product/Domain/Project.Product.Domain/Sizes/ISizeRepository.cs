@@ -7,5 +7,6 @@
         Task UpdateSize(SizeInfo size);
         Task DeleteSize(SizeInfo size);
         Task ReActiveSize(SizeInfo size);
+        Task<SizeInfo> GetSizeByName(string name);
     }
 }

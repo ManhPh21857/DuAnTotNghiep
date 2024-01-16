@@ -1,6 +1,4 @@
-﻿
-
-using Dapper;
+﻿using Dapper;
 using Project.Core.Infrastructure.SQLDB.Extensions;
 using Project.Core.Infrastructure.SQLDB.Providers;
 using Project.Product.Domain.Enums;
@@ -19,7 +17,7 @@ namespace Project.Product.Infrastructure.SQLDB.Sizes
 
         public async Task CreateSize(SizeInfo size)
         {
-            var connect = await provider.Connect();
+            var connect = await this.provider.Connect();
 
             const string query = @"
                 INSERT [dbo].[sizes] (
@@ -40,7 +38,7 @@ namespace Project.Product.Infrastructure.SQLDB.Sizes
 
         public async Task DeleteSize(SizeInfo size)
         {
-            var connect = await provider.Connect();
+            var connect = await this.provider.Connect();
 
             const string query = @"
                 UPDATE [dbo].[sizes]
@@ -67,7 +65,7 @@ namespace Project.Product.Infrastructure.SQLDB.Sizes
 
         public async Task<IEnumerable<SizeInfo>> GetSizes(int? id)
         {
-            var connect = await provider.Connect();
+            var connect = await this.provider.Connect();
 
             var builder = new SqlBuilder();
 
@@ -96,7 +94,7 @@ namespace Project.Product.Infrastructure.SQLDB.Sizes
 
         public async Task ReActiveSize(SizeInfo size)
         {
-            var connect = await provider.Connect();
+            var connect = await this.provider.Connect();
 
             const string query = @"
                 UPDATE [dbo].[sizes]
@@ -123,7 +121,7 @@ namespace Project.Product.Infrastructure.SQLDB.Sizes
 
         public async Task UpdateSize(SizeInfo size)
         {
-            var connect = await provider.Connect();
+            var connect = await this.provider.Connect();
 
             const string query = @"
                 UPDATE [dbo].[sizes]
@@ -146,6 +144,32 @@ namespace Project.Product.Infrastructure.SQLDB.Sizes
             );
 
             result.IsOptimisticLocked();
+        }
+
+        public async Task<SizeInfo> GetSizeByName(string name)
+        {
+            var connect = await this.provider.Connect();
+
+            const string query = @"
+                SELECT
+	                [id]            AS Id
+                   ,[size]         AS Size
+                   ,[is_deleted]    AS IsDeleted
+                   ,[data_version]  AS DataVersion
+                FROM
+	                [sizes]
+                WHERE
+                    [size] = @Size
+            ";
+
+            var result = await connect.QueryFirstOrDefaultAsync<SizeInfo>(query,
+                new
+                {
+                    Size = name
+                }
+            );
+
+            return result;
         }
     }
 }

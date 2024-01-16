@@ -7,5 +7,6 @@
         Task UpdateColor(ColorInfo param);
         Task DeleteColor(ColorInfo param);
         Task ReActiveColor(ColorInfo param);
+        Task<ColorInfo> GetColorByName(string name);
     }
 }

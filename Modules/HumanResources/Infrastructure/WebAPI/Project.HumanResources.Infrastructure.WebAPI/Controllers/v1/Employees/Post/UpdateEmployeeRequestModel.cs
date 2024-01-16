@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using System.Text.RegularExpressions;
 
 namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees.Post
 {
@@ -23,11 +24,15 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees.
 
     public class UpdateEmployeeRequestModelValidator : AbstractValidator<UpdateEmployeeRequestModel>
     {
+        private readonly Regex phoneNumberRegex = new(@"(84|0[3|5|7|8|9])+([0-9]{8})\b");
+        private readonly Regex emailRegex = new(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
         public UpdateEmployeeRequestModelValidator()
         {
             this.RuleFor(x => x.Email)
                 .NotEmpty()
-                .WithMessage($"{nameof(UpdateEmployeeRequestModel.Email)} không thể trống");
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.Email)} không thể trống")
+                .Must(x => this.emailRegex.IsMatch(x ?? ""))
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.Email)} sai định dạng");
 
             this.RuleFor(x => x.Username)
                 .MinimumLength(8)
@@ -71,7 +76,9 @@ namespace Project.HumanResources.Infrastructure.WebAPI.Controllers.v1.Employees.
             this.RuleFor(x => x.PhoneNumber)
                 .NotEmpty()
                 .WithMessage($"{nameof(UpdateEmployeeRequestModel.PhoneNumber)} không thể trống")
-                .MaximumLength(10);
+                .MaximumLength(10)
+                .Must(x => this.phoneNumberRegex.IsMatch(x ?? ""))
+                .WithMessage($"{nameof(UpdateEmployeeRequestModel.PhoneNumber)} sai định dạng");
 
             this.RuleFor(x => x.Roles)
                 .NotEmpty()

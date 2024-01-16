@@ -50,7 +50,8 @@ namespace Project.Sales.ApplicationService.Orders.Command
             var orderDetails = await this.orderRepository.GetOrderDetails(request.Id);
             foreach (var item in orderDetails)
             {
-                var productDetail = await this.productRepository.GetProductDetails(item.ProductId, item.ColorId, item.SizeId);
+                var productDetail =
+                    await this.productRepository.GetProductDetails(item.ProductId, item.ColorId, item.SizeId, null);
 
                 await this.productRepository.UpdateProductDetailActualQuantity(
                     productDetail.Id,

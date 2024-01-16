@@ -10,12 +10,9 @@ namespace Project.Product.ApplicationService.Colors.Command
     {
         private readonly IColorRepository colorRepository;
 
-        private readonly ISessionInfo sessionInfo;
-
-        public UpdateColorCommandHandler(IColorRepository colorRepository, ISessionInfo sessionInfo)
+        public UpdateColorCommandHandler(IColorRepository colorRepository)
         {
             this.colorRepository = colorRepository;
-            this.sessionInfo = sessionInfo;
         }
 
         public async override Task<UpdateColorCommandResult> Handle(
@@ -23,14 +20,17 @@ namespace Project.Product.ApplicationService.Colors.Command
             CancellationToken cancellationToken
         )
         {
-            var userId = sessionInfo.UserId;
-            var sessionId = sessionInfo.SessionId;
-
-
             foreach (var item in request.Colors)
             {
                 if (item.DataVersion.IsNullOrEmpty())
                 {
+                    var color = await this.colorRepository.GetColorByName(item.Color ?? "");
+
+                    if (color is not null)
+                    {
+                        throw new DomainException("", "Màu sắc đã tồn tại");
+                    }
+
                     await this.colorRepository.CreateColor(item);
                 }
                 else

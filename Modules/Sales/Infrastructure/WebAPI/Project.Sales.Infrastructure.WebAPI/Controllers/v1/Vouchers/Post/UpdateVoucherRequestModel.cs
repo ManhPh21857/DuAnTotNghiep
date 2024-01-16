@@ -54,7 +54,9 @@ namespace Project.Sales.Infrastructure.WebAPI.Controllers.v1.Vouchers.Post
 
             this.RuleFor(x => x.Quantity)
                 .NotNull()
-                .WithMessage("vui lòng nhập số lượng");
+                .WithMessage("vui lòng nhập số lượng")
+                .GreaterThan(0)
+                .WithMessage("số lượng không thể nhỏ hơn 0");
 
             this.RuleFor(x => x.DiscountType)
                 .InclusiveBetween(1, 2);
