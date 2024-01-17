@@ -60,8 +60,15 @@ namespace Project.Sales.ApplicationService.SaleCounters.Command
                 Status = 3
             };
             var id = await this.saleCounterRepository.CreateOrder(order);
+
             foreach (var item in request.Orderdetails)
             {
+                var a = await this.saleCounterRepository.GetQuantity(item.ProductId, item.ColorId, item.SizeId);
+                if (a < item.Quantity)
+                {
+                    throw new DomainException("", "Số lượng hàng còn lại không đủ");
+                }
+
                 await this.saleCounterRepository.CreateOrderDetail(new OrderDetailInfo
                 {
                     OrderId = id,
@@ -72,7 +79,7 @@ namespace Project.Sales.ApplicationService.SaleCounters.Command
                     Price = item.Price,
                     Quantity = item.Quantity,
                 });
-                var a = await this.saleCounterRepository.GetQuantity(item.ProductId, item.ColorId, item.SizeId);
+                
                 UpdateQuantityInfo update = new UpdateQuantityInfo()
                 {
                     ProductId = item.ProductId,

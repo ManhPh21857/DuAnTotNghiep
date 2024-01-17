@@ -200,6 +200,8 @@ namespace Project.Sales.Infrastructure.SQLDB.Orders
                    ,[order_date]		AS OrderDate
                    ,[Status]			AS Status
                    ,[voucher_id]		AS VoucherId
+                   ,[phone_number]		AS PhoneNumber
+                   ,[address]			AS Address
                 FROM
 	                [dbo].[orders]
                 /**where**/
