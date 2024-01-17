@@ -17,7 +17,7 @@ namespace Project.Sales.Infrastructure.SQLDB.Dashboards
             var connect = await this.provider.Connect();
             const string sql = @"
                 SELECT  COUNT(is_deleted) AS CustomerTotal
-                FROM users
+                FROM customers
                 WHERE is_deleted = 0
                 GROUP BY is_deleted
             ";
