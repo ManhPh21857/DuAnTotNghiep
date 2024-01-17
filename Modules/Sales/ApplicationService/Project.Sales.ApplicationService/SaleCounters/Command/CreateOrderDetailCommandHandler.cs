@@ -22,7 +22,7 @@ namespace Project.Sales.ApplicationService.SaleCounters.Command
         {
             var code = Guid.NewGuid();
 
-            if (request.Order.VoucherId>1)
+            if (request.Order.VoucherId>0)
             {
                 var voucher = await this.voucherRepository.GetVoucher(request.Order.VoucherId.Value);
                 if (voucher is null)
